@@ -3350,9 +3350,18 @@ void CSharpScript::get_script_property_list(List<PropertyInfo> *p_list) const {
 }
 
 int CSharpScript::get_member_line(const StringName &p_member) const {
-
-	// TODO omnisharp
-	return -1;
+	Vector<String> source_code_line = get_source_code().split("\n");
+	int p_line = -1;
+	//int p_col = 0;
+	for (int i = 0; i < source_code_line.size(); i = i + 1) {
+		int tmp_col = source_code_line[i].find(p_member);
+		if (tmp_col > 0) {
+			p_line = i;
+			//p_col = tmp_col;//no place to output col
+			break;
+		}
+	}
+	return p_line;
 }
 
 Error CSharpScript::load_source_code(const String &p_path) {
