@@ -61,7 +61,7 @@ protected:
 	}
 
 	void _sig_changed() {
-		_change_notify();
+		notify_property_list_changed();
 		emit_signal("changed");
 	}
 
@@ -172,7 +172,7 @@ protected:
 public:
 	void edit(const StringName &p_sig) {
 		sig = p_sig;
-		_change_notify();
+		notify_property_list_changed();
 	}
 
 	VisualScriptEditorSignalEdit() { undo_redo = nullptr; }
@@ -195,11 +195,10 @@ protected:
 	}
 
 	void _var_changed() {
-		_change_notify();
+		notify_property_list_changed();
 		emit_signal("changed");
 	}
 	void _var_value_changed() {
-		_change_notify("value"); // So the whole tree is not redrawn, makes editing smoother in general.
 		emit_signal("changed");
 	}
 
@@ -331,7 +330,7 @@ protected:
 public:
 	void edit(const StringName &p_var) {
 		var = p_var;
-		_change_notify();
+		notify_property_list_changed();
 	}
 
 	VisualScriptEditorVariableEdit() { undo_redo = nullptr; }
@@ -981,6 +980,10 @@ void VisualScriptEditor::_update_graph(int p_only_id) {
 	}
 
 	_update_graph_connections();
+
+	float graph_minimap_opacity = EditorSettings::get_singleton()->get("editors/visual_editors/minimap_opacity");
+	graph->set_minimap_opacity(graph_minimap_opacity);
+
 	// Use default_func instead of default_func for now I think that should be good stop gap solution to ensure not breaking anything.
 	graph->call_deferred("set_scroll_ofs", script->get_scroll() * EDSCALE);
 	updating_graph = false;
@@ -1834,7 +1837,7 @@ void VisualScriptEditor::_input(const Ref<InputEvent> &p_event) {
 void VisualScriptEditor::_graph_gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> key = p_event;
 
-	if (key.is_valid() && key->is_pressed() && key->get_button_mask() == BUTTON_RIGHT) {
+	if (key.is_valid() && key->is_pressed() && key->get_button_mask() == MOUSE_BUTTON_RIGHT) {
 		saved_position = graph->get_local_mouse_position();
 
 		Point2 gpos = Input::get_singleton()->get_mouse_position();
@@ -3685,16 +3688,23 @@ void VisualScriptEditor::_comment_node_resized(const Vector2 &p_new_size, int p_
 		return;
 	}
 
+	Vector2 new_size = p_new_size;
+	if (graph->is_using_snap()) {
+		Vector2 snap = Vector2(graph->get_snap(), graph->get_snap());
+		Vector2 min_size = (gn->get_minimum_size() + (snap * 0.5)).snapped(snap);
+		new_size = new_size.snapped(snap).max(min_size);
+	}
+
 	updating_graph = true;
 
 	graph->set_block_minimum_size_adjust(true); //faster resize
 
 	undo_redo->create_action(TTR("Resize Comment"), UndoRedo::MERGE_ENDS);
-	undo_redo->add_do_method(vsc.ptr(), "set_size", p_new_size / EDSCALE);
+	undo_redo->add_do_method(vsc.ptr(), "set_size", new_size / EDSCALE);
 	undo_redo->add_undo_method(vsc.ptr(), "set_size", vsc->get_size());
 	undo_redo->commit_action();
 
-	gn->set_custom_minimum_size(p_new_size);
+	gn->set_custom_minimum_size(new_size);
 	gn->set_size(Size2(1, 1));
 	graph->set_block_minimum_size_adjust(false);
 	updating_graph = false;
@@ -3948,7 +3958,7 @@ void VisualScriptEditor::_menu_option(int p_what) {
 					if (start_node == -1) {
 						// If we still don't have a start node then,
 						// run through the nodes and select the first tree node,
-						// ie node without any input sequence but output sequence.
+						// i.e. node without any input sequence but output sequence.
 						for (Set<int>::Element *E = nodes_from.front(); E; E = E->next()) {
 							if (!nodes_to.has(E->get())) {
 								start_node = E->get();
@@ -4264,13 +4274,13 @@ VisualScriptEditor::VisualScriptEditor() {
 	edit_menu->set_shortcut_context(this);
 	edit_menu->set_text(TTR("Edit"));
 	edit_menu->set_switch_on_hover(true);
-	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/delete_selected"), EDIT_DELETE_NODES);
+	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("ui_graph_delete"), EDIT_DELETE_NODES);
 	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/toggle_breakpoint"), EDIT_TOGGLE_BREAKPOINT);
 	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/find_node_type"), EDIT_FIND_NODE_TYPE);
 	edit_menu->get_popup()->add_separator();
-	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/copy_nodes"), EDIT_COPY_NODES);
-	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/cut_nodes"), EDIT_CUT_NODES);
-	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/paste_nodes"), EDIT_PASTE_NODES);
+	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("ui_copy"), EDIT_COPY_NODES);
+	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("ui_cut"), EDIT_CUT_NODES);
+	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("ui_paste"), EDIT_PASTE_NODES);
 	edit_menu->get_popup()->add_separator();
 	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/create_function"), EDIT_CREATE_FUNCTION);
 	edit_menu->get_popup()->add_shortcut(ED_GET_SHORTCUT("visual_script_editor/refresh_nodes"), REFRESH_GRAPH);
@@ -4326,6 +4336,8 @@ VisualScriptEditor::VisualScriptEditor() {
 	graph->connect("duplicate_nodes_request", callable_mp(this, &VisualScriptEditor::_on_nodes_duplicate));
 	graph->connect("gui_input", callable_mp(this, &VisualScriptEditor::_graph_gui_input));
 	graph->set_drag_forwarding(this);
+	float graph_minimap_opacity = EditorSettings::get_singleton()->get("editors/visual_editors/minimap_opacity");
+	graph->set_minimap_opacity(graph_minimap_opacity);
 	graph->hide();
 	graph->connect("scroll_offset_changed", callable_mp(this, &VisualScriptEditor::_graph_ofs_changed));
 
@@ -4508,12 +4520,8 @@ void VisualScriptEditor::free_clipboard() {
 static void register_editor_callback() {
 	ScriptEditor::register_create_script_editor_function(create_editor);
 
-	ED_SHORTCUT("visual_script_editor/delete_selected", TTR("Delete Selected"), KEY_DELETE);
 	ED_SHORTCUT("visual_script_editor/toggle_breakpoint", TTR("Toggle Breakpoint"), KEY_F9);
 	ED_SHORTCUT("visual_script_editor/find_node_type", TTR("Find Node Type"), KEY_MASK_CMD + KEY_F);
-	ED_SHORTCUT("visual_script_editor/copy_nodes", TTR("Copy Nodes"), KEY_MASK_CMD + KEY_C);
-	ED_SHORTCUT("visual_script_editor/cut_nodes", TTR("Cut Nodes"), KEY_MASK_CMD + KEY_X);
-	ED_SHORTCUT("visual_script_editor/paste_nodes", TTR("Paste Nodes"), KEY_MASK_CMD + KEY_V);
 	ED_SHORTCUT("visual_script_editor/create_function", TTR("Make Function"), KEY_MASK_CMD + KEY_G);
 	ED_SHORTCUT("visual_script_editor/refresh_nodes", TTR("Refresh Graph"), KEY_MASK_CMD + KEY_R);
 	ED_SHORTCUT("visual_script_editor/edit_member", TTR("Edit Member"), KEY_MASK_CMD + KEY_E);

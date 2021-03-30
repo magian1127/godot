@@ -76,6 +76,9 @@ bool FileSystemDock::_create_tree(TreeItem *p_parent, EditorFileSystemDirectory 
 	subdirectory_item->set_metadata(0, lpath);
 	if (!p_select_in_favorites && (path == lpath || ((display_mode == DISPLAY_MODE_SPLIT) && path.get_base_dir() == lpath))) {
 		subdirectory_item->select(0);
+		// Keep select an item when re-created a tree
+		// To prevent crashing when nothing is selected.
+		subdirectory_item->set_as_cursor(0);
 	}
 
 	if (p_unfold_path && path.begins_with(lpath) && path != lpath) {
@@ -941,8 +944,41 @@ void FileSystemDock::_select_file(const String &p_path, bool p_select_in_favorit
 			fpath = fpath.substr(0, fpath.length() - 1);
 		}
 	} else if (fpath != "Favorites") {
+		if (FileAccess::exists(fpath + ".import")) {
+			Ref<ConfigFile> config;
+			config.instance();
+			Error err = config->load(fpath + ".import");
+			if (err == OK) {
+				if (config->has_section_key("remap", "importer")) {
+					String importer = config->get_value("remap", "importer");
+					if (importer == "keep") {
+						EditorNode::get_singleton()->show_warning(TTR("Importing has been disabled for this file, so it can't be opened for editing."));
+						return;
+					}
+				}
+			}
+		}
+
 		if (ResourceLoader::get_resource_type(fpath) == "PackedScene") {
-			editor->open_request(fpath);
+			bool is_imported = false;
+
+			{
+				List<String> importer_exts;
+				ResourceImporterScene::get_singleton()->get_recognized_extensions(&importer_exts);
+				String extension = fpath.get_extension();
+				for (List<String>::Element *E = importer_exts.front(); E; E = E->next()) {
+					if (extension.nocasecmp_to(E->get()) == 0) {
+						is_imported = true;
+						break;
+					}
+				}
+			}
+
+			if (is_imported) {
+				ResourceImporterScene::get_singleton()->show_advanced_options(fpath);
+			} else {
+				editor->open_request(fpath);
+			}
 		} else {
 			editor->load_resource(fpath);
 		}
@@ -1407,10 +1443,28 @@ void FileSystemDock::_make_scene_confirm() {
 
 void FileSystemDock::_file_removed(String p_file) {
 	emit_signal("file_removed", p_file);
+
+	// Find the closest parent directory available, in case multiple items were deleted along the same path.
+	path = p_file.get_base_dir();
+	DirAccessRef da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
+	while (!da->dir_exists(path)) {
+		path = path.get_base_dir();
+	}
+
+	current_path->set_text(path);
 }
 
 void FileSystemDock::_folder_removed(String p_folder) {
 	emit_signal("folder_removed", p_folder);
+
+	// Find the closest parent directory available, in case multiple items were deleted along the same path.
+	path = p_folder.get_base_dir();
+	DirAccessRef da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
+	while (!da->dir_exists(path)) {
+		path = path.get_base_dir();
+	}
+
+	current_path->set_text(path);
 }
 
 void FileSystemDock::_rename_operation_confirm() {
@@ -1465,6 +1519,9 @@ void FileSystemDock::_rename_operation_confirm() {
 
 	print_verbose("FileSystem: saving moved scenes.");
 	_save_scenes_after_move(file_renames);
+
+	path = new_path;
+	current_path->set_text(path);
 }
 
 void FileSystemDock::_duplicate_operation_confirm() {
@@ -1573,6 +1630,9 @@ void FileSystemDock::_move_operation_confirm(const String &p_to_path, bool p_ove
 
 		print_verbose("FileSystem: saving moved scenes.");
 		_save_scenes_after_move(file_renames);
+
+		path = p_to_path;
+		current_path->set_text(path);
 	}
 }
 
@@ -2599,7 +2659,10 @@ void FileSystemDock::_update_import_dock() {
 			break;
 		}
 
-		String type = cf->get_value("remap", "type");
+		String type;
+		if (cf->has_section_key("remap", "type")) {
+			type = cf->get_value("remap", "type");
+		}
 		if (import_type == "") {
 			import_type = type;
 		} else if (import_type != type) {
@@ -2691,7 +2754,22 @@ FileSystemDock::FileSystemDock(EditorNode *p_editor) {
 	// `KEY_MASK_CMD | KEY_C` conflicts with other editor shortcuts.
 	ED_SHORTCUT("filesystem_dock/copy_path", TTR("Copy Path"), KEY_MASK_CMD | KEY_MASK_SHIFT | KEY_C);
 	ED_SHORTCUT("filesystem_dock/duplicate", TTR("Duplicate..."), KEY_MASK_CMD | KEY_D);
+
+#if defined(WINDOWS_ENABLED)
+	// TRANSLATORS: This string is only used on Windows, as it refers to the system trash
+	// as "Recycle Bin" instead of "Trash". Make sure to use the translation of "Recycle Bin"
+	// recommended by Microsoft for the target language.
+	ED_SHORTCUT("filesystem_dock/delete", TTR("Move to Recycle Bin"), KEY_DELETE);
+#elif defined(OSX_ENABLED)
+	// TRANSLATORS: This string is only used on macOS, as it refers to the system trash
+	// as "Bin" instead of "Trash". Make sure to use the translation of "Bin"
+	// recommended by Apple for the target language.
+	ED_SHORTCUT("filesystem_dock/delete", TTR("Move to Bin"), KEY_DELETE);
+#else
+	// TRANSLATORS: This string is only used on platforms other than Windows and macOS.
 	ED_SHORTCUT("filesystem_dock/delete", TTR("Move to Trash"), KEY_DELETE);
+#endif
+
 	ED_SHORTCUT("filesystem_dock/rename", TTR("Rename..."), KEY_F2);
 
 	VBoxContainer *top_vbc = memnew(VBoxContainer);

@@ -36,6 +36,10 @@
 #include "renderer_compositor_rd.h"
 #include "servers/rendering/shader_language.h"
 
+bool RendererStorageRD::can_create_resources_async() const {
+	return true;
+}
+
 Ref<Image> RendererStorageRD::_validate_texture_format(const Ref<Image> &p_image, TextureToRDFormat &r_format) {
 	Ref<Image> image = p_image->duplicate();
 
@@ -535,9 +539,13 @@ Ref<Image> RendererStorageRD::_validate_texture_format(const Ref<Image> &p_image
 	return image;
 }
 
-RID RendererStorageRD::texture_2d_create(const Ref<Image> &p_image) {
-	ERR_FAIL_COND_V(p_image.is_null(), RID());
-	ERR_FAIL_COND_V(p_image->is_empty(), RID());
+RID RendererStorageRD::texture_allocate() {
+	return texture_owner.allocate_rid();
+}
+
+void RendererStorageRD::texture_2d_initialize(RID p_texture, const Ref<Image> &p_image) {
+	ERR_FAIL_COND(p_image.is_null());
+	ERR_FAIL_COND(p_image->is_empty());
 
 	TextureToRDFormat ret_format;
 	Ref<Image> image = _validate_texture_format(p_image, ret_format);
@@ -585,13 +593,13 @@ RID RendererStorageRD::texture_2d_create(const Ref<Image> &p_image) {
 	Vector<Vector<uint8_t>> data_slices;
 	data_slices.push_back(data);
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
-	ERR_FAIL_COND_V(texture.rd_texture.is_null(), RID());
+	ERR_FAIL_COND(texture.rd_texture.is_null());
 	if (texture.rd_format_srgb != RD::DATA_FORMAT_MAX) {
 		rd_view.format_override = texture.rd_format_srgb;
 		texture.rd_texture_srgb = RD::get_singleton()->texture_create_shared(rd_view, texture.rd_texture);
 		if (texture.rd_texture_srgb.is_null()) {
 			RD::get_singleton()->free(texture.rd_texture);
-			ERR_FAIL_COND_V(texture.rd_texture_srgb.is_null(), RID());
+			ERR_FAIL_COND(texture.rd_texture_srgb.is_null());
 		}
 	}
 
@@ -602,14 +610,14 @@ RID RendererStorageRD::texture_2d_create(const Ref<Image> &p_image) {
 	texture.rd_view = rd_view;
 	texture.is_proxy = false;
 
-	return texture_owner.make_rid(texture);
+	texture_owner.initialize_rid(p_texture, texture);
 }
 
-RID RendererStorageRD::texture_2d_layered_create(const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
-	ERR_FAIL_COND_V(p_layers.size() == 0, RID());
+void RendererStorageRD::texture_2d_layered_initialize(RID p_texture, const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
+	ERR_FAIL_COND(p_layers.size() == 0);
 
-	ERR_FAIL_COND_V(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP && p_layers.size() != 6, RID());
-	ERR_FAIL_COND_V(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP_ARRAY && (p_layers.size() < 6 || (p_layers.size() % 6) != 0), RID());
+	ERR_FAIL_COND(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP && p_layers.size() != 6);
+	ERR_FAIL_COND(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP_ARRAY && (p_layers.size() < 6 || (p_layers.size() % 6) != 0));
 
 	TextureToRDFormat ret_format;
 	Vector<Ref<Image>> images;
@@ -620,7 +628,7 @@ RID RendererStorageRD::texture_2d_layered_create(const Vector<Ref<Image>> &p_lay
 		Image::Format valid_format = Image::FORMAT_MAX;
 
 		for (int i = 0; i < p_layers.size(); i++) {
-			ERR_FAIL_COND_V(p_layers[i]->is_empty(), RID());
+			ERR_FAIL_COND(p_layers[i]->is_empty());
 
 			if (i == 0) {
 				valid_width = p_layers[i]->get_width();
@@ -628,10 +636,10 @@ RID RendererStorageRD::texture_2d_layered_create(const Vector<Ref<Image>> &p_lay
 				valid_format = p_layers[i]->get_format();
 				valid_mipmaps = p_layers[i]->has_mipmaps();
 			} else {
-				ERR_FAIL_COND_V(p_layers[i]->get_width() != valid_width, RID());
-				ERR_FAIL_COND_V(p_layers[i]->get_height() != valid_height, RID());
-				ERR_FAIL_COND_V(p_layers[i]->get_format() != valid_format, RID());
-				ERR_FAIL_COND_V(p_layers[i]->has_mipmaps() != valid_mipmaps, RID());
+				ERR_FAIL_COND(p_layers[i]->get_width() != valid_width);
+				ERR_FAIL_COND(p_layers[i]->get_height() != valid_height);
+				ERR_FAIL_COND(p_layers[i]->get_format() != valid_format);
+				ERR_FAIL_COND(p_layers[i]->has_mipmaps() != valid_mipmaps);
 			}
 
 			images.push_back(_validate_texture_format(p_layers[i], ret_format));
@@ -695,13 +703,13 @@ RID RendererStorageRD::texture_2d_layered_create(const Vector<Ref<Image>> &p_lay
 		data_slices.push_back(data);
 	}
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
-	ERR_FAIL_COND_V(texture.rd_texture.is_null(), RID());
+	ERR_FAIL_COND(texture.rd_texture.is_null());
 	if (texture.rd_format_srgb != RD::DATA_FORMAT_MAX) {
 		rd_view.format_override = texture.rd_format_srgb;
 		texture.rd_texture_srgb = RD::get_singleton()->texture_create_shared(rd_view, texture.rd_texture);
 		if (texture.rd_texture_srgb.is_null()) {
 			RD::get_singleton()->free(texture.rd_texture);
-			ERR_FAIL_COND_V(texture.rd_texture_srgb.is_null(), RID());
+			ERR_FAIL_COND(texture.rd_texture_srgb.is_null());
 		}
 	}
 
@@ -712,14 +720,14 @@ RID RendererStorageRD::texture_2d_layered_create(const Vector<Ref<Image>> &p_lay
 	texture.rd_view = rd_view;
 	texture.is_proxy = false;
 
-	return texture_owner.make_rid(texture);
+	texture_owner.initialize_rid(p_texture, texture);
 }
 
-RID RendererStorageRD::texture_3d_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
-	ERR_FAIL_COND_V(p_data.size() == 0, RID());
+void RendererStorageRD::texture_3d_initialize(RID p_texture, Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
+	ERR_FAIL_COND(p_data.size() == 0);
 	Image::Image3DValidateError verr = Image::validate_3d_image(p_format, p_width, p_height, p_depth, p_mipmaps, p_data);
 	if (verr != Image::VALIDATE_3D_OK) {
-		ERR_FAIL_V_MSG(RID(), Image::get_3d_image_validation_error_text(verr));
+		ERR_FAIL_MSG(Image::get_3d_image_validation_error_text(verr));
 	}
 
 	TextureToRDFormat ret_format;
@@ -811,13 +819,13 @@ RID RendererStorageRD::texture_3d_create(Image::Format p_format, int p_width, in
 	data_slices.push_back(all_data); //one slice
 
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
-	ERR_FAIL_COND_V(texture.rd_texture.is_null(), RID());
+	ERR_FAIL_COND(texture.rd_texture.is_null());
 	if (texture.rd_format_srgb != RD::DATA_FORMAT_MAX) {
 		rd_view.format_override = texture.rd_format_srgb;
 		texture.rd_texture_srgb = RD::get_singleton()->texture_create_shared(rd_view, texture.rd_texture);
 		if (texture.rd_texture_srgb.is_null()) {
 			RD::get_singleton()->free(texture.rd_texture);
-			ERR_FAIL_COND_V(texture.rd_texture_srgb.is_null(), RID());
+			ERR_FAIL_COND(texture.rd_texture_srgb.is_null());
 		}
 	}
 
@@ -828,12 +836,12 @@ RID RendererStorageRD::texture_3d_create(Image::Format p_format, int p_width, in
 	texture.rd_view = rd_view;
 	texture.is_proxy = false;
 
-	return texture_owner.make_rid(texture);
+	texture_owner.initialize_rid(p_texture, texture);
 }
 
-RID RendererStorageRD::texture_proxy_create(RID p_base) {
+void RendererStorageRD::texture_proxy_initialize(RID p_texture, RID p_base) {
 	Texture *tex = texture_owner.getornull(p_base);
-	ERR_FAIL_COND_V(!tex, RID());
+	ERR_FAIL_COND(!tex);
 	Texture proxy_tex = *tex;
 
 	proxy_tex.rd_view.format_override = tex->rd_format;
@@ -847,11 +855,9 @@ RID RendererStorageRD::texture_proxy_create(RID p_base) {
 	proxy_tex.is_proxy = true;
 	proxy_tex.proxies.clear();
 
-	RID rid = texture_owner.make_rid(proxy_tex);
+	texture_owner.initialize_rid(p_texture, proxy_tex);
 
-	tex->proxies.push_back(rid);
-
-	return rid;
+	tex->proxies.push_back(p_texture);
 }
 
 void RendererStorageRD::_texture_2d_update(RID p_texture, const Ref<Image> &p_image, int p_layer, bool p_immediate) {
@@ -873,7 +879,7 @@ void RendererStorageRD::_texture_2d_update(RID p_texture, const Ref<Image> &p_im
 	TextureToRDFormat f;
 	Ref<Image> validated = _validate_texture_format(p_image, f);
 
-	RD::get_singleton()->texture_update(tex->rd_texture, p_layer, validated->get_data(), !p_immediate);
+	RD::get_singleton()->texture_update(tex->rd_texture, p_layer, validated->get_data());
 }
 
 void RendererStorageRD::texture_2d_update_immediate(RID p_texture, const Ref<Image> &p_image, int p_layer) {
@@ -918,7 +924,7 @@ void RendererStorageRD::texture_3d_update(RID p_texture, const Vector<Ref<Image>
 		}
 	}
 
-	RD::get_singleton()->texture_update(tex->rd_texture, 0, all_data, true);
+	RD::get_singleton()->texture_update(tex->rd_texture, 0, all_data);
 }
 
 void RendererStorageRD::texture_proxy_update(RID p_texture, RID p_proxy_to) {
@@ -961,7 +967,7 @@ void RendererStorageRD::texture_proxy_update(RID p_texture, RID p_proxy_to) {
 }
 
 //these two APIs can be used together or in combination with the others.
-RID RendererStorageRD::texture_2d_placeholder_create() {
+void RendererStorageRD::texture_2d_placeholder_initialize(RID p_texture) {
 	//this could be better optimized to reuse an existing image , done this way
 	//for now to get it working
 	Ref<Image> image;
@@ -974,10 +980,10 @@ RID RendererStorageRD::texture_2d_placeholder_create() {
 		}
 	}
 
-	return texture_2d_create(image);
+	texture_2d_initialize(p_texture, image);
 }
 
-RID RendererStorageRD::texture_2d_layered_placeholder_create(RS::TextureLayeredType p_layered_type) {
+void RendererStorageRD::texture_2d_layered_placeholder_initialize(RID p_texture, RS::TextureLayeredType p_layered_type) {
 	//this could be better optimized to reuse an existing image , done this way
 	//for now to get it working
 	Ref<Image> image;
@@ -1000,10 +1006,10 @@ RID RendererStorageRD::texture_2d_layered_placeholder_create(RS::TextureLayeredT
 		}
 	}
 
-	return texture_2d_layered_create(images, p_layered_type);
+	texture_2d_layered_initialize(p_texture, images, p_layered_type);
 }
 
-RID RendererStorageRD::texture_3d_placeholder_create() {
+void RendererStorageRD::texture_3d_placeholder_initialize(RID p_texture) {
 	//this could be better optimized to reuse an existing image , done this way
 	//for now to get it working
 	Ref<Image> image;
@@ -1022,7 +1028,7 @@ RID RendererStorageRD::texture_3d_placeholder_create() {
 		images.push_back(image);
 	}
 
-	return texture_3d_create(Image::FORMAT_RGBA8, 4, 4, 4, false, images);
+	texture_3d_initialize(p_texture, Image::FORMAT_RGBA8, 4, 4, 4, false, images);
 }
 
 Ref<Image> RendererStorageRD::texture_2d_get(RID p_texture) const {
@@ -1223,8 +1229,11 @@ RendererStorageRD::CanvasTexture::~CanvasTexture() {
 	clear_sets();
 }
 
-RID RendererStorageRD::canvas_texture_create() {
-	return canvas_texture_owner.make_rid(memnew(CanvasTexture));
+RID RendererStorageRD::canvas_texture_allocate() {
+	return canvas_texture_owner.allocate_rid();
+}
+void RendererStorageRD::canvas_texture_initialize(RID p_rid) {
+	canvas_texture_owner.initialize_rid(p_rid, memnew(CanvasTexture));
 }
 
 void RendererStorageRD::canvas_texture_set_channel(RID p_canvas_texture, RS::CanvasTextureChannel p_channel, RID p_texture) {
@@ -1365,12 +1374,15 @@ bool RendererStorageRD::canvas_texture_get_uniform_set(RID p_texture, RS::Canvas
 
 /* SHADER API */
 
-RID RendererStorageRD::shader_create() {
+RID RendererStorageRD::shader_allocate() {
+	return shader_owner.allocate_rid();
+}
+void RendererStorageRD::shader_initialize(RID p_rid) {
 	Shader shader;
 	shader.data = nullptr;
 	shader.type = SHADER_TYPE_MAX;
 
-	return shader_owner.make_rid(shader);
+	shader_owner.initialize_rid(p_rid, shader);
 }
 
 void RendererStorageRD::shader_set_code(RID p_shader, const String &p_code) {
@@ -1510,7 +1522,10 @@ RS::ShaderNativeSourceCode RendererStorageRD::shader_get_native_source_code(RID 
 
 /* COMMON MATERIAL API */
 
-RID RendererStorageRD::material_create() {
+RID RendererStorageRD::material_allocate() {
+	return material_owner.allocate_rid();
+}
+void RendererStorageRD::material_initialize(RID p_rid) {
 	Material material;
 	material.data = nullptr;
 	material.shader = nullptr;
@@ -1520,12 +1535,8 @@ RID RendererStorageRD::material_create() {
 	material.uniform_dirty = false;
 	material.texture_dirty = false;
 	material.priority = 0;
-	RID id = material_owner.make_rid(material);
-	{
-		Material *material_ptr = material_owner.getornull(id);
-		material_ptr->self = id;
-	}
-	return id;
+	material.self = p_rid;
+	material_owner.initialize_rid(p_rid, material);
 }
 
 void RendererStorageRD::_material_queue_update(Material *material, bool p_uniform, bool p_texture) {
@@ -2399,8 +2410,11 @@ void RendererStorageRD::_update_queued_materials() {
 
 /* MESH API */
 
-RID RendererStorageRD::mesh_create() {
-	return mesh_owner.make_rid(Mesh());
+RID RendererStorageRD::mesh_allocate() {
+	return mesh_owner.allocate_rid();
+}
+void RendererStorageRD::mesh_initialize(RID p_rid) {
+	mesh_owner.initialize_rid(p_rid, Mesh());
 }
 
 void RendererStorageRD::mesh_set_blend_shape_count(RID p_mesh, int p_blend_shape_count) {
@@ -2608,6 +2622,12 @@ void RendererStorageRD::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_su
 	}
 
 	mesh->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+
+	for (Set<Mesh *>::Element *E = mesh->shadow_owners.front(); E; E = E->next()) {
+		Mesh *shadow_owner = E->get();
+		shadow_owner->shadow_mesh = RID();
+		shadow_owner->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+	}
 
 	mesh->material_cache.clear();
 }
@@ -2824,6 +2844,25 @@ AABB RendererStorageRD::mesh_get_aabb(RID p_mesh, RID p_skeleton) {
 	return aabb;
 }
 
+void RendererStorageRD::mesh_set_shadow_mesh(RID p_mesh, RID p_shadow_mesh) {
+	Mesh *mesh = mesh_owner.getornull(p_mesh);
+	ERR_FAIL_COND(!mesh);
+
+	Mesh *shadow_mesh = mesh_owner.getornull(mesh->shadow_mesh);
+	if (shadow_mesh) {
+		shadow_mesh->shadow_owners.erase(mesh);
+	}
+	mesh->shadow_mesh = p_shadow_mesh;
+
+	shadow_mesh = mesh_owner.getornull(mesh->shadow_mesh);
+
+	if (shadow_mesh) {
+		shadow_mesh->shadow_owners.insert(mesh);
+	}
+
+	mesh->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+}
+
 void RendererStorageRD::mesh_clear(RID p_mesh) {
 	Mesh *mesh = mesh_owner.getornull(p_mesh);
 	ERR_FAIL_COND(!mesh);
@@ -2871,6 +2910,12 @@ void RendererStorageRD::mesh_clear(RID p_mesh) {
 	}
 	mesh->has_bone_weights = false;
 	mesh->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+
+	for (Set<Mesh *>::Element *E = mesh->shadow_owners.front(); E; E = E->next()) {
+		Mesh *shadow_owner = E->get();
+		shadow_owner->shadow_mesh = RID();
+		shadow_owner->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+	}
 }
 
 bool RendererStorageRD::mesh_needs_instance(RID p_mesh, bool p_has_skeleton) {
@@ -3013,7 +3058,7 @@ void RendererStorageRD::update_mesh_instances() {
 		MeshInstance *mi = dirty_mesh_instance_weights.first()->self();
 
 		if (mi->blend_weights_buffer.is_valid()) {
-			RD::get_singleton()->buffer_update(mi->blend_weights_buffer, 0, mi->blend_weights.size() * sizeof(float), mi->blend_weights.ptr(), true);
+			RD::get_singleton()->buffer_update(mi->blend_weights_buffer, 0, mi->blend_weights.size() * sizeof(float), mi->blend_weights.ptr());
 		}
 		dirty_mesh_instance_weights.remove(&mi->weight_update_list);
 		mi->weights_dirty = false;
@@ -3067,7 +3112,7 @@ void RendererStorageRD::update_mesh_instances() {
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(SkeletonShader::PushConstant));
 
 			//dispatch without barrier, so all is done at the same time
-			RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.vertex_count, 1, 1, 64, 1, 1);
+			RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.vertex_count, 1, 1);
 		}
 
 		mi->dirty = false;
@@ -3267,11 +3312,14 @@ void RendererStorageRD::_mesh_surface_generate_version_for_input_mask(Mesh::Surf
 
 ////////////////// MULTIMESH
 
-RID RendererStorageRD::multimesh_create() {
-	return multimesh_owner.make_rid(MultiMesh());
+RID RendererStorageRD::multimesh_allocate() {
+	return multimesh_owner.allocate_rid();
+}
+void RendererStorageRD::multimesh_initialize(RID p_rid) {
+	multimesh_owner.initialize_rid(p_rid, MultiMesh());
 }
 
-void RendererStorageRD::multimesh_allocate(RID p_multimesh, int p_instances, RS::MultimeshTransformFormat p_transform_format, bool p_use_colors, bool p_use_custom_data) {
+void RendererStorageRD::multimesh_allocate_data(RID p_multimesh, int p_instances, RS::MultimeshTransformFormat p_transform_format, bool p_use_colors, bool p_use_custom_data) {
 	MultiMesh *multimesh = multimesh_owner.getornull(p_multimesh);
 	ERR_FAIL_COND(!multimesh);
 
@@ -3681,7 +3729,7 @@ void RendererStorageRD::multimesh_set_buffer(RID p_multimesh, const Vector<float
 
 	{
 		const float *r = p_buffer.ptr();
-		RD::get_singleton()->buffer_update(multimesh->buffer, 0, p_buffer.size() * sizeof(float), r, false);
+		RD::get_singleton()->buffer_update(multimesh->buffer, 0, p_buffer.size() * sizeof(float), r);
 		multimesh->buffer_set = true;
 	}
 
@@ -3780,14 +3828,14 @@ void RendererStorageRD::_update_dirty_multimeshes() {
 
 				if (multimesh->data_cache_used_dirty_regions > 32 || multimesh->data_cache_used_dirty_regions > visible_region_count / 2) {
 					//if there too many dirty regions, or represent the majority of regions, just copy all, else transfer cost piles up too much
-					RD::get_singleton()->buffer_update(multimesh->buffer, 0, MIN(visible_region_count * region_size, multimesh->instances * multimesh->stride_cache * sizeof(float)), data, false);
+					RD::get_singleton()->buffer_update(multimesh->buffer, 0, MIN(visible_region_count * region_size, multimesh->instances * multimesh->stride_cache * sizeof(float)), data);
 				} else {
 					//not that many regions? update them all
 					for (uint32_t i = 0; i < visible_region_count; i++) {
 						if (multimesh->data_cache_dirty_regions[i]) {
 							uint64_t offset = i * region_size;
 							uint64_t size = multimesh->stride_cache * multimesh->instances * sizeof(float);
-							RD::get_singleton()->buffer_update(multimesh->buffer, offset, MIN(region_size, size - offset), &data[i * region_size], false);
+							RD::get_singleton()->buffer_update(multimesh->buffer, offset, MIN(region_size, size - offset), &data[i * region_size]);
 						}
 					}
 				}
@@ -3818,8 +3866,11 @@ void RendererStorageRD::_update_dirty_multimeshes() {
 
 /* PARTICLES */
 
-RID RendererStorageRD::particles_create() {
-	return particles_owner.make_rid(Particles());
+RID RendererStorageRD::particles_allocate() {
+	return particles_owner.allocate_rid();
+}
+void RendererStorageRD::particles_initialize(RID p_rid) {
+	particles_owner.initialize_rid(p_rid, Particles());
 }
 
 void RendererStorageRD::particles_set_emitting(RID p_particles, bool p_emitting) {
@@ -4478,7 +4529,7 @@ void RendererStorageRD::_particles_process(Particles *p_particles, float p_delta
 	if (sub_emitter && sub_emitter->emission_storage_buffer.is_valid()) {
 		//	print_line("updating subemitter buffer");
 		int32_t zero[4] = { 0, sub_emitter->amount, 0, 0 };
-		RD::get_singleton()->buffer_update(sub_emitter->emission_storage_buffer, 0, sizeof(uint32_t) * 4, zero, true);
+		RD::get_singleton()->buffer_update(sub_emitter->emission_storage_buffer, 0, sizeof(uint32_t) * 4, zero);
 		push_constant.can_emit = true;
 
 		if (sub_emitter->emitting) {
@@ -4496,13 +4547,13 @@ void RendererStorageRD::_particles_process(Particles *p_particles, float p_delta
 	}
 
 	if (p_particles->emission_buffer && p_particles->emission_buffer->particle_count) {
-		RD::get_singleton()->buffer_update(p_particles->emission_storage_buffer, 0, sizeof(uint32_t) * 4 + sizeof(ParticleEmissionBuffer::Data) * p_particles->emission_buffer->particle_count, p_particles->emission_buffer, true);
+		RD::get_singleton()->buffer_update(p_particles->emission_storage_buffer, 0, sizeof(uint32_t) * 4 + sizeof(ParticleEmissionBuffer::Data) * p_particles->emission_buffer->particle_count, p_particles->emission_buffer);
 		p_particles->emission_buffer->particle_count = 0;
 	}
 
 	p_particles->clear = false;
 
-	RD::get_singleton()->buffer_update(p_particles->frame_params_buffer, 0, sizeof(ParticlesFrameParams), &frame_params, true);
+	RD::get_singleton()->buffer_update(p_particles->frame_params_buffer, 0, sizeof(ParticlesFrameParams), &frame_params);
 
 	ParticlesMaterialData *m = (ParticlesMaterialData *)material_get_data(p_particles->process_material, SHADER_TYPE_PARTICLES);
 	if (!m) {
@@ -4524,7 +4575,7 @@ void RendererStorageRD::_particles_process(Particles *p_particles, float p_delta
 
 	RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(ParticlesShader::PushConstant));
 
-	RD::get_singleton()->compute_list_dispatch_threads(compute_list, p_particles->amount, 1, 1, 64, 1, 1);
+	RD::get_singleton()->compute_list_dispatch_threads(compute_list, p_particles->amount, 1, 1);
 
 	RD::get_singleton()->compute_list_end();
 }
@@ -4578,7 +4629,7 @@ void RendererStorageRD::particles_set_view_axis(RID p_particles, const Vector3 &
 	RD::get_singleton()->compute_list_bind_uniform_set(compute_list, particles->particles_sort_uniform_set, 1);
 	RD::get_singleton()->compute_list_set_push_constant(compute_list, &copy_push_constant, sizeof(ParticlesShader::CopyPushConstant));
 
-	RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1, 64, 1, 1);
+	RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1);
 
 	RD::get_singleton()->compute_list_end();
 
@@ -4590,7 +4641,7 @@ void RendererStorageRD::particles_set_view_axis(RID p_particles, const Vector3 &
 	RD::get_singleton()->compute_list_bind_uniform_set(compute_list, particles->particles_sort_uniform_set, 1);
 	RD::get_singleton()->compute_list_set_push_constant(compute_list, &copy_push_constant, sizeof(ParticlesShader::CopyPushConstant));
 
-	RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1, 64, 1, 1);
+	RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1);
 
 	RD::get_singleton()->compute_list_end();
 }
@@ -4697,7 +4748,7 @@ void RendererStorageRD::update_particles() {
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, particles->particles_copy_uniform_set, 0);
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &copy_push_constant, sizeof(ParticlesShader::CopyPushConstant));
 
-			RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1, 64, 1, 1);
+			RD::get_singleton()->compute_list_dispatch_threads(compute_list, particles->amount, 1, 1);
 
 			RD::get_singleton()->compute_list_end();
 		}
@@ -4953,8 +5004,11 @@ RendererStorageRD::MaterialData *RendererStorageRD::_create_particles_material_f
 
 /* PARTICLES COLLISION API */
 
-RID RendererStorageRD::particles_collision_create() {
-	return particles_collision_owner.make_rid(ParticlesCollision());
+RID RendererStorageRD::particles_collision_allocate() {
+	return particles_collision_owner.allocate_rid();
+}
+void RendererStorageRD::particles_collision_initialize(RID p_rid) {
+	particles_collision_owner.initialize_rid(p_rid, ParticlesCollision());
 }
 
 RID RendererStorageRD::particles_collision_get_heightfield_framebuffer(RID p_particles_collision) const {
@@ -5067,6 +5121,7 @@ void RendererStorageRD::particles_collision_height_field_update(RID p_particles_
 void RendererStorageRD::particles_collision_set_height_field_resolution(RID p_particles_collision, RS::ParticlesCollisionHeightfieldResolution p_resolution) {
 	ParticlesCollision *particles_collision = particles_collision_owner.getornull(p_particles_collision);
 	ERR_FAIL_COND(!particles_collision);
+	ERR_FAIL_INDEX(p_resolution, RS::PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_MAX);
 
 	if (particles_collision->heightfield_resolution == p_resolution) {
 		return;
@@ -5133,8 +5188,11 @@ void RendererStorageRD::particles_collision_instance_set_active(RID p_collision_
 
 /* SKELETON API */
 
-RID RendererStorageRD::skeleton_create() {
-	return skeleton_owner.make_rid(Skeleton());
+RID RendererStorageRD::skeleton_allocate() {
+	return skeleton_owner.allocate_rid();
+}
+void RendererStorageRD::skeleton_initialize(RID p_rid) {
+	skeleton_owner.initialize_rid(p_rid, Skeleton());
 }
 
 void RendererStorageRD::_skeleton_make_dirty(Skeleton *skeleton) {
@@ -5145,7 +5203,7 @@ void RendererStorageRD::_skeleton_make_dirty(Skeleton *skeleton) {
 	}
 }
 
-void RendererStorageRD::skeleton_allocate(RID p_skeleton, int p_bones, bool p_2d_skeleton) {
+void RendererStorageRD::skeleton_allocate_data(RID p_skeleton, int p_bones, bool p_2d_skeleton) {
 	Skeleton *skeleton = skeleton_owner.getornull(p_skeleton);
 	ERR_FAIL_COND(!skeleton);
 	ERR_FAIL_COND(p_bones < 0);
@@ -5301,7 +5359,7 @@ void RendererStorageRD::_update_dirty_skeletons() {
 		Skeleton *skeleton = skeleton_dirty_list;
 
 		if (skeleton->size) {
-			RD::get_singleton()->buffer_update(skeleton->buffer, 0, skeleton->data.size() * sizeof(float), skeleton->data.ptr(), false);
+			RD::get_singleton()->buffer_update(skeleton->buffer, 0, skeleton->data.size() * sizeof(float), skeleton->data.ptr());
 		}
 
 		skeleton_dirty_list = skeleton->dirty_list;
@@ -5319,7 +5377,7 @@ void RendererStorageRD::_update_dirty_skeletons() {
 
 /* LIGHT */
 
-RID RendererStorageRD::light_create(RS::LightType p_type) {
+void RendererStorageRD::_light_initialize(RID p_light, RS::LightType p_type) {
 	Light light;
 	light.type = p_type;
 
@@ -5340,10 +5398,31 @@ RID RendererStorageRD::light_create(RS::LightType p_type) {
 	light.param[RS::LIGHT_PARAM_SHADOW_BIAS] = 0.02;
 	light.param[RS::LIGHT_PARAM_SHADOW_BLUR] = 0;
 	light.param[RS::LIGHT_PARAM_SHADOW_PANCAKE_SIZE] = 20.0;
-	light.param[RS::LIGHT_PARAM_SHADOW_VOLUMETRIC_FOG_FADE] = 1.0;
+	light.param[RS::LIGHT_PARAM_SHADOW_VOLUMETRIC_FOG_FADE] = 0.1;
 	light.param[RS::LIGHT_PARAM_TRANSMITTANCE_BIAS] = 0.05;
 
-	return light_owner.make_rid(light);
+	light_owner.initialize_rid(p_light, light);
+}
+
+RID RendererStorageRD::directional_light_allocate() {
+	return light_owner.allocate_rid();
+}
+void RendererStorageRD::directional_light_initialize(RID p_light) {
+	_light_initialize(p_light, RS::LIGHT_DIRECTIONAL);
+}
+
+RID RendererStorageRD::omni_light_allocate() {
+	return light_owner.allocate_rid();
+}
+void RendererStorageRD::omni_light_initialize(RID p_light) {
+	_light_initialize(p_light, RS::LIGHT_OMNI);
+}
+
+RID RendererStorageRD::spot_light_allocate() {
+	return light_owner.allocate_rid();
+}
+void RendererStorageRD::spot_light_initialize(RID p_light) {
+	_light_initialize(p_light, RS::LIGHT_SPOT);
 }
 
 void RendererStorageRD::light_set_color(RID p_light, const Color &p_color) {
@@ -5581,8 +5660,11 @@ AABB RendererStorageRD::light_get_aabb(RID p_light) const {
 
 /* REFLECTION PROBE */
 
-RID RendererStorageRD::reflection_probe_create() {
-	return reflection_probe_owner.make_rid(ReflectionProbe());
+RID RendererStorageRD::reflection_probe_allocate() {
+	return reflection_probe_owner.allocate_rid();
+}
+void RendererStorageRD::reflection_probe_initialize(RID p_reflection_probe) {
+	reflection_probe_owner.initialize_rid(p_reflection_probe, ReflectionProbe());
 }
 
 void RendererStorageRD::reflection_probe_set_update_mode(RID p_probe, RS::ReflectionProbeUpdateMode p_mode) {
@@ -5804,8 +5886,11 @@ float RendererStorageRD::reflection_probe_get_ambient_color_energy(RID p_probe) 
 	return reflection_probe->ambient_color_energy;
 }
 
-RID RendererStorageRD::decal_create() {
-	return decal_owner.make_rid(Decal());
+RID RendererStorageRD::decal_allocate() {
+	return decal_owner.allocate_rid();
+}
+void RendererStorageRD::decal_initialize(RID p_decal) {
+	decal_owner.initialize_rid(p_decal, Decal());
 }
 
 void RendererStorageRD::decal_set_extents(RID p_decal, const Vector3 &p_extents) {
@@ -5892,11 +5977,14 @@ AABB RendererStorageRD::decal_get_aabb(RID p_decal) const {
 	return AABB(-decal->extents, decal->extents * 2.0);
 }
 
-RID RendererStorageRD::gi_probe_create() {
-	return gi_probe_owner.make_rid(GIProbe());
+RID RendererStorageRD::gi_probe_allocate() {
+	return gi_probe_owner.allocate_rid();
+}
+void RendererStorageRD::gi_probe_initialize(RID p_gi_probe) {
+	gi_probe_owner.initialize_rid(p_gi_probe, GIProbe());
 }
 
-void RendererStorageRD::gi_probe_allocate(RID p_gi_probe, const Transform &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) {
+void RendererStorageRD::gi_probe_allocate_data(RID p_gi_probe, const Transform &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) {
 	GIProbe *gi_probe = gi_probe_owner.getornull(p_gi_probe);
 	ERR_FAIL_COND(!gi_probe);
 
@@ -6245,8 +6333,12 @@ RID RendererStorageRD::gi_probe_get_sdf_texture(RID p_gi_probe) {
 
 /* LIGHTMAP API */
 
-RID RendererStorageRD::lightmap_create() {
-	return lightmap_owner.make_rid(Lightmap());
+RID RendererStorageRD::lightmap_allocate() {
+	return lightmap_owner.allocate_rid();
+}
+
+void RendererStorageRD::lightmap_initialize(RID p_lightmap) {
+	lightmap_owner.initialize_rid(p_lightmap, Lightmap());
 }
 
 void RendererStorageRD::lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) {
@@ -6449,7 +6541,8 @@ void RendererStorageRD::_clear_render_target(RenderTarget *rt) {
 void RendererStorageRD::_update_render_target(RenderTarget *rt) {
 	if (rt->texture.is_null()) {
 		//create a placeholder until updated
-		rt->texture = texture_2d_placeholder_create();
+		rt->texture = texture_allocate();
+		texture_2d_placeholder_initialize(rt->texture);
 		Texture *tex = texture_owner.getornull(rt->texture);
 		tex->is_render_target = true;
 	}
@@ -6949,7 +7042,7 @@ void RendererStorageRD::render_target_sdf_process(RID p_render_target) {
 	RD::get_singleton()->compute_list_bind_uniform_set(compute_list, rt->sdf_buffer_process_uniform_sets[1], 0); //fill [0]
 	RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(RenderTargetSDF::PushConstant));
 
-	RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1, 8, 8, 1);
+	RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1);
 
 	/* Process */
 
@@ -6965,7 +7058,7 @@ void RendererStorageRD::render_target_sdf_process(RID p_render_target) {
 		RD::get_singleton()->compute_list_bind_uniform_set(compute_list, rt->sdf_buffer_process_uniform_sets[swap ? 1 : 0], 0);
 		push_constant.stride = stride;
 		RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(RenderTargetSDF::PushConstant));
-		RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1, 8, 8, 1);
+		RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1);
 		stride /= 2;
 		swap = !swap;
 		RD::get_singleton()->compute_list_add_barrier(compute_list);
@@ -6976,7 +7069,7 @@ void RendererStorageRD::render_target_sdf_process(RID p_render_target) {
 	RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, rt_sdf.pipelines[shrink ? RenderTargetSDF::SHADER_STORE_SHRINK : RenderTargetSDF::SHADER_STORE]);
 	RD::get_singleton()->compute_list_bind_uniform_set(compute_list, rt->sdf_buffer_process_uniform_sets[swap ? 1 : 0], 0);
 	RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(RenderTargetSDF::PushConstant));
-	RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1, 8, 8, 1);
+	RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.size[0], push_constant.size[1], 1);
 
 	RD::get_singleton()->compute_list_end();
 }
@@ -7340,7 +7433,7 @@ void RendererStorageRD::_update_decal_atlas() {
 	tformat.shareable_formats.push_back(RD::DATA_FORMAT_R8G8B8A8_SRGB);
 
 	decal_atlas.texture = RD::get_singleton()->texture_create(tformat, RD::TextureView());
-	RD::get_singleton()->texture_clear(decal_atlas.texture, Color(0, 0, 0, 0), 0, decal_atlas.mipmaps, 0, 1, true);
+	RD::get_singleton()->texture_clear(decal_atlas.texture, Color(0, 0, 0, 0), 0, decal_atlas.mipmaps, 0, 1);
 
 	{
 		//create the framebuffer
@@ -7395,7 +7488,7 @@ void RendererStorageRD::_update_decal_atlas() {
 				prev_texture = mm.texture;
 			}
 		} else {
-			RD::get_singleton()->texture_clear(mm.texture, clear_color, 0, 1, 0, 1, false);
+			RD::get_singleton()->texture_clear(mm.texture, clear_color, 0, 1, 0, 1);
 		}
 	}
 }
@@ -8161,10 +8254,18 @@ bool RendererStorageRD::free(RID p_rid) {
 		material_owner.free(p_rid);
 	} else if (mesh_owner.owns(p_rid)) {
 		mesh_clear(p_rid);
+		mesh_set_shadow_mesh(p_rid, RID());
 		Mesh *mesh = mesh_owner.getornull(p_rid);
 		mesh->dependency.deleted_notify(p_rid);
 		if (mesh->instances.size()) {
 			ERR_PRINT("deleting mesh with active instances");
+		}
+		if (mesh->shadow_owners.size()) {
+			for (Set<Mesh *>::Element *E = mesh->shadow_owners.front(); E; E = E->next()) {
+				Mesh *shadow_owner = E->get();
+				shadow_owner->shadow_mesh = RID();
+				shadow_owner->dependency.changed_notify(DEPENDENCY_CHANGED_MESH);
+			}
 		}
 		mesh_owner.free(p_rid);
 	} else if (mesh_instance_owner.owns(p_rid)) {
@@ -8172,18 +8273,19 @@ bool RendererStorageRD::free(RID p_rid) {
 		_mesh_instance_clear(mi);
 		mi->mesh->instances.erase(mi->I);
 		mi->I = nullptr;
+
 		mesh_instance_owner.free(p_rid);
 		memdelete(mi);
 
 	} else if (multimesh_owner.owns(p_rid)) {
 		_update_dirty_multimeshes();
-		multimesh_allocate(p_rid, 0, RS::MULTIMESH_TRANSFORM_2D);
+		multimesh_allocate_data(p_rid, 0, RS::MULTIMESH_TRANSFORM_2D);
 		MultiMesh *multimesh = multimesh_owner.getornull(p_rid);
 		multimesh->dependency.deleted_notify(p_rid);
 		multimesh_owner.free(p_rid);
 	} else if (skeleton_owner.owns(p_rid)) {
 		_update_dirty_skeletons();
-		skeleton_allocate(p_rid, 0);
+		skeleton_allocate_data(p_rid, 0);
 		Skeleton *skeleton = skeleton_owner.getornull(p_rid);
 		skeleton->dependency.deleted_notify(p_rid);
 		skeleton_owner.free(p_rid);
@@ -8201,7 +8303,7 @@ bool RendererStorageRD::free(RID p_rid) {
 		decal->dependency.deleted_notify(p_rid);
 		decal_owner.free(p_rid);
 	} else if (gi_probe_owner.owns(p_rid)) {
-		gi_probe_allocate(p_rid, Transform(), AABB(), Vector3i(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<int>()); //deallocate
+		gi_probe_allocate_data(p_rid, Transform(), AABB(), Vector3i(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<int>()); //deallocate
 		GIProbe *gi_probe = gi_probe_owner.getornull(p_rid);
 		gi_probe->dependency.deleted_notify(p_rid);
 		gi_probe_owner.free(p_rid);
@@ -8257,11 +8359,11 @@ EffectsRD *RendererStorageRD::get_effects() {
 }
 
 void RendererStorageRD::capture_timestamps_begin() {
-	RD::get_singleton()->capture_timestamp("Frame Begin", false);
+	RD::get_singleton()->capture_timestamp("Frame Begin");
 }
 
 void RendererStorageRD::capture_timestamp(const String &p_name) {
-	RD::get_singleton()->capture_timestamp(p_name, true);
+	RD::get_singleton()->capture_timestamp(p_name);
 }
 
 uint32_t RendererStorageRD::get_captured_timestamps_count() const {
@@ -8295,7 +8397,7 @@ RendererStorageRD::RendererStorageRD() {
 
 	static_assert(sizeof(GlobalVariables::Value) == 16);
 
-	global_variables.buffer_size = GLOBAL_GET("rendering/high_end/global_shader_variables_buffer_size");
+	global_variables.buffer_size = GLOBAL_GET("rendering/limits/global_shader_variables/buffer_size");
 	global_variables.buffer_size = MAX(4096, global_variables.buffer_size);
 	global_variables.buffer_values = memnew_arr(GlobalVariables::Value, global_variables.buffer_size);
 	zeromem(global_variables.buffer_values, sizeof(GlobalVariables::Value) * global_variables.buffer_size);
@@ -8563,14 +8665,14 @@ RendererStorageRD::RendererStorageRD() {
 					sampler_state.min_filter = RD::SAMPLER_FILTER_LINEAR;
 					sampler_state.mip_filter = RD::SAMPLER_FILTER_LINEAR;
 					sampler_state.use_anisotropy = true;
-					sampler_state.anisotropy_max = 1 << int(GLOBAL_GET("rendering/quality/texture_filters/anisotropic_filtering_level"));
+					sampler_state.anisotropy_max = 1 << int(GLOBAL_GET("rendering/textures/default_filters/anisotropic_filtering_level"));
 				} break;
 				case RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC: {
 					sampler_state.mag_filter = RD::SAMPLER_FILTER_LINEAR;
 					sampler_state.min_filter = RD::SAMPLER_FILTER_LINEAR;
 					sampler_state.mip_filter = RD::SAMPLER_FILTER_LINEAR;
 					sampler_state.use_anisotropy = true;
-					sampler_state.anisotropy_max = 1 << int(GLOBAL_GET("rendering/quality/texture_filters/anisotropic_filtering_level"));
+					sampler_state.anisotropy_max = 1 << int(GLOBAL_GET("rendering/textures/default_filters/anisotropic_filtering_level"));
 
 				} break;
 				default: {
@@ -8740,7 +8842,7 @@ RendererStorageRD::RendererStorageRD() {
 		}
 	}
 
-	lightmap_probe_capture_update_speed = GLOBAL_GET("rendering/lightmapper/probe_capture_update_speed");
+	lightmap_probe_capture_update_speed = GLOBAL_GET("rendering/lightmapping/probe_capture/update_speed");
 
 	/* Particles */
 
@@ -8807,9 +8909,11 @@ RendererStorageRD::RendererStorageRD() {
 
 	{
 		// default material and shader for particles shader
-		particles_shader.default_shader = shader_create();
+		particles_shader.default_shader = shader_allocate();
+		shader_initialize(particles_shader.default_shader);
 		shader_set_code(particles_shader.default_shader, "shader_type particles; void compute() { COLOR = vec4(1.0); } \n");
-		particles_shader.default_material = material_create();
+		particles_shader.default_material = material_allocate();
+		material_initialize(particles_shader.default_material);
 		material_set_shader(particles_shader.default_material, particles_shader.default_shader);
 
 		ParticlesMaterialData *md = (ParticlesMaterialData *)material_get_data(particles_shader.default_material, RendererStorageRD::SHADER_TYPE_PARTICLES);

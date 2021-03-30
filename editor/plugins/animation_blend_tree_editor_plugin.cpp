@@ -139,7 +139,7 @@ void AnimationNodeBlendTreeEditor::_update_graph() {
 			name->set_expand_to_text_length(true);
 			node->add_child(name);
 			node->set_slot(0, false, 0, Color(), true, 0, get_theme_color("font_color", "Label"));
-			name->connect("text_entered", callable_mp(this, &AnimationNodeBlendTreeEditor::_node_renamed), varray(agnode));
+			name->connect("text_entered", callable_mp(this, &AnimationNodeBlendTreeEditor::_node_renamed), varray(agnode), CONNECT_DEFERRED);
 			name->connect("focus_exited", callable_mp(this, &AnimationNodeBlendTreeEditor::_node_renamed_focus_out), varray(name, agnode), CONNECT_DEFERRED);
 			base = 1;
 			node->set_show_close_button(true);
@@ -255,6 +255,9 @@ void AnimationNodeBlendTreeEditor::_update_graph() {
 
 		graph->connect_node(from, 0, to, to_idx);
 	}
+
+	float graph_minimap_opacity = EditorSettings::get_singleton()->get("editors/visual_editors/minimap_opacity");
+	graph->set_minimap_opacity(graph_minimap_opacity);
 }
 
 void AnimationNodeBlendTreeEditor::_file_opened(const String &p_file) {
@@ -888,6 +891,8 @@ AnimationNodeBlendTreeEditor::AnimationNodeBlendTreeEditor() {
 	graph->connect("scroll_offset_changed", callable_mp(this, &AnimationNodeBlendTreeEditor::_scroll_changed));
 	graph->connect("delete_nodes_request", callable_mp(this, &AnimationNodeBlendTreeEditor::_delete_nodes_request));
 	graph->connect("popup_request", callable_mp(this, &AnimationNodeBlendTreeEditor::_popup_request));
+	float graph_minimap_opacity = EditorSettings::get_singleton()->get("editors/visual_editors/minimap_opacity");
+	graph->set_minimap_opacity(graph_minimap_opacity);
 
 	VSeparator *vs = memnew(VSeparator);
 	graph->get_zoom_hbox()->add_child(vs);

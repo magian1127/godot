@@ -34,6 +34,7 @@
 #include "editor/import/resource_importer_scene.h"
 #include "editor/import/scene_importer_mesh_node_3d.h"
 #include "gltf_animation.h"
+#include "modules/modules_enabled.gen.h"
 #include "scene/2d/node_2d.h"
 #include "scene/3d/bone_attachment_3d.h"
 #include "scene/3d/light_3d.h"
@@ -161,8 +162,9 @@ private:
 	Error _parse_nodes(Ref<GLTFState> state);
 	String _get_type_name(const GLTFType p_component);
 	String _get_accessor_type_name(const GLTFDocument::GLTFType p_type);
-	String _sanitize_scene_name(const String &name);
 	String _gen_unique_name(Ref<GLTFState> state, const String &p_name);
+	String _sanitize_animation_name(const String &name);
+	String _gen_unique_animation_name(Ref<GLTFState> state, const String &p_name);
 	String _sanitize_bone_name(const String &name);
 	String _gen_unique_bone_name(Ref<GLTFState> state,
 			const GLTFSkeletonIndex skel_i,
@@ -377,7 +379,9 @@ public:
 			const GLTFNodeIndex p_gltf_current,
 			const GLTFNodeIndex p_gltf_root);
 
+#ifdef MODULE_CSG_ENABLED
 	void _convert_csg_shape_to_gltf(Node *p_current, GLTFNodeIndex p_gltf_parent, Ref<GLTFNode> gltf_node, Ref<GLTFState> state);
+#endif // MODULE_CSG_ENABLED
 
 	void _create_gltf_node(Ref<GLTFState> state,
 			Node *p_scene_parent,
@@ -395,12 +399,14 @@ public:
 	void _convert_camera_to_gltf(Camera3D *camera, Ref<GLTFState> state,
 			Node3D *spatial,
 			Ref<GLTFNode> gltf_node);
+#ifdef MODULE_GRIDMAP_ENABLED
 	void _convert_grid_map_to_gltf(
 			Node *p_scene_parent,
 			const GLTFNodeIndex &p_parent_node_index,
 			const GLTFNodeIndex &p_root_node_index,
 			Ref<GLTFNode> gltf_node, Ref<GLTFState> state,
 			Node *p_root_node);
+#endif // MODULE_GRIDMAP_ENABLED
 	void _convert_mult_mesh_instance_to_gltf(
 			Node *p_scene_parent,
 			const GLTFNodeIndex &p_parent_node_index,

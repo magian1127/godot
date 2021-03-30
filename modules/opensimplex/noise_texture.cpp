@@ -33,16 +33,6 @@
 #include "core/core_string_names.h"
 
 NoiseTexture::NoiseTexture() {
-	update_queued = false;
-	noise_thread = nullptr;
-	regen_queued = false;
-	first_time = true;
-
-	size = Vector2i(512, 512);
-	seamless = false;
-	as_normal_map = false;
-	bump_strength = 8.0;
-
 	noise = Ref<OpenSimplexNoise>();
 
 	_queue_update();
@@ -52,10 +42,7 @@ NoiseTexture::~NoiseTexture() {
 	if (texture.is_valid()) {
 		RS::get_singleton()->free(texture);
 	}
-	if (noise_thread) {
-		Thread::wait_to_finish(noise_thread);
-		memdelete(noise_thread);
-	}
+	noise_thread.wait_to_finish();
 }
 
 void NoiseTexture::_bind_methods() {
@@ -94,9 +81,9 @@ void NoiseTexture::_validate_property(PropertyInfo &property) const {
 	}
 }
 
-void NoiseTexture::_set_texture_data(const Ref<Image> &p_image) {
-	data = p_image;
-	if (data.is_valid()) {
+void NoiseTexture::_set_texture_image(const Ref<Image> &p_image) {
+	image = p_image;
+	if (image.is_valid()) {
 		if (texture.is_valid()) {
 			RID new_texture = RS::get_singleton()->texture_2d_create(p_image);
 			RS::get_singleton()->texture_replace(texture, new_texture);
@@ -108,12 +95,10 @@ void NoiseTexture::_set_texture_data(const Ref<Image> &p_image) {
 }
 
 void NoiseTexture::_thread_done(const Ref<Image> &p_image) {
-	_set_texture_data(p_image);
-	Thread::wait_to_finish(noise_thread);
-	memdelete(noise_thread);
-	noise_thread = nullptr;
+	_set_texture_image(p_image);
+	noise_thread.wait_to_finish();
 	if (regen_queued) {
-		noise_thread = Thread::create(_thread_function, this);
+		noise_thread.start(_thread_function, this);
 		regen_queued = false;
 	}
 }
@@ -165,8 +150,8 @@ void NoiseTexture::_update_texture() {
 	use_thread = false;
 #endif
 	if (use_thread) {
-		if (!noise_thread) {
-			noise_thread = Thread::create(_thread_function, this);
+		if (!noise_thread.is_started()) {
+			noise_thread.start(_thread_function, this);
 			regen_queued = false;
 		} else {
 			regen_queued = true;
@@ -174,7 +159,7 @@ void NoiseTexture::_update_texture() {
 
 	} else {
 		Ref<Image> image = _generate_texture();
-		_set_texture_data(image);
+		_set_texture_image(image);
 	}
 	update_queued = false;
 }
@@ -231,7 +216,7 @@ void NoiseTexture::set_as_normal_map(bool p_as_normal_map) {
 	}
 	as_normal_map = p_as_normal_map;
 	_queue_update();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 bool NoiseTexture::is_normal_map() {
@@ -268,6 +253,6 @@ RID NoiseTexture::get_rid() const {
 	return texture;
 }
 
-Ref<Image> NoiseTexture::get_data() const {
-	return data;
+Ref<Image> NoiseTexture::get_image() const {
+	return image;
 }

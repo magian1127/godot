@@ -192,7 +192,7 @@ Variant ShaderMaterial::property_get_revert(const String &p_name) {
 
 void ShaderMaterial::set_shader(const Ref<Shader> &p_shader) {
 	// Only connect/disconnect the signal when running in the editor.
-	// This can be a slow operation, and `_change_notify()` (which is called by `_shader_changed()`)
+	// This can be a slow operation, and `notify_property_list_changed()` (which is called by `_shader_changed()`)
 	// does nothing in non-editor builds anyway. See GH-34741 for details.
 	if (shader.is_valid() && Engine::get_singleton()->is_editor_hint()) {
 		shader->disconnect("changed", callable_mp(this, &ShaderMaterial::_shader_changed));
@@ -210,7 +210,7 @@ void ShaderMaterial::set_shader(const Ref<Shader> &p_shader) {
 	}
 
 	RS::get_singleton()->material_set_shader(_get_material(), rid);
-	_change_notify(); //properties for shader exposed
+	notify_property_list_changed(); //properties for shader exposed
 	emit_changed();
 }
 
@@ -227,7 +227,7 @@ Variant ShaderMaterial::get_shader_param(const StringName &p_param) const {
 }
 
 void ShaderMaterial::_shader_changed() {
-	_change_notify(); //update all properties
+	notify_property_list_changed(); //update all properties
 }
 
 void ShaderMaterial::_bind_methods() {
@@ -735,7 +735,7 @@ void BaseMaterial3D::_update_shader() {
 
 	if (flags[FLAG_SRGB_VERTEX_COLOR]) {
 		code += "\tif (!OUTPUT_IS_SRGB) {\n";
-		code += "\t\tCOLOR.rgb = mix( pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), COLOR.rgb* (1.0 / 12.92), lessThan(COLOR.rgb,vec3(0.04045)) );\n";
+		code += "\t\tCOLOR.rgb = mix(pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), COLOR.rgb * (1.0 / 12.92), lessThan(COLOR.rgb, vec3(0.04045)));\n";
 		code += "\t}\n";
 	}
 	if (flags[FLAG_USE_POINT_SIZE]) {
@@ -1489,7 +1489,7 @@ void BaseMaterial3D::set_transparency(Transparency p_transparency) {
 
 	transparency = p_transparency;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 BaseMaterial3D::Transparency BaseMaterial3D::get_transparency() const {
@@ -1503,7 +1503,7 @@ void BaseMaterial3D::set_alpha_antialiasing(AlphaAntiAliasing p_alpha_aa) {
 
 	alpha_antialiasing_mode = p_alpha_aa;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 BaseMaterial3D::AlphaAntiAliasing BaseMaterial3D::get_alpha_antialiasing() const {
@@ -1517,7 +1517,7 @@ void BaseMaterial3D::set_shading_mode(ShadingMode p_shading_mode) {
 
 	shading_mode = p_shading_mode;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 BaseMaterial3D::ShadingMode BaseMaterial3D::get_shading_mode() const {
@@ -1584,8 +1584,8 @@ void BaseMaterial3D::set_flag(Flags p_flag, bool p_enabled) {
 	}
 
 	flags[p_flag] = p_enabled;
-	if (p_flag == FLAG_USE_SHADOW_TO_OPACITY || p_flag == FLAG_USE_TEXTURE_REPEAT || p_flag == FLAG_SUBSURFACE_MODE_SKIN) {
-		_change_notify();
+	if (p_flag == FLAG_USE_SHADOW_TO_OPACITY || p_flag == FLAG_USE_TEXTURE_REPEAT || p_flag == FLAG_SUBSURFACE_MODE_SKIN || p_flag == FLAG_USE_POINT_SIZE) {
+		notify_property_list_changed();
 	}
 	_queue_shader_change();
 }
@@ -1602,7 +1602,7 @@ void BaseMaterial3D::set_feature(Feature p_feature, bool p_enabled) {
 	}
 
 	features[p_feature] = p_enabled;
-	_change_notify();
+	notify_property_list_changed();
 	_queue_shader_change();
 }
 
@@ -1620,7 +1620,7 @@ void BaseMaterial3D::set_texture(TextureParam p_param, const Ref<Texture2D> &p_t
 		RS::get_singleton()->material_set_param(_get_material(), shader_names->albedo_texture_size,
 				Vector2i(p_texture->get_width(), p_texture->get_height()));
 	}
-	_change_notify();
+	notify_property_list_changed();
 	_queue_shader_change();
 }
 
@@ -1650,7 +1650,7 @@ BaseMaterial3D::TextureFilter BaseMaterial3D::get_texture_filter() const {
 
 void BaseMaterial3D::_validate_feature(const String &text, Feature feature, PropertyInfo &property) const {
 	if (property.name.begins_with(text) && property.name != text + "_enabled" && !features[feature]) {
-		property.usage = 0;
+		property.usage = PROPERTY_USAGE_NOEDITOR;
 	}
 }
 
@@ -1683,19 +1683,27 @@ void BaseMaterial3D::_validate_property(PropertyInfo &property) const {
 		property.usage = 0;
 	}
 
-	if (property.name == "params_grow_amount" && !grow_enabled) {
-		property.usage = 0;
+	if (property.name == "billboard_keep_scale" && billboard_mode == BILLBOARD_DISABLED) {
+		property.usage = PROPERTY_USAGE_NOEDITOR;
+	}
+
+	if (property.name == "grow_amount" && !grow_enabled) {
+		property.usage = PROPERTY_USAGE_NOEDITOR;
+	}
+
+	if (property.name == "point_size" && !flags[FLAG_USE_POINT_SIZE]) {
+		property.usage = PROPERTY_USAGE_NOEDITOR;
 	}
 
 	if (property.name == "proximity_fade_distance" && !proximity_fade_enabled) {
-		property.usage = 0;
+		property.usage = PROPERTY_USAGE_NOEDITOR;
 	}
 
 	if ((property.name == "distance_fade_max_distance" || property.name == "distance_fade_min_distance") && distance_fade == DISTANCE_FADE_DISABLED) {
-		property.usage = 0;
+		property.usage = PROPERTY_USAGE_NOEDITOR;
 	}
 
-	// you can only enable anti-aliasing (in mataerials) on alpha scissor and alpha hash
+	// you can only enable anti-aliasing (in materials) on alpha scissor and alpha hash
 	const bool can_select_aa = (transparency == TRANSPARENCY_ALPHA_SCISSOR || transparency == TRANSPARENCY_ALPHA_HASH);
 	// alpha anti aliasiasing is only enabled when you can select aa
 	const bool alpha_aa_enabled = (alpha_antialiasing_mode != ALPHA_ANTIALIASING_OFF) && can_select_aa;
@@ -1714,7 +1722,7 @@ void BaseMaterial3D::_validate_property(PropertyInfo &property) const {
 		property.usage = 0;
 	}
 
-	// we cant choose an antialiasing mode if alpha isnt possible
+	// we can't choose an antialiasing mode if alpha isn't possible
 	if (property.name == "alpha_antialiasing_edge" && !alpha_aa_enabled) {
 		property.usage = 0;
 	}
@@ -1860,7 +1868,7 @@ float BaseMaterial3D::get_uv2_triplanar_blend_sharpness() const {
 void BaseMaterial3D::set_billboard_mode(BillboardMode p_mode) {
 	billboard_mode = p_mode;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 BaseMaterial3D::BillboardMode BaseMaterial3D::get_billboard_mode() const {
@@ -1897,7 +1905,7 @@ bool BaseMaterial3D::get_particles_anim_loop() const {
 void BaseMaterial3D::set_heightmap_deep_parallax(bool p_enable) {
 	deep_parallax = p_enable;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 bool BaseMaterial3D::is_heightmap_deep_parallax_enabled() const {
@@ -1943,7 +1951,7 @@ bool BaseMaterial3D::get_heightmap_deep_parallax_flip_binormal() const {
 void BaseMaterial3D::set_grow_enabled(bool p_enable) {
 	grow_enabled = p_enable;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 bool BaseMaterial3D::is_grow_enabled() const {
@@ -2093,7 +2101,7 @@ void BaseMaterial3D::set_on_top_of_alpha() {
 void BaseMaterial3D::set_proximity_fade(bool p_enable) {
 	proximity_fade_enabled = p_enable;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 bool BaseMaterial3D::is_proximity_fade_enabled() const {
@@ -2112,7 +2120,7 @@ float BaseMaterial3D::get_proximity_fade_distance() const {
 void BaseMaterial3D::set_distance_fade(DistanceFadeMode p_mode) {
 	distance_fade = p_mode;
 	_queue_shader_change();
-	_change_notify();
+	notify_property_list_changed();
 }
 
 BaseMaterial3D::DistanceFadeMode BaseMaterial3D::get_distance_fade() const {
@@ -2655,9 +2663,6 @@ BaseMaterial3D::BaseMaterial3D(bool p_orm) :
 		element(this) {
 	orm = p_orm;
 	// Initialize to the same values as the shader
-	shading_mode = SHADING_MODE_PER_PIXEL;
-	transparency = TRANSPARENCY_DISABLED;
-	alpha_antialiasing_mode = ALPHA_ANTIALIASING_OFF;
 	set_albedo(Color(1.0, 1.0, 1.0, 1.0));
 	set_specular(0.5);
 	set_roughness(1.0);
@@ -2689,7 +2694,6 @@ BaseMaterial3D::BaseMaterial3D(bool p_orm) :
 	set_particles_anim_h_frames(1);
 	set_particles_anim_v_frames(1);
 	set_particles_anim_loop(false);
-	emission_op = EMISSION_OP_ADD;
 
 	set_transparency(TRANSPARENCY_DISABLED);
 	set_alpha_antialiasing(ALPHA_ANTIALIASING_OFF);
@@ -2697,8 +2701,6 @@ BaseMaterial3D::BaseMaterial3D(bool p_orm) :
 	set_alpha_hash_scale(1.0);
 	set_alpha_antialiasing_edge(0.3);
 
-	proximity_fade_enabled = false;
-	distance_fade = DISTANCE_FADE_DISABLED;
 	set_proximity_fade_distance(1);
 	set_distance_fade_min_distance(0);
 	set_distance_fade_max_distance(10);
@@ -2710,34 +2712,13 @@ BaseMaterial3D::BaseMaterial3D(bool p_orm) :
 	set_ao_texture_channel(TEXTURE_CHANNEL_RED);
 	set_refraction_texture_channel(TEXTURE_CHANNEL_RED);
 
-	grow_enabled = false;
 	set_grow(0.0);
 
-	deep_parallax = false;
-	heightmap_parallax_flip_tangent = false;
-	heightmap_parallax_flip_binormal = false;
 	set_heightmap_deep_parallax_min_layers(8);
 	set_heightmap_deep_parallax_max_layers(32);
 	set_heightmap_deep_parallax_flip_tangent(false); //also sets binormal
 
-	detail_uv = DETAIL_UV_1;
-	blend_mode = BLEND_MODE_MIX;
-	detail_blend_mode = BLEND_MODE_MIX;
-	depth_draw_mode = DEPTH_DRAW_OPAQUE_ONLY;
-	cull_mode = CULL_BACK;
-	for (int i = 0; i < FLAG_MAX; i++) {
-		flags[i] = false;
-	}
 	flags[FLAG_USE_TEXTURE_REPEAT] = true;
-
-	diffuse_mode = DIFFUSE_BURLEY;
-	specular_mode = SPECULAR_SCHLICK_GGX;
-
-	for (int i = 0; i < FEATURE_MAX; i++) {
-		features[i] = false;
-	}
-
-	texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
 
 	_queue_shader_change();
 }

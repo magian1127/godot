@@ -96,6 +96,11 @@ Error HTTPClient::connect_to_host(const String &p_host, int p_port, bool p_ssl, 
 void HTTPClient::set_connection(const Ref<StreamPeer> &p_connection) {
 	ERR_FAIL_COND_MSG(p_connection.is_null(), "Connection is not a reference to a valid StreamPeer object.");
 
+	if (ssl) {
+		ERR_FAIL_NULL_MSG(Object::cast_to<StreamPeerSSL>(p_connection.ptr()),
+				"Connection is not a reference to a valid StreamPeerSSL object.");
+	}
+
 	if (connection == p_connection) {
 		return;
 	}
@@ -736,14 +741,14 @@ String HTTPClient::query_string_from_dict(const Dictionary &p_dict) {
 	String query = "";
 	Array keys = p_dict.keys();
 	for (int i = 0; i < keys.size(); ++i) {
-		String encoded_key = String(keys[i]).http_escape();
+		String encoded_key = String(keys[i]).uri_encode();
 		Variant value = p_dict[keys[i]];
 		switch (value.get_type()) {
 			case Variant::ARRAY: {
 				// Repeat the key with every values
 				Array values = value;
 				for (int j = 0; j < values.size(); ++j) {
-					query += "&" + encoded_key + "=" + String(values[j]).http_escape();
+					query += "&" + encoded_key + "=" + String(values[j]).uri_encode();
 				}
 				break;
 			}
@@ -754,7 +759,7 @@ String HTTPClient::query_string_from_dict(const Dictionary &p_dict) {
 			}
 			default: {
 				// Add the key-value pair
-				query += "&" + encoded_key + "=" + String(value).http_escape();
+				query += "&" + encoded_key + "=" + String(value).uri_encode();
 			}
 		}
 	}

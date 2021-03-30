@@ -33,6 +33,7 @@
 
 #include "core/os/semaphore.h"
 #include "core/os/thread.h"
+#include "core/templates/safe_refcount.h"
 #include "scene/main/node.h"
 #include "scene/resources/texture.h"
 
@@ -70,9 +71,9 @@ class EditorResourcePreview : public Node {
 
 	Mutex preview_mutex;
 	Semaphore preview_sem;
-	Thread *thread;
-	volatile bool exit;
-	volatile bool exited;
+	Thread thread;
+	SafeFlag exit;
+	SafeFlag exited;
 
 	struct Item {
 		Ref<Texture2D> preview;

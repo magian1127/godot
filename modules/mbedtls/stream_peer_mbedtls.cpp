@@ -242,7 +242,7 @@ void StreamPeerMbedTLS::poll() {
 		return;
 	}
 
-	// We could pass NULL as second parameter, but some behaviour sanitizers doesn't seem to like that.
+	// We could pass NULL as second parameter, but some behaviour sanitizers don't seem to like that.
 	// Passing a 1 byte buffer to workaround it.
 	uint8_t byte;
 	int ret = mbedtls_ssl_read(ssl_ctx->get_context(), &byte, 0);
@@ -274,7 +274,6 @@ int StreamPeerMbedTLS::get_available_bytes() const {
 
 StreamPeerMbedTLS::StreamPeerMbedTLS() {
 	ssl_ctx.instance();
-	status = STATUS_DISCONNECTED;
 }
 
 StreamPeerMbedTLS::~StreamPeerMbedTLS() {

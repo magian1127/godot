@@ -96,7 +96,7 @@ void AudioStreamEditor::_preview_changed(ObjectID p_which) {
 	}
 }
 
-void AudioStreamEditor::_changed_callback(Object *p_changed, const char *p_prop) {
+void AudioStreamEditor::_audio_changed() {
 	if (!is_visible()) {
 		return;
 	}
@@ -105,6 +105,8 @@ void AudioStreamEditor::_changed_callback(Object *p_changed, const char *p_prop)
 
 void AudioStreamEditor::_play() {
 	if (_player->is_playing()) {
+		// '_pausing' variable indicates that we want to pause the audio player, not stop it. See '_on_finished()'.
+		_pausing = true;
 		_player->stop();
 		_play_button->set_icon(get_theme_icon("MainPlay", "EditorIcons"));
 		set_process(false);
@@ -125,10 +127,13 @@ void AudioStreamEditor::_stop() {
 
 void AudioStreamEditor::_on_finished() {
 	_play_button->set_icon(get_theme_icon("MainPlay", "EditorIcons"));
-	if (_current == _player->get_stream()->get_length()) {
+	if (!_pausing) {
 		_current = 0;
 		_indicator->update();
+	} else {
+		_pausing = false;
 	}
+	set_process(false);
 }
 
 void AudioStreamEditor::_draw_indicator() {
@@ -172,7 +177,7 @@ void AudioStreamEditor::_seek_to(real_t p_x) {
 
 void AudioStreamEditor::edit(Ref<AudioStream> p_stream) {
 	if (!stream.is_null()) {
-		stream->remove_change_receptor(this);
+		stream->disconnect("changed", callable_mp(this, &AudioStreamEditor::_audio_changed));
 	}
 
 	stream = p_stream;
@@ -182,7 +187,7 @@ void AudioStreamEditor::edit(Ref<AudioStream> p_stream) {
 	_duration_label->set_text(text);
 
 	if (!stream.is_null()) {
-		stream->add_change_receptor(this);
+		stream->connect("changed", callable_mp(this, &AudioStreamEditor::_audio_changed));
 		update();
 	} else {
 		hide();
@@ -194,8 +199,6 @@ void AudioStreamEditor::_bind_methods() {
 
 AudioStreamEditor::AudioStreamEditor() {
 	set_custom_minimum_size(Size2(1, 100) * EDSCALE);
-	_current = 0;
-	_dragging = false;
 
 	_player = memnew(AudioStreamPlayer);
 	_player->connect("finished", callable_mp(this, &AudioStreamEditor::_on_finished));

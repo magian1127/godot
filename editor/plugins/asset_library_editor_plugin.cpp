@@ -144,8 +144,8 @@ void EditorAssetLibraryItemDescription::set_image(int p_type, int p_index, const
 			for (int i = 0; i < preview_images.size(); i++) {
 				if (preview_images[i].id == p_index) {
 					if (preview_images[i].is_video) {
-						Ref<Image> overlay = previews->get_theme_icon("PlayOverlay", "EditorIcons")->get_data();
-						Ref<Image> thumbnail = p_image->get_data();
+						Ref<Image> overlay = previews->get_theme_icon("PlayOverlay", "EditorIcons")->get_image();
+						Ref<Image> thumbnail = p_image->get_image();
 						thumbnail = thumbnail->duplicate();
 						Point2 overlay_pos = Point2((thumbnail->get_width() - overlay->get_width()) / 2, (thumbnail->get_height() - overlay->get_height()) / 2);
 
@@ -350,7 +350,7 @@ void EditorAssetLibraryItemDownload::_http_download_completed(int p_status, int 
 				if (sha256 != download_sha256) {
 					error_text = TTR("Bad download hash, assuming file has been tampered with.") + "\n";
 					error_text += TTR("Expected:") + " " + sha256 + "\n" + TTR("Got:") + " " + download_sha256;
-					status->set_text(TTR("Failed sha256 hash check"));
+					status->set_text(TTR("Failed SHA-256 hash check"));
 				}
 			}
 		} break;
@@ -359,6 +359,8 @@ void EditorAssetLibraryItemDownload::_http_download_completed(int p_status, int 
 	if (error_text != String()) {
 		download_error->set_text(TTR("Asset Download Error:") + "\n" + error_text);
 		download_error->popup_centered();
+		// Let the user retry the download.
+		retry->show();
 		return;
 	}
 
@@ -459,6 +461,9 @@ void EditorAssetLibraryItemDownload::_install() {
 }
 
 void EditorAssetLibraryItemDownload::_make_request() {
+	// Hide the Retry button if we've just pressed it.
+	retry->hide();
+
 	download->cancel_request();
 	download->set_download_file(EditorSettings::get_singleton()->get_cache_dir().plus_file("tmp_asset_" + itos(asset_id)) + ".zip");
 
@@ -516,6 +521,8 @@ EditorAssetLibraryItemDownload::EditorAssetLibraryItemDownload() {
 	retry = memnew(Button);
 	retry->set_text(TTR("Retry"));
 	retry->connect("pressed", callable_mp(this, &EditorAssetLibraryItemDownload::_make_request));
+	// Only show the Retry button in case of a failure.
+	retry->hide();
 
 	hb2->add_child(retry);
 	hb2->add_child(install);
@@ -577,6 +584,24 @@ void EditorAssetLibrary::_notification(int p_what) {
 			filter->set_right_icon(get_theme_icon("Search", "EditorIcons"));
 			filter->set_clear_button_enabled(true);
 		} break;
+
+		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
+			_update_repository_options();
+		} break;
+	}
+}
+
+void EditorAssetLibrary::_update_repository_options() {
+	Dictionary default_urls;
+	default_urls["godotengine.org"] = "https://godotengine.org/asset-library/api";
+	default_urls["localhost"] = "http://127.0.0.1/asset-library/api";
+	Dictionary available_urls = _EDITOR_DEF("asset_library/available_urls", default_urls, true);
+	repository->clear();
+	Array keys = available_urls.keys();
+	for (int i = 0; i < available_urls.size(); i++) {
+		String key = keys[i];
+		repository->add_item(key);
+		repository->set_item_metadata(i, available_urls[key]);
 	}
 }
 
@@ -900,7 +925,7 @@ void EditorAssetLibrary::_search(int p_page) {
 	}
 
 	if (filter->get_text() != String()) {
-		args += "&filter=" + filter->get_text().http_escape();
+		args += "&filter=" + filter->get_text().uri_encode();
 	}
 
 	if (p_page > 0) {
@@ -962,14 +987,16 @@ HBoxContainer *EditorAssetLibrary::_make_pages(int p_page, int p_page_count, int
 	for (int i = from; i < to; i++) {
 		if (i == p_page) {
 			Button *current = memnew(Button);
-			current->set_text(itos(i + 1));
+			// Keep the extended padding for the currently active page (see below).
+			current->set_text(vformat(" %d ", i + 1));
 			current->set_disabled(true);
 			current->set_focus_mode(Control::FOCUS_NONE);
 
 			hbc->add_child(current);
 		} else {
 			Button *current = memnew(Button);
-			current->set_text(itos(i + 1));
+			// Add padding to make page number buttons easier to click.
+			current->set_text(vformat(" %d ", i + 1));
 			current->connect("pressed", callable_mp(this, &EditorAssetLibrary::_search), varray(i));
 
 			hbc->add_child(current);
@@ -1364,10 +1391,7 @@ EditorAssetLibrary::EditorAssetLibrary(bool p_templates_only) {
 	search_hb2->add_child(memnew(Label(TTR("Site:") + " ")));
 	repository = memnew(OptionButton);
 
-	repository->add_item("godotengine.org");
-	repository->set_item_metadata(0, "https://godotengine.org/asset-library/api");
-	repository->add_item("localhost");
-	repository->set_item_metadata(1, "http://127.0.0.1/asset-library/api");
+	_update_repository_options();
 
 	repository->connect("item_selected", callable_mp(this, &EditorAssetLibrary::_repository_changed));
 
@@ -1379,6 +1403,7 @@ EditorAssetLibrary::EditorAssetLibrary(bool p_templates_only) {
 	support = memnew(MenuButton);
 	search_hb2->add_child(support);
 	support->set_text(TTR("Support"));
+	support->get_popup()->set_hide_on_checkable_item_selection(false);
 	support->get_popup()->add_check_item(TTR("Official"), SUPPORT_OFFICIAL);
 	support->get_popup()->add_check_item(TTR("Community"), SUPPORT_COMMUNITY);
 	support->get_popup()->add_check_item(TTR("Testing"), SUPPORT_TESTING);

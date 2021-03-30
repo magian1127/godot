@@ -37,6 +37,7 @@
 #include "core/io/zip_io.h"
 #include "core/os/file_access.h"
 #include "core/os/os.h"
+#include "core/templates/safe_refcount.h"
 #include "core/version.h"
 #include "editor/editor_export.h"
 #include "editor/editor_node.h"
@@ -56,9 +57,9 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 	Ref<ImageTexture> logo;
 
 	// Plugins
-	volatile bool plugins_changed;
-	Thread *check_for_changes_thread;
-	volatile bool quit_request;
+	SafeFlag plugins_changed;
+	Thread check_for_changes_thread;
+	SafeFlag quit_request;
 	Mutex plugins_lock;
 	Vector<PluginConfigIOS> plugins;
 
@@ -141,19 +142,19 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 	static void _check_for_changes_poll_thread(void *ud) {
 		EditorExportPlatformIOS *ea = (EditorExportPlatformIOS *)ud;
 
-		while (!ea->quit_request) {
+		while (!ea->quit_request.is_set()) {
 			// Nothing to do if we already know the plugins have changed.
-			if (!ea->plugins_changed) {
+			if (!ea->plugins_changed.is_set()) {
 				MutexLock lock(ea->plugins_lock);
 
 				Vector<PluginConfigIOS> loaded_plugins = get_plugins();
 
 				if (ea->plugins.size() != loaded_plugins.size()) {
-					ea->plugins_changed = true;
+					ea->plugins_changed.set();
 				} else {
 					for (int i = 0; i < ea->plugins.size(); i++) {
 						if (ea->plugins[i].name != loaded_plugins[i].name || ea->plugins[i].last_updated != loaded_plugins[i].last_updated) {
-							ea->plugins_changed = true;
+							ea->plugins_changed.set();
 							break;
 						}
 					}
@@ -165,7 +166,7 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 			while (OS::get_singleton()->get_ticks_usec() - time < wait) {
 				OS::get_singleton()->delay_usec(300000);
 
-				if (ea->quit_request) {
+				if (ea->quit_request.is_set()) {
 					break;
 				}
 			}
@@ -182,10 +183,10 @@ public:
 	virtual Ref<Texture2D> get_logo() const override { return logo; }
 
 	virtual bool should_update_export_options() override {
-		bool export_options_changed = plugins_changed;
+		bool export_options_changed = plugins_changed.is_set();
 		if (export_options_changed) {
 			// don't clear unless we're reporting true, to avoid race
-			plugins_changed = false;
+			plugins_changed.clear();
 		}
 		return export_options_changed;
 	}
@@ -291,7 +292,7 @@ public:
 };
 
 void EditorExportPlatformIOS::get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) {
-	String driver = ProjectSettings::get_singleton()->get("rendering/quality/driver/driver_name");
+	String driver = ProjectSettings::get_singleton()->get("rendering/driver/driver_name");
 	r_features->push_back("pvrtc");
 	if (driver == "Vulkan") {
 		// FIXME: Review if this is correct.
@@ -364,7 +365,7 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	for (int i = 0; i < found_plugins.size(); i++) {
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "plugins/" + found_plugins[i].name), false));
 	}
-	plugins_changed = false;
+	plugins_changed.clear();
 	plugins = found_plugins;
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "capabilities/access_wifi"), false));
@@ -1351,6 +1352,8 @@ Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset>
 	Vector<String> added_embedded_dependenciy_names;
 	HashMap<String, String> plist_values;
 
+	Set<String> plugin_linker_flags;
+
 	Error err;
 
 	for (int i = 0; i < enabled_plugins.size(); i++) {
@@ -1415,6 +1418,13 @@ Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset>
 			}
 
 			p_config_data.capabilities.push_back(capability);
+		}
+
+		// Linker flags
+		// Checking duplicates
+		for (int j = 0; j < plugin.linker_flags.size(); j++) {
+			String linker_flag = plugin.linker_flags[j];
+			plugin_linker_flags.insert(linker_flag);
 		}
 
 		// Plist
@@ -1497,6 +1507,27 @@ Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset>
 
 		p_config_data.cpp_code += plugin_cpp_code.format(plugin_format, "$_");
 	}
+
+	// Update Linker Flag Values
+	{
+		String result_linker_flags = " ";
+		for (Set<String>::Element *E = plugin_linker_flags.front(); E; E = E->next()) {
+			const String &flag = E->get();
+
+			if (flag.length() == 0) {
+				continue;
+			}
+
+			if (result_linker_flags.length() > 0) {
+				result_linker_flags += ' ';
+			}
+
+			result_linker_flags += flag;
+		}
+		result_linker_flags = result_linker_flags.replace("\"", "\\\"");
+		p_config_data.linker_flags += result_linker_flags;
+	}
+
 	return OK;
 }
 
@@ -1570,9 +1601,9 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 		return ERR_SKIP;
 	}
 
-	String library_to_use = "libgodot.iphone." + String(p_debug ? "debug" : "release") + ".fat.a";
+	String library_to_use = "libgodot.iphone." + String(p_debug ? "debug" : "release") + ".xcframework";
 
-	print_line("Static library: " + library_to_use);
+	print_line("Static framework: " + library_to_use);
 	String pkg_name;
 	if (p_preset->get("application/name") != "") {
 		pkg_name = p_preset->get("application/name"); // app_name
@@ -1658,7 +1689,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 		if (files_to_parse.has(file)) {
 			_fix_config_file(p_preset, data, config_data, p_debug);
 		} else if (file.begins_with("libgodot.iphone")) {
-			if (file != library_to_use) {
+			if (!file.begins_with(library_to_use) || file.ends_with(String("/empty"))) {
 				ret = unzGoToNextFile(src_pkg_zip);
 				continue; //ignore!
 			}
@@ -1666,7 +1697,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 #if defined(OSX_ENABLED) || defined(X11_ENABLED)
 			is_execute = true;
 #endif
-			file = "godot_ios.a";
+			file = file.replace(library_to_use, binary_name + ".xcframework");
 		}
 
 		if (file == project_file) {
@@ -1937,16 +1968,14 @@ EditorExportPlatformIOS::EditorExportPlatformIOS() {
 	logo.instance();
 	logo->create_from_image(img);
 
-	plugins_changed = true;
-	quit_request = false;
+	plugins_changed.set();
 
-	check_for_changes_thread = Thread::create(_check_for_changes_poll_thread, this);
+	check_for_changes_thread.start(_check_for_changes_poll_thread, this);
 }
 
 EditorExportPlatformIOS::~EditorExportPlatformIOS() {
-	quit_request = true;
-	Thread::wait_to_finish(check_for_changes_thread);
-	memdelete(check_for_changes_thread);
+	quit_request.set();
+	check_for_changes_thread.wait_to_finish();
 }
 
 void register_iphone_exporter() {

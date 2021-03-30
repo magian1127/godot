@@ -137,7 +137,6 @@ Ref<VisualScript> VisualScriptNode::get_visual_script() const {
 }
 
 VisualScriptNode::VisualScriptNode() {
-	breakpoint = false;
 }
 
 ////////////////
@@ -145,8 +144,6 @@ VisualScriptNode::VisualScriptNode() {
 /////////////////////
 
 VisualScriptNodeInstance::VisualScriptNodeInstance() {
-	sequence_outputs = nullptr;
-	input_ports = nullptr;
 }
 
 VisualScriptNodeInstance::~VisualScriptNodeInstance() {
@@ -1372,7 +1369,7 @@ void VisualScriptInstance::_dependency_step(VisualScriptNodeInstance *node, int 
 			// Is a default value (unassigned input port).
 			input_args[i] = &default_values[index];
 		} else {
-			// Rregular temporary in stack.
+			// Regular temporary in stack.
 			input_args[i] = &variant_stack[index];
 		}
 	}
@@ -1394,7 +1391,7 @@ Variant VisualScriptInstance::_call_internal(const StringName &p_method, void *p
 	ERR_FAIL_COND_V(!F, Variant());
 	Function *f = &F->get();
 
-	// This call goes separate, so it can e yielded and suspended.
+	// This call goes separate, so it can be yielded and suspended.
 	Variant *variant_stack = (Variant *)p_stack;
 	bool *sequence_bits = (bool *)(variant_stack + f->max_stack);
 	const Variant **input_args = (const Variant **)(sequence_bits + f->node_count);
@@ -2623,14 +2620,8 @@ void VisualScriptLanguage::get_registered_node_names(List<String> *r_names) {
 }
 
 VisualScriptLanguage::VisualScriptLanguage() {
-	notification = "_notification";
-	_step = "_step";
-	_subcall = "_subcall";
 	singleton = this;
 
-	_debug_parse_err_node = -1;
-	_debug_parse_err_file = "";
-	_debug_call_stack_pos = 0;
 	int dmcs = GLOBAL_DEF("debug/settings/visual_script/max_call_stack", 1024);
 	ProjectSettings::get_singleton()->set_custom_property_info("debug/settings/visual_script/max_call_stack", PropertyInfo(Variant::INT, "debug/settings/visual_script/max_call_stack", PROPERTY_HINT_RANGE, "1024,4096,1,or_greater")); //minimum is 1024
 

@@ -188,10 +188,10 @@ int AudioDriverManager::get_driver_count() {
 }
 
 void AudioDriverManager::initialize(int p_driver) {
-	GLOBAL_DEF_RST("audio/enable_audio_input", false);
-	GLOBAL_DEF_RST("audio/mix_rate", DEFAULT_MIX_RATE);
-	GLOBAL_DEF_RST("audio/output_latency", DEFAULT_OUTPUT_LATENCY);
-	GLOBAL_DEF_RST("audio/output_latency.web", 50); // Safer default output_latency for web.
+	GLOBAL_DEF_RST("audio/driver/enable_input", false);
+	GLOBAL_DEF_RST("audio/driver/mix_rate", DEFAULT_MIX_RATE);
+	GLOBAL_DEF_RST("audio/driver/output_latency", DEFAULT_OUTPUT_LATENCY);
+	GLOBAL_DEF_RST("audio/driver/output_latency.web", 50); // Safer default output_latency for web.
 
 	int failed_driver = -1;
 
@@ -401,6 +401,7 @@ void AudioServer::_mix_step() {
 
 		for (int k = 0; k < bus->channels.size(); k++) {
 			if (!bus->channels[k].active) {
+				bus->channels.write[k].peak_volume = AudioFrame(AUDIO_MIN_PEAK_DB, AUDIO_MIN_PEAK_DB);
 				continue;
 			}
 
@@ -434,7 +435,7 @@ void AudioServer::_mix_step() {
 				}
 			}
 
-			bus->channels.write[k].peak_volume = AudioFrame(Math::linear2db(peak.l + 0.0000000001), Math::linear2db(peak.r + 0.0000000001));
+			bus->channels.write[k].peak_volume = AudioFrame(Math::linear2db(peak.l + AUDIO_PEAK_OFFSET), Math::linear2db(peak.r + AUDIO_PEAK_OFFSET));
 
 			if (!bus->channels[k].used) {
 				//see if any audio is contained, because channel was not used
@@ -938,9 +939,9 @@ void AudioServer::init_channels_and_buffers() {
 }
 
 void AudioServer::init() {
-	channel_disable_threshold_db = GLOBAL_DEF_RST("audio/channel_disable_threshold_db", -60.0);
-	channel_disable_frames = float(GLOBAL_DEF_RST("audio/channel_disable_time", 2.0)) * get_mix_rate();
-	ProjectSettings::get_singleton()->set_custom_property_info("audio/channel_disable_time", PropertyInfo(Variant::FLOAT, "audio/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"));
+	channel_disable_threshold_db = GLOBAL_DEF_RST("audio/buses/channel_disable_threshold_db", -60.0);
+	channel_disable_frames = float(GLOBAL_DEF_RST("audio/buses/channel_disable_time", 2.0)) * get_mix_rate();
+	ProjectSettings::get_singleton()->set_custom_property_info("audio/buses/channel_disable_time", PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"));
 	buffer_size = 1024; //hardcoded for now
 
 	init_channels_and_buffers();
@@ -957,7 +958,7 @@ void AudioServer::init() {
 	set_edited(false); //avoid editors from thinking this was edited
 #endif
 
-	GLOBAL_DEF_RST("audio/video_delay_compensation_ms", 0);
+	GLOBAL_DEF_RST("audio/video/video_delay_compensation_ms", 0);
 }
 
 void AudioServer::update() {
@@ -1034,7 +1035,7 @@ void AudioServer::update() {
 }
 
 void AudioServer::load_default_bus_layout() {
-	String layout_path = ProjectSettings::get_singleton()->get("audio/default_bus_layout");
+	String layout_path = ProjectSettings::get_singleton()->get("audio/buses/default_bus_layout");
 
 	if (ResourceLoader::exists(layout_path)) {
 		Ref<AudioBusLayout> default_layout = ResourceLoader::load(layout_path);

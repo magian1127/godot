@@ -33,7 +33,8 @@
 #include "thread_jandroid.h"
 
 GodotJavaViewWrapper::GodotJavaViewWrapper(jobject godot_view) {
-	JNIEnv *env = ThreadAndroid::get_env();
+	JNIEnv *env = get_jni_env();
+	ERR_FAIL_COND(env == nullptr);
 
 	_godot_view = env->NewGlobalRef(godot_view);
 
@@ -47,20 +48,26 @@ GodotJavaViewWrapper::GodotJavaViewWrapper(jobject godot_view) {
 
 void GodotJavaViewWrapper::request_pointer_capture() {
 	if (_request_pointer_capture != 0) {
-		JNIEnv *env = ThreadAndroid::get_env();
+		JNIEnv *env = get_jni_env();
+		ERR_FAIL_COND(env == nullptr);
+
 		env->CallVoidMethod(_godot_view, _request_pointer_capture);
 	}
 }
 
 void GodotJavaViewWrapper::release_pointer_capture() {
 	if (_request_pointer_capture != 0) {
-		JNIEnv *env = ThreadAndroid::get_env();
+		JNIEnv *env = get_jni_env();
+		ERR_FAIL_COND(env == nullptr);
+
 		env->CallVoidMethod(_godot_view, _release_pointer_capture);
 	}
 }
 
 GodotJavaViewWrapper::~GodotJavaViewWrapper() {
-	JNIEnv *env = ThreadAndroid::get_env();
+	JNIEnv *env = get_jni_env();
+	ERR_FAIL_COND(env == nullptr);
+
 	env->DeleteGlobalRef(_godot_view);
 	env->DeleteGlobalRef(_cls);
 }

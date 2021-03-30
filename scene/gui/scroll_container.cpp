@@ -94,7 +94,7 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 	Ref<InputEventMouseButton> mb = p_gui_input;
 
 	if (mb.is_valid()) {
-		if (mb->get_button_index() == BUTTON_WHEEL_UP && mb->is_pressed()) {
+		if (mb->get_button_index() == MOUSE_BUTTON_WHEEL_UP && mb->is_pressed()) {
 			// only horizontal is enabled, scroll horizontally
 			if (h_scroll->is_visible() && (!v_scroll->is_visible() || mb->get_shift())) {
 				h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() / 8 * mb->get_factor());
@@ -103,7 +103,7 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 			}
 		}
 
-		if (mb->get_button_index() == BUTTON_WHEEL_DOWN && mb->is_pressed()) {
+		if (mb->get_button_index() == MOUSE_BUTTON_WHEEL_DOWN && mb->is_pressed()) {
 			// only horizontal is enabled, scroll horizontally
 			if (h_scroll->is_visible() && (!v_scroll->is_visible() || mb->get_shift())) {
 				h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() / 8 * mb->get_factor());
@@ -112,13 +112,13 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 			}
 		}
 
-		if (mb->get_button_index() == BUTTON_WHEEL_LEFT && mb->is_pressed()) {
+		if (mb->get_button_index() == MOUSE_BUTTON_WHEEL_LEFT && mb->is_pressed()) {
 			if (h_scroll->is_visible_in_tree()) {
 				h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() * mb->get_factor() / 8);
 			}
 		}
 
-		if (mb->get_button_index() == BUTTON_WHEEL_RIGHT && mb->is_pressed()) {
+		if (mb->get_button_index() == MOUSE_BUTTON_WHEEL_RIGHT && mb->is_pressed()) {
 			if (h_scroll->is_visible_in_tree()) {
 				h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() * mb->get_factor() / 8);
 			}
@@ -132,7 +132,7 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 			return;
 		}
 
-		if (mb->get_button_index() != BUTTON_LEFT) {
+		if (mb->get_button_index() != MOUSE_BUTTON_LEFT) {
 			return;
 		}
 
@@ -244,11 +244,11 @@ void ScrollContainer::_ensure_focused_visible(Control *p_control) {
 	if (is_a_parent_of(p_control)) {
 		Rect2 global_rect = get_global_rect();
 		Rect2 other_rect = p_control->get_global_rect();
-		float right_margin = 0;
+		float right_margin = 0.0;
 		if (v_scroll->is_visible()) {
 			right_margin += v_scroll->get_size().x;
 		}
-		float bottom_margin = 0;
+		float bottom_margin = 0.0;
 		if (h_scroll->is_visible()) {
 			bottom_margin += h_scroll->get_size().y;
 		}
@@ -624,15 +624,7 @@ ScrollContainer::ScrollContainer() {
 	add_child(v_scroll);
 	v_scroll->connect("value_changed", callable_mp(this, &ScrollContainer::_scroll_moved));
 
-	drag_speed = Vector2();
-	drag_touching = false;
-	drag_touching_deaccel = false;
-	beyond_deadzone = false;
-	scroll_h = true;
-	scroll_v = true;
-
 	deadzone = GLOBAL_GET("gui/common/default_scroll_deadzone");
-	follow_focus = false;
 
 	set_clip_contents(true);
 };

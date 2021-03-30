@@ -44,31 +44,31 @@ int InputEvent::get_device() const {
 	return device;
 }
 
-bool InputEvent::is_action(const StringName &p_action) const {
-	return InputMap::get_singleton()->event_is_action(Ref<InputEvent>((InputEvent *)this), p_action);
+bool InputEvent::is_action(const StringName &p_action, bool p_exact_match) const {
+	return InputMap::get_singleton()->event_is_action(Ref<InputEvent>((InputEvent *)this), p_action, p_exact_match);
 }
 
-bool InputEvent::is_action_pressed(const StringName &p_action, bool p_allow_echo) const {
+bool InputEvent::is_action_pressed(const StringName &p_action, bool p_allow_echo, bool p_exact_match) const {
 	bool pressed;
-	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, &pressed);
+	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, p_exact_match, &pressed, nullptr, nullptr);
 	return valid && pressed && (p_allow_echo || !is_echo());
 }
 
-bool InputEvent::is_action_released(const StringName &p_action) const {
+bool InputEvent::is_action_released(const StringName &p_action, bool p_exact_match) const {
 	bool pressed;
-	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, &pressed);
+	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, p_exact_match, &pressed, nullptr, nullptr);
 	return valid && !pressed;
 }
 
-float InputEvent::get_action_strength(const StringName &p_action) const {
+float InputEvent::get_action_strength(const StringName &p_action, bool p_exact_match) const {
 	float strength;
-	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, nullptr, &strength);
+	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, p_exact_match, nullptr, &strength, nullptr);
 	return valid ? strength : 0.0f;
 }
 
-float InputEvent::get_action_raw_strength(const StringName &p_action) const {
+float InputEvent::get_action_raw_strength(const StringName &p_action, bool p_exact_match) const {
 	float raw_strength;
-	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, nullptr, nullptr, &raw_strength);
+	bool valid = InputMap::get_singleton()->event_get_action_status(Ref<InputEvent>((InputEvent *)this), p_action, p_exact_match, nullptr, nullptr, &raw_strength);
 	return valid ? raw_strength : 0.0f;
 }
 
@@ -100,10 +100,10 @@ void InputEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_device", "device"), &InputEvent::set_device);
 	ClassDB::bind_method(D_METHOD("get_device"), &InputEvent::get_device);
 
-	ClassDB::bind_method(D_METHOD("is_action", "action"), &InputEvent::is_action);
-	ClassDB::bind_method(D_METHOD("is_action_pressed", "action", "allow_echo"), &InputEvent::is_action_pressed, DEFVAL(false));
-	ClassDB::bind_method(D_METHOD("is_action_released", "action"), &InputEvent::is_action_released);
-	ClassDB::bind_method(D_METHOD("get_action_strength", "action"), &InputEvent::get_action_strength);
+	ClassDB::bind_method(D_METHOD("is_action", "action", "exact_match"), &InputEvent::is_action, DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("is_action_pressed", "action", "allow_echo", "exact_match"), &InputEvent::is_action_pressed, DEFVAL(false), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("is_action_released", "action", "exact_match"), &InputEvent::is_action_released, DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("get_action_strength", "action", "exact_match"), &InputEvent::get_action_strength, DEFVAL(false));
 
 	ClassDB::bind_method(D_METHOD("is_pressed"), &InputEvent::is_pressed);
 	ClassDB::bind_method(D_METHOD("is_echo"), &InputEvent::is_echo);
@@ -384,6 +384,31 @@ String InputEventKey::to_string() {
 	return vformat("InputEventKey: keycode=%s mods=%s physical=%s pressed=%s echo=%s", kc, mods, physical, p, e);
 }
 
+Ref<InputEventKey> InputEventKey::create_reference(uint32_t p_keycode) {
+	Ref<InputEventKey> ie;
+	ie.instance();
+	ie->set_keycode(p_keycode & KEY_CODE_MASK);
+	ie->set_unicode(p_keycode & KEY_CODE_MASK);
+
+	if (p_keycode & KEY_MASK_SHIFT) {
+		ie->set_shift(true);
+	}
+	if (p_keycode & KEY_MASK_ALT) {
+		ie->set_alt(true);
+	}
+	if (p_keycode & KEY_MASK_CTRL) {
+		ie->set_control(true);
+	}
+	if (p_keycode & KEY_MASK_CMD) {
+		ie->set_command(true);
+	}
+	if (p_keycode & KEY_MASK_META) {
+		ie->set_metakey(true);
+	}
+
+	return ie;
+}
+
 bool InputEventKey::action_match(const Ref<InputEvent> &p_event, bool *p_pressed, float *p_strength, float *p_raw_strength, float p_deadzone) const {
 	Ref<InputEventKey> key = p_event;
 	if (key.is_null()) {
@@ -594,15 +619,15 @@ String InputEventMouseButton::as_text() const {
 	// Button
 	int idx = get_button_index();
 	switch (idx) {
-		case BUTTON_LEFT:
-		case BUTTON_RIGHT:
-		case BUTTON_MIDDLE:
-		case BUTTON_WHEEL_UP:
-		case BUTTON_WHEEL_DOWN:
-		case BUTTON_WHEEL_LEFT:
-		case BUTTON_WHEEL_RIGHT:
-		case BUTTON_XBUTTON1:
-		case BUTTON_XBUTTON2:
+		case MOUSE_BUTTON_LEFT:
+		case MOUSE_BUTTON_RIGHT:
+		case MOUSE_BUTTON_MIDDLE:
+		case MOUSE_BUTTON_WHEEL_UP:
+		case MOUSE_BUTTON_WHEEL_DOWN:
+		case MOUSE_BUTTON_WHEEL_LEFT:
+		case MOUSE_BUTTON_WHEEL_RIGHT:
+		case MOUSE_BUTTON_XBUTTON1:
+		case MOUSE_BUTTON_XBUTTON2:
 			full_string += RTR(_mouse_button_descriptions[idx - 1]); // button index starts from 1, array index starts from 0, so subtract 1
 			break;
 		default:
@@ -626,15 +651,15 @@ String InputEventMouseButton::to_string() {
 	String button_string = itos(idx);
 
 	switch (idx) {
-		case BUTTON_LEFT:
-		case BUTTON_RIGHT:
-		case BUTTON_MIDDLE:
-		case BUTTON_WHEEL_UP:
-		case BUTTON_WHEEL_DOWN:
-		case BUTTON_WHEEL_LEFT:
-		case BUTTON_WHEEL_RIGHT:
-		case BUTTON_XBUTTON1:
-		case BUTTON_XBUTTON2:
+		case MOUSE_BUTTON_LEFT:
+		case MOUSE_BUTTON_RIGHT:
+		case MOUSE_BUTTON_MIDDLE:
+		case MOUSE_BUTTON_WHEEL_UP:
+		case MOUSE_BUTTON_WHEEL_DOWN:
+		case MOUSE_BUTTON_WHEEL_LEFT:
+		case MOUSE_BUTTON_WHEEL_RIGHT:
+		case MOUSE_BUTTON_XBUTTON1:
+		case MOUSE_BUTTON_XBUTTON2:
 			button_string += " (" + RTR(_mouse_button_descriptions[idx - 1]) + ")"; // button index starts from 1, array index starts from 0, so subtract 1
 			break;
 		default:
@@ -736,20 +761,20 @@ String InputEventMouseMotion::to_string() {
 	int button_mask = get_button_mask();
 	String button_mask_string = itos(button_mask);
 	switch (get_button_mask()) {
-		case BUTTON_MASK_LEFT:
-			button_mask_string += " (" + RTR(_mouse_button_descriptions[BUTTON_LEFT - 1]) + ")";
+		case MOUSE_BUTTON_MASK_LEFT:
+			button_mask_string += " (" + RTR(_mouse_button_descriptions[MOUSE_BUTTON_LEFT - 1]) + ")";
 			break;
-		case BUTTON_MASK_MIDDLE:
-			button_mask_string += " (" + RTR(_mouse_button_descriptions[BUTTON_MIDDLE - 1]) + ")";
+		case MOUSE_BUTTON_MASK_MIDDLE:
+			button_mask_string += " (" + RTR(_mouse_button_descriptions[MOUSE_BUTTON_MIDDLE - 1]) + ")";
 			break;
-		case BUTTON_MASK_RIGHT:
-			button_mask_string += " (" + RTR(_mouse_button_descriptions[BUTTON_RIGHT - 1]) + ")";
+		case MOUSE_BUTTON_MASK_RIGHT:
+			button_mask_string += " (" + RTR(_mouse_button_descriptions[MOUSE_BUTTON_RIGHT - 1]) + ")";
 			break;
-		case BUTTON_MASK_XBUTTON1:
-			button_mask_string += " (" + RTR(_mouse_button_descriptions[BUTTON_XBUTTON1 - 1]) + ")";
+		case MOUSE_BUTTON_MASK_XBUTTON1:
+			button_mask_string += " (" + RTR(_mouse_button_descriptions[MOUSE_BUTTON_XBUTTON1 - 1]) + ")";
 			break;
-		case BUTTON_MASK_XBUTTON2:
-			button_mask_string += " (" + RTR(_mouse_button_descriptions[BUTTON_XBUTTON2 - 1]) + ")";
+		case MOUSE_BUTTON_MASK_XBUTTON2:
+			button_mask_string += " (" + RTR(_mouse_button_descriptions[MOUSE_BUTTON_XBUTTON2 - 1]) + ")";
 			break;
 		default:
 			break;
@@ -985,6 +1010,12 @@ static const char *_joy_button_descriptions[JOY_BUTTON_SDL_MAX] = {
 	TTRC("D-pad Down"),
 	TTRC("D-pad Left"),
 	TTRC("D-pad Right"),
+	TTRC("Xbox Share, PS5 Microphone, Nintendo Capture"),
+	TTRC("Xbox Paddle 1"),
+	TTRC("Xbox Paddle 2"),
+	TTRC("Xbox Paddle 3"),
+	TTRC("Xbox Paddle 4"),
+	TTRC("PS4/5 Touchpad"),
 };
 
 String InputEventJoypadButton::as_text() const {
@@ -1003,6 +1034,14 @@ String InputEventJoypadButton::as_text() const {
 
 String InputEventJoypadButton::to_string() {
 	return "InputEventJoypadButton : button_index=" + itos(button_index) + ", pressed=" + (pressed ? "true" : "false") + ", pressure=" + String(Variant(pressure));
+}
+
+Ref<InputEventJoypadButton> InputEventJoypadButton::create_reference(int p_btn_index) {
+	Ref<InputEventJoypadButton> ie;
+	ie.instance();
+	ie->set_button_index(p_btn_index);
+
+	return ie;
 }
 
 void InputEventJoypadButton::_bind_methods() {

@@ -1095,6 +1095,15 @@ bool ArrayMesh::_get(const StringName &p_name, Variant &r_ret) const {
 	return true;
 }
 
+void ArrayMesh::reset_state() {
+	clear_surfaces();
+	clear_blend_shapes();
+
+	aabb = AABB();
+	blend_shape_mode = BLEND_SHAPE_MODE_RELATIVE;
+	custom_aabb = AABB();
+}
+
 void ArrayMesh::_get_property_list(List<PropertyInfo> *p_list) const {
 	if (_is_generated()) {
 		return;
@@ -1156,7 +1165,7 @@ void ArrayMesh::add_surface(uint32_t p_format, PrimitiveType p_primitive, const 
 	RenderingServer::get_singleton()->mesh_add_surface(mesh, sd);
 
 	clear_cache();
-	_change_notify();
+	notify_property_list_changed();
 	emit_changed();
 }
 
@@ -1278,7 +1287,6 @@ void ArrayMesh::surface_set_material(int p_idx, const Ref<Material> &p_material)
 	surfaces.write[p_idx].material = p_material;
 	RenderingServer::get_singleton()->mesh_surface_set_material(mesh, p_idx, p_material.is_null() ? RID() : p_material->get_rid());
 
-	_change_notify("material");
 	emit_changed();
 }
 
@@ -1375,8 +1383,8 @@ bool (*array_mesh_lightmap_unwrap_callback)(float p_texel_size, const float *p_v
 struct ArrayMeshLightmapSurface {
 	Ref<Material> material;
 	LocalVector<SurfaceTool::Vertex> vertices;
-	Mesh::PrimitiveType primitive;
-	uint32_t format;
+	Mesh::PrimitiveType primitive = Mesh::PrimitiveType::PRIMITIVE_MAX;
+	uint32_t format = 0;
 };
 
 Error ArrayMesh::lightmap_unwrap(const Transform &p_base_transform, float p_texel_size) {
@@ -1565,6 +1573,19 @@ Error ArrayMesh::lightmap_unwrap_cached(int *&r_cache_data, unsigned int &r_cach
 	return OK;
 }
 
+void ArrayMesh::set_shadow_mesh(const Ref<ArrayMesh> &p_mesh) {
+	shadow_mesh = p_mesh;
+	if (shadow_mesh.is_valid()) {
+		RS::get_singleton()->mesh_set_shadow_mesh(mesh, shadow_mesh->get_rid());
+	} else {
+		RS::get_singleton()->mesh_set_shadow_mesh(mesh, RID());
+	}
+}
+
+Ref<ArrayMesh> ArrayMesh::get_shadow_mesh() const {
+	return shadow_mesh;
+}
+
 void ArrayMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_blend_shape", "name"), &ArrayMesh::add_blend_shape);
 	ClassDB::bind_method(D_METHOD("get_blend_shape_count"), &ArrayMesh::get_blend_shape_count);
@@ -1596,6 +1617,9 @@ void ArrayMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_custom_aabb", "aabb"), &ArrayMesh::set_custom_aabb);
 	ClassDB::bind_method(D_METHOD("get_custom_aabb"), &ArrayMesh::get_custom_aabb);
 
+	ClassDB::bind_method(D_METHOD("set_shadow_mesh", "mesh"), &ArrayMesh::set_shadow_mesh);
+	ClassDB::bind_method(D_METHOD("get_shadow_mesh"), &ArrayMesh::get_shadow_mesh);
+
 	ClassDB::bind_method(D_METHOD("_set_blend_shape_names", "blend_shape_names"), &ArrayMesh::_set_blend_shape_names);
 	ClassDB::bind_method(D_METHOD("_get_blend_shape_names"), &ArrayMesh::_get_blend_shape_names);
 
@@ -1606,6 +1630,7 @@ void ArrayMesh::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "_surfaces", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NOEDITOR | PROPERTY_USAGE_INTERNAL), "_set_surfaces", "_get_surfaces");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_shape_mode", PROPERTY_HINT_ENUM, "Normalized,Relative"), "set_blend_shape_mode", "get_blend_shape_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::AABB, "custom_aabb", PROPERTY_HINT_NONE, ""), "set_custom_aabb", "get_custom_aabb");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shadow_mesh", PROPERTY_HINT_RESOURCE_TYPE, "ArrayMesh"), "set_shadow_mesh", "get_shadow_mesh");
 }
 
 void ArrayMesh::reload_from_file() {
@@ -1616,13 +1641,12 @@ void ArrayMesh::reload_from_file() {
 
 	Resource::reload_from_file();
 
-	_change_notify();
+	notify_property_list_changed();
 }
 
 ArrayMesh::ArrayMesh() {
 	//mesh is now created on demand
 	//mesh = RenderingServer::get_singleton()->mesh_create();
-	blend_shape_mode = BLEND_SHAPE_MODE_RELATIVE;
 }
 
 ArrayMesh::~ArrayMesh() {

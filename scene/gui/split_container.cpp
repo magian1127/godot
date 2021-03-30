@@ -102,7 +102,7 @@ void SplitContainer::_resort() {
 		middle_sep += clamped_split_offset;
 		if (should_clamp_split_offset) {
 			split_offset = clamped_split_offset;
-			_change_notify("split_offset");
+
 			should_clamp_split_offset = false;
 		}
 	}
@@ -214,7 +214,7 @@ void SplitContainer::_gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> mb = p_event;
 
 	if (mb.is_valid()) {
-		if (mb->get_button_index() == BUTTON_LEFT) {
+		if (mb->get_button_index() == MOUSE_BUTTON_LEFT) {
 			if (mb->is_pressed()) {
 				int sep = get_theme_constant("separation");
 
@@ -359,12 +359,5 @@ void SplitContainer::_bind_methods() {
 }
 
 SplitContainer::SplitContainer(bool p_vertical) {
-	mouse_inside = false;
-	split_offset = 0;
-	should_clamp_split_offset = false;
-	middle_sep = 0;
 	vertical = p_vertical;
-	dragging = false;
-	collapsed = false;
-	dragger_visibility = DRAGGER_VISIBLE;
 }

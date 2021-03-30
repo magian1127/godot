@@ -110,6 +110,7 @@ void CollisionShape2D::_notification(int p_what) {
 				draw_col.r = g;
 				draw_col.g = g;
 				draw_col.b = g;
+				draw_col.a *= 0.5;
 			}
 			shape->draw(get_canvas_item(), draw_col);
 
@@ -125,7 +126,7 @@ void CollisionShape2D::_notification(int p_what) {
 				Vector2 line_to(0, 20);
 				draw_line(Vector2(), line_to, draw_col, 2);
 				Vector<Vector2> pts;
-				float tsize = 8;
+				real_t tsize = 8;
 				pts.push_back(line_to + (Vector2(0, tsize)));
 				pts.push_back(line_to + (Vector2(Math_SQRT12 * tsize, 0)));
 				pts.push_back(line_to + (Vector2(-Math_SQRT12 * tsize, 0)));
@@ -215,14 +216,14 @@ bool CollisionShape2D::is_one_way_collision_enabled() const {
 	return one_way_collision;
 }
 
-void CollisionShape2D::set_one_way_collision_margin(float p_margin) {
+void CollisionShape2D::set_one_way_collision_margin(real_t p_margin) {
 	one_way_collision_margin = p_margin;
 	if (parent) {
 		parent->shape_owner_set_one_way_collision_margin(owner_id, one_way_collision_margin);
 	}
 }
 
-float CollisionShape2D::get_one_way_collision_margin() const {
+real_t CollisionShape2D::get_one_way_collision_margin() const {
 	return one_way_collision_margin;
 }
 
@@ -243,11 +244,5 @@ void CollisionShape2D::_bind_methods() {
 }
 
 CollisionShape2D::CollisionShape2D() {
-	rect = Rect2(-Point2(10, 10), Point2(20, 20));
 	set_notify_local_transform(true);
-	owner_id = 0;
-	parent = nullptr;
-	disabled = false;
-	one_way_collision = false;
-	one_way_collision_margin = 1.0;
 }

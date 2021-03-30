@@ -40,17 +40,13 @@ class CollisionShape3D : public Node3D {
 
 	Ref<Shape3D> shape;
 
-	uint32_t owner_id;
-	CollisionObject3D *parent;
-
-	Node *debug_shape;
-	bool debug_shape_dirty;
+	uint32_t owner_id = 0;
+	CollisionObject3D *parent = nullptr;
 
 	void resource_changed(RES res);
-	bool disabled;
+	bool disabled = false;
 
 protected:
-	void _update_debug_shape();
 	void _shape_changed();
 
 	void _update_in_shape_owner(bool p_xform_only = false);

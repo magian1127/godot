@@ -405,6 +405,10 @@ bool EditorFileSystem::_test_for_reimport(const String &p_path, bool p_only_impo
 
 	memdelete(f);
 
+	if (importer_name == "keep") {
+		return false; //keep mode, do not reimport
+	}
+
 	Ref<ResourceImporter> importer = ResourceFormatImporter::get_singleton()->get_importer_by_name(importer_name);
 
 	if (importer->get_format_version() > version) {
@@ -595,7 +599,7 @@ void EditorFileSystem::scan() {
 		return;
 	}
 
-	if (scanning || scanning_changes || thread) {
+	if (scanning || scanning_changes || thread.is_started()) {
 		return;
 	}
 
@@ -619,13 +623,13 @@ void EditorFileSystem::scan() {
 		_queue_update_script_classes();
 		first_scan = false;
 	} else {
-		ERR_FAIL_COND(thread);
+		ERR_FAIL_COND(thread.is_started());
 		set_process(true);
 		Thread::Settings s;
 		scanning = true;
 		scan_total = 0;
 		s.priority = Thread::PRIORITY_LOW;
-		thread = Thread::create(_thread_func, this, s);
+		thread.start(_thread_func, this, s);
 		//tree->hide();
 		//progress->show();
 	}
@@ -669,10 +673,7 @@ void EditorFileSystem::_scan_new_dir(EditorFileSystemDirectory *p_dir, DirAccess
 				continue;
 			}
 
-			if (FileAccess::exists(cd.plus_file(f).plus_file("project.godot"))) { // skip if another project inside this
-				continue;
-			}
-			if (FileAccess::exists(cd.plus_file(f).plus_file(".gdignore"))) { // skip if another project inside this
+			if (_should_skip_directory(cd.plus_file(f))) {
 				continue;
 			}
 
@@ -874,10 +875,7 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir, const 
 
 				int idx = p_dir->find_dir_index(f);
 				if (idx == -1) {
-					if (FileAccess::exists(cd.plus_file(f).plus_file("project.godot"))) { // skip if another project inside this
-						continue;
-					}
-					if (FileAccess::exists(cd.plus_file(f).plus_file(".gdignore"))) { // skip if another project inside this
+					if (_should_skip_directory(cd.plus_file(f))) {
 						continue;
 					}
 
@@ -1046,7 +1044,7 @@ void EditorFileSystem::_thread_func_sources(void *_userdata) {
 
 void EditorFileSystem::scan_changes() {
 	if (first_scan || // Prevent a premature changes scan from inhibiting the first full scan
-			scanning || scanning_changes || thread) {
+			scanning || scanning_changes || thread.is_started()) {
 		scan_changes_pending = true;
 		set_process(true);
 		return;
@@ -1076,12 +1074,12 @@ void EditorFileSystem::scan_changes() {
 		scanning_changes_done = true;
 		emit_signal("sources_changed", sources_changed.size() > 0);
 	} else {
-		ERR_FAIL_COND(thread_sources);
+		ERR_FAIL_COND(thread_sources.is_started());
 		set_process(true);
 		scan_total = 0;
 		Thread::Settings s;
 		s.priority = Thread::PRIORITY_LOW;
-		thread_sources = Thread::create(_thread_func_sources, this, s);
+		thread_sources.start(_thread_func_sources, this, s);
 	}
 }
 
@@ -1092,17 +1090,14 @@ void EditorFileSystem::_notification(int p_what) {
 
 		} break;
 		case NOTIFICATION_EXIT_TREE: {
-			Thread *active_thread = thread ? thread : thread_sources;
-			if (use_threads && active_thread) {
+			Thread &active_thread = thread.is_started() ? thread : thread_sources;
+			if (use_threads && active_thread.is_started()) {
 				//abort thread if in progress
 				abort_scan = true;
 				while (scanning) {
 					OS::get_singleton()->delay_usec(1000);
 				}
-				Thread::wait_to_finish(active_thread);
-				memdelete(active_thread);
-				thread = nullptr;
-				thread_sources = nullptr;
+				active_thread.wait_to_finish();
 				WARN_PRINT("Scan thread aborted...");
 				set_process(false);
 			}
@@ -1125,9 +1120,7 @@ void EditorFileSystem::_notification(int p_what) {
 
 						set_process(false);
 
-						Thread::wait_to_finish(thread_sources);
-						memdelete(thread_sources);
-						thread_sources = nullptr;
+						thread_sources.wait_to_finish();
 						if (_update_scan_actions()) {
 							emit_signal("filesystem_changed");
 						}
@@ -1135,7 +1128,7 @@ void EditorFileSystem::_notification(int p_what) {
 						_queue_update_script_classes();
 						first_scan = false;
 					}
-				} else if (!scanning && thread) {
+				} else if (!scanning && thread.is_started()) {
 					set_process(false);
 
 					if (filesystem) {
@@ -1143,9 +1136,7 @@ void EditorFileSystem::_notification(int p_what) {
 					}
 					filesystem = new_filesystem;
 					new_filesystem = nullptr;
-					Thread::wait_to_finish(thread);
-					memdelete(thread);
-					thread = nullptr;
+					thread.wait_to_finish();
 					_update_scan_actions();
 					emit_signal("filesystem_changed");
 					emit_signal("sources_changed", sources_changed.size() > 0);
@@ -1420,11 +1411,11 @@ void EditorFileSystem::_scan_script_classes(EditorFileSystemDirectory *p_dir) {
 }
 
 void EditorFileSystem::update_script_classes() {
-	if (!update_script_classes_queued) {
+	if (!update_script_classes_queued.is_set()) {
 		return;
 	}
 
-	update_script_classes_queued = false;
+	update_script_classes_queued.clear();
 	ScriptServer::global_classes_clear();
 	if (get_filesystem()) {
 		_scan_script_classes(get_filesystem());
@@ -1443,11 +1434,11 @@ void EditorFileSystem::update_script_classes() {
 }
 
 void EditorFileSystem::_queue_update_script_classes() {
-	if (update_script_classes_queued) {
+	if (update_script_classes_queued.is_set()) {
 		return;
 	}
 
-	update_script_classes_queued = true;
+	update_script_classes_queued.set();
 	call_deferred("update_script_classes");
 }
 
@@ -1545,6 +1536,10 @@ Error EditorFileSystem::_reimport_group(const String &p_group_file, const Vector
 		source_file_options[p_files[i]] = Map<StringName, Variant>();
 		importer_name = file_importer_name;
 
+		if (importer_name == "keep") {
+			continue; //do nothing
+		}
+
 		Ref<ResourceImporter> importer = ResourceFormatImporter::get_singleton()->get_importer_by_name(importer_name);
 		ERR_FAIL_COND_V(!importer.is_valid(), ERR_FILE_CORRUPT);
 		List<ResourceImporter::ImportOption> options;
@@ -1566,6 +1561,10 @@ Error EditorFileSystem::_reimport_group(const String &p_group_file, const Vector
 		}
 
 		base_paths[p_files[i]] = ResourceFormatImporter::get_singleton()->get_import_base_path(p_files[i]);
+	}
+
+	if (importer_name == "keep") {
+		return OK; // (do nothing)
 	}
 
 	ERR_FAIL_COND_V(importer_name == String(), ERR_UNCONFIGURED);
@@ -1681,7 +1680,7 @@ Error EditorFileSystem::_reimport_group(const String &p_group_file, const Vector
 	return err;
 }
 
-void EditorFileSystem::_reimport_file(const String &p_file) {
+void EditorFileSystem::_reimport_file(const String &p_file, const Map<StringName, Variant> *p_custom_options, const String &p_custom_importer) {
 	EditorFileSystemDirectory *fs = nullptr;
 	int cpos = -1;
 	bool found = _find_file(p_file, &fs, cpos);
@@ -1690,23 +1689,32 @@ void EditorFileSystem::_reimport_file(const String &p_file) {
 	//try to obtain existing params
 
 	Map<StringName, Variant> params;
-	String importer_name;
+	String importer_name; //empty by default though
+
+	if (p_custom_importer != String()) {
+		importer_name = p_custom_importer;
+	}
+	if (p_custom_options != nullptr) {
+		params = *p_custom_options;
+	}
 
 	if (FileAccess::exists(p_file + ".import")) {
 		//use existing
-		Ref<ConfigFile> cf;
-		cf.instance();
-		Error err = cf->load(p_file + ".import");
-		if (err == OK) {
-			if (cf->has_section("params")) {
-				List<String> sk;
-				cf->get_section_keys("params", &sk);
-				for (List<String>::Element *E = sk.front(); E; E = E->next()) {
-					params[E->get()] = cf->get_value("params", E->get());
+		if (p_custom_options == nullptr) {
+			Ref<ConfigFile> cf;
+			cf.instance();
+			Error err = cf->load(p_file + ".import");
+			if (err == OK) {
+				if (cf->has_section("params")) {
+					List<String> sk;
+					cf->get_section_keys("params", &sk);
+					for (List<String>::Element *E = sk.front(); E; E = E->next()) {
+						params[E->get()] = cf->get_value("params", E->get());
+					}
 				}
-			}
-			if (cf->has_section("remap")) {
-				importer_name = cf->get_value("remap", "importer");
+				if (p_custom_importer == String() && cf->has_section("remap")) {
+					importer_name = cf->get_value("remap", "importer");
+				}
 			}
 		}
 
@@ -1714,6 +1722,16 @@ void EditorFileSystem::_reimport_file(const String &p_file) {
 		late_added_files.insert(p_file); //imported files do not call update_file(), but just in case..
 	}
 
+	if (importer_name == "keep") {
+		//keep files, do nothing.
+		fs->files[cpos]->modified_time = FileAccess::get_modified_time(p_file);
+		fs->files[cpos]->import_modified_time = FileAccess::get_modified_time(p_file + ".import");
+		fs->files[cpos]->deps.clear();
+		fs->files[cpos]->type = "";
+		fs->files[cpos]->import_valid = false;
+		EditorResourcePreview::get_singleton()->check_for_invalidation(p_file);
+		return;
+	}
 	Ref<ResourceImporter> importer;
 	bool load_default = false;
 	//find the importer
@@ -1900,6 +1918,10 @@ void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, Map<Str
 	}
 }
 
+void EditorFileSystem::reimport_file_with_custom_parameters(const String &p_file, const String &p_importer, const Map<StringName, Variant> &p_custom_params) {
+	_reimport_file(p_file, &p_custom_params, p_importer);
+}
+
 void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
 	{
 		// Ensure that ProjectSettings::IMPORTED_FILES_PATH exists.
@@ -1984,6 +2006,20 @@ Error EditorFileSystem::_resource_import(const String &p_path) {
 	singleton->reimport_files(files);
 
 	return OK;
+}
+
+bool EditorFileSystem::_should_skip_directory(const String &p_path) {
+	if (FileAccess::exists(p_path.plus_file("project.godot"))) {
+		// skip if another project inside this
+		return true;
+	}
+
+	if (FileAccess::exists(p_path.plus_file(".gdignore"))) {
+		// skip if a `.gdignore` file is inside this
+		return true;
+	}
+
+	return false;
 }
 
 bool EditorFileSystem::is_group_file(const String &p_path) const {
@@ -2074,17 +2110,15 @@ void EditorFileSystem::_update_extensions() {
 
 EditorFileSystem::EditorFileSystem() {
 	ResourceLoader::import = _resource_import;
-	reimport_on_missing_imported_files = GLOBAL_DEF("editor/reimport_missing_imported_files", true);
+	reimport_on_missing_imported_files = GLOBAL_DEF("editor/import/reimport_missing_imported_files", true);
 
 	singleton = this;
 	filesystem = memnew(EditorFileSystemDirectory); //like, empty
 	filesystem->parent = nullptr;
 
-	thread = nullptr;
 	scanning = false;
 	importing = false;
 	use_threads = true;
-	thread_sources = nullptr;
 	new_filesystem = nullptr;
 
 	abort_scan = false;
@@ -2100,7 +2134,7 @@ EditorFileSystem::EditorFileSystem() {
 	memdelete(da);
 
 	scan_total = 0;
-	update_script_classes_queued = false;
+	update_script_classes_queued.clear();
 	first_scan = true;
 	scan_changes_pending = false;
 	revalidate_import_files = false;

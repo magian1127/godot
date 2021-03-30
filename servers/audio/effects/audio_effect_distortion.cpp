@@ -36,8 +36,8 @@ void AudioEffectDistortionInstance::process(const AudioFrame *p_src_frames, Audi
 	const float *src = (const float *)p_src_frames;
 	float *dst = (float *)p_dst_frames;
 
-	//float lpf_c=expf(-2.0*Math_PI*keep_hf_hz.get()/(mix_rate*(float)OVERSAMPLE));
-	float lpf_c = expf(-2.0 * Math_PI * base->keep_hf_hz / (AudioServer::get_singleton()->get_mix_rate()));
+	//float lpf_c=expf(-Math_TAU*keep_hf_hz.get()/(mix_rate*(float)OVERSAMPLE));
+	float lpf_c = expf(-Math_TAU * base->keep_hf_hz / (AudioServer::get_singleton()->get_mix_rate()));
 	float lpf_ic = 1.0 - lpf_c;
 
 	float drive_f = base->drive;
@@ -58,7 +58,8 @@ void AudioEffectDistortionInstance::process(const AudioFrame *p_src_frames, Audi
 
 		switch (base->mode) {
 			case AudioEffectDistortion::MODE_CLIP: {
-				a = powf(a, 1.0001 - drive_f);
+				float a_sign = a < 0 ? -1.0f : 1.0f;
+				a = powf(abs(a), 1.0001 - drive_f) * a_sign;
 				if (a > 1.0) {
 					a = 1.0;
 				} else if (a < (-1.0)) {

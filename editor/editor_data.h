@@ -111,6 +111,7 @@ public:
 	struct EditedScene {
 		Node *root = nullptr;
 		String path;
+		uint64_t file_modified_time = 0;
 		Dictionary editor_states;
 		List<Node *> selection;
 		Vector<EditorHistory::History> history_stored;
@@ -144,7 +145,6 @@ private:
 
 public:
 	EditorPlugin *get_editor(Object *p_object);
-	EditorPlugin *get_subeditor(Object *p_object);
 	Vector<EditorPlugin *> get_subeditors(Object *p_object);
 	EditorPlugin *get_editor(String p_name);
 
@@ -184,13 +184,15 @@ public:
 	Node *get_edited_scene_root(int p_idx = -1);
 	int get_edited_scene_count() const;
 	Vector<EditedScene> get_edited_scenes() const;
-	String get_scene_title(int p_idx) const;
+	String get_scene_title(int p_idx, bool p_always_strip_extension = false) const;
 	String get_scene_path(int p_idx) const;
 	String get_scene_type(int p_idx) const;
 	void set_scene_path(int p_idx, const String &p_path);
 	Ref<Script> get_scene_root_script(int p_idx) const;
 	void set_edited_scene_version(uint64_t version, int p_scene_idx = -1);
 	uint64_t get_scene_version(int p_idx) const;
+	void set_scene_modified_time(int p_idx, uint64_t p_time);
+	uint64_t get_scene_modified_time(int p_idx) const;
 	void clear_edited_scenes();
 	void set_edited_scene_live_edit_root(const NodePath &p_root);
 	NodePath get_edited_scene_live_edit_root();

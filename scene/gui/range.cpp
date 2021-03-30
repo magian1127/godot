@@ -47,7 +47,6 @@ void Range::_value_changed_notify() {
 	_value_changed(shared->val);
 	emit_signal("value_changed", shared->val);
 	update();
-	_change_notify("value");
 }
 
 void Range::Shared::emit_value_changed() {
@@ -63,7 +62,6 @@ void Range::Shared::emit_value_changed() {
 void Range::_changed_notify(const char *p_what) {
 	emit_signal("changed");
 	update();
-	_change_notify(p_what);
 }
 
 void Range::Shared::emit_changed(const char *p_what) {
@@ -171,7 +169,10 @@ void Range::set_as_ratio(double p_value) {
 }
 
 double Range::get_as_ratio() const {
-	ERR_FAIL_COND_V_MSG(Math::is_equal_approx(get_max(), get_min()), 0.0, "Cannot get ratio when minimum and maximum value are equal.");
+	if (Math::is_equal_approx(get_max(), get_min())) {
+		// Avoid division by zero.
+		return 1.0;
+	}
 
 	if (shared->exp_ratio && get_min() >= 0) {
 		double exp_min = get_min() == 0 ? 0.0 : Math::log(get_min()) / Math::log((double)2);
@@ -311,17 +312,7 @@ bool Range::is_lesser_allowed() const {
 
 Range::Range() {
 	shared = memnew(Shared);
-	shared->min = 0;
-	shared->max = 100;
-	shared->val = 0;
-	shared->step = 1;
-	shared->page = 0;
 	shared->owners.insert(this);
-	shared->exp_ratio = false;
-	shared->allow_greater = false;
-	shared->allow_lesser = false;
-
-	_rounded_values = false;
 }
 
 Range::~Range() {

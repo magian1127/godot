@@ -57,9 +57,12 @@
 #include "core/version_hash.gen.h"
 #include "drivers/png/png_driver_common.h"
 #include "editor/import/resource_importer_scene.h"
+#ifdef MODULE_CSG_ENABLED
 #include "modules/csg/csg_shape.h"
+#endif // MODULE_CSG_ENABLED
+#ifdef MODULE_GRIDMAP_ENABLED
 #include "modules/gridmap/grid_map.h"
-#include "modules/regex/regex.h"
+#endif // MODULE_GRIDMAP_ENABLED
 #include "scene/2d/node_2d.h"
 #include "scene/3d/bone_attachment_3d.h"
 #include "scene/3d/camera_3d.h"
@@ -68,6 +71,7 @@
 #include "scene/3d/node_3d.h"
 #include "scene/3d/skeleton_3d.h"
 #include "scene/animation/animation_player.h"
+#include "scene/main/node.h"
 #include "scene/resources/surface_tool.h"
 #include <limits>
 
@@ -445,14 +449,8 @@ Error GLTFDocument::_serialize_nodes(Ref<GLTFState> state) {
 	return OK;
 }
 
-String GLTFDocument::_sanitize_scene_name(const String &name) {
-	RegEx regex("([^a-zA-Z0-9_ -]+)");
-	String p_name = regex.sub(name, "", true);
-	return p_name;
-}
-
 String GLTFDocument::_gen_unique_name(Ref<GLTFState> state, const String &p_name) {
-	const String s_name = _sanitize_scene_name(p_name);
+	const String s_name = p_name.validate_node_name();
 
 	String name;
 	int index = 1;
@@ -460,7 +458,7 @@ String GLTFDocument::_gen_unique_name(Ref<GLTFState> state, const String &p_name
 		name = s_name;
 
 		if (index > 1) {
-			name += " " + itos(index);
+			name += itos(index);
 		}
 		if (!state->unique_names.has(name)) {
 			break;
@@ -473,25 +471,44 @@ String GLTFDocument::_gen_unique_name(Ref<GLTFState> state, const String &p_name
 	return name;
 }
 
-String GLTFDocument::_sanitize_bone_name(const String &name) {
-	String p_name = name.camelcase_to_underscore(true);
+String GLTFDocument::_sanitize_animation_name(const String &p_name) {
+	// Animations disallow the normal node invalid characters as well as  "," and "["
+	// (See animation/animation_player.cpp::add_animation)
 
-	RegEx pattern_nocolon(":");
-	p_name = pattern_nocolon.sub(p_name, "_", true);
+	// TODO: Consider adding invalid_characters or a validate_animation_name to animation_player to mirror Node.
+	String name = p_name.validate_node_name();
+	name = name.replace(",", "");
+	name = name.replace("[", "");
+	return name;
+}
 
-	RegEx pattern_noslash("/");
-	p_name = pattern_noslash.sub(p_name, "_", true);
+String GLTFDocument::_gen_unique_animation_name(Ref<GLTFState> state, const String &p_name) {
+	const String s_name = _sanitize_animation_name(p_name);
 
-	RegEx pattern_nospace(" +");
-	p_name = pattern_nospace.sub(p_name, "_", true);
+	String name;
+	int index = 1;
+	while (true) {
+		name = s_name;
 
-	RegEx pattern_multiple("_+");
-	p_name = pattern_multiple.sub(p_name, "_", true);
+		if (index > 1) {
+			name += itos(index);
+		}
+		if (!state->unique_animation_names.has(name)) {
+			break;
+		}
+		index++;
+	}
 
-	RegEx pattern_padded("0+(\\d+)");
-	p_name = pattern_padded.sub(p_name, "$1", true);
+	state->unique_animation_names.insert(name);
 
-	return p_name;
+	return name;
+}
+
+String GLTFDocument::_sanitize_bone_name(const String &p_name) {
+	String name = p_name;
+	name = name.replace(":", "_");
+	name = name.replace("/", "_");
+	return name;
 }
 
 String GLTFDocument::_gen_unique_bone_name(Ref<GLTFState> state, const GLTFSkeletonIndex skel_i, const String &p_name) {
@@ -537,10 +554,10 @@ Error GLTFDocument::_parse_scenes(Ref<GLTFState> state) {
 			state->root_nodes.push_back(nodes[j]);
 		}
 
-		if (s.has("name") && s["name"] != "") {
+		if (s.has("name") && !String(s["name"]).is_empty() && !((String)s["name"]).begins_with("Scene")) {
 			state->scene_name = _gen_unique_name(state, s["name"]);
 		} else {
-			state->scene_name = _gen_unique_name(state, "Scene");
+			state->scene_name = _gen_unique_name(state, state->filename);
 		}
 	}
 
@@ -2387,7 +2404,7 @@ Error GLTFDocument::_serialize_meshes(Ref<GLTFState> state) {
 		e["targetNames"] = target_names;
 
 		for (int j = 0; j < target_names.size(); j++) {
-			real_t weight = 0;
+			real_t weight = 0.0;
 			if (j < state->meshes.write[gltf_mesh_i]->get_blend_weights().size()) {
 				weight = state->meshes.write[gltf_mesh_i]->get_blend_weights()[j];
 			}
@@ -2432,6 +2449,12 @@ Error GLTFDocument::_parse_meshes(Ref<GLTFState> state) {
 		const Dictionary &extras = d.has("extras") ? (Dictionary)d["extras"] : Dictionary();
 		Ref<EditorSceneImporterMesh> import_mesh;
 		import_mesh.instance();
+		String mesh_name = "mesh";
+		if (d.has("name") && !String(d["name"]).is_empty()) {
+			mesh_name = d["name"];
+		}
+		import_mesh->set_name(_gen_unique_name(state, vformat("%s_%s", state->scene_name, mesh_name)));
+
 		for (int j = 0; j < primitives.size(); j++) {
 			Dictionary p = primitives[j];
 
@@ -2798,7 +2821,7 @@ Error GLTFDocument::_serialize_images(Ref<GLTFState> state, const String &p_path
 
 		ERR_CONTINUE(state->images[i].is_null());
 
-		Ref<Image> image = state->images[i]->get_data();
+		Ref<Image> image = state->images[i]->get_image();
 		ERR_CONTINUE(image.is_null());
 
 		if (p_path.to_lower().ends_with("glb")) {
@@ -2815,7 +2838,7 @@ Error GLTFDocument::_serialize_images(Ref<GLTFState> state, const String &p_path
 			Vector<uint8_t> buffer;
 			Ref<ImageTexture> img_tex = image;
 			if (img_tex.is_valid()) {
-				image = img_tex->get_data();
+				image = img_tex->get_image();
 			}
 			Error err = PNGDriverCommon::image_to_png(image, buffer);
 			ERR_FAIL_COND_V_MSG(err, err, "Can't convert image to PNG.");
@@ -3045,7 +3068,7 @@ GLTFTextureIndex GLTFDocument::_set_texture(Ref<GLTFState> state, Ref<Texture2D>
 	ERR_FAIL_COND_V(p_texture.is_null(), -1);
 	Ref<GLTFTexture> gltf_texture;
 	gltf_texture.instance();
-	ERR_FAIL_COND_V(p_texture->get_data().is_null(), -1);
+	ERR_FAIL_COND_V(p_texture->get_image().is_null(), -1);
 	GLTFImageIndex gltf_src_image_i = state->images.size();
 	state->images.push_back(p_texture);
 	gltf_texture->set_src_image(gltf_src_image_i);
@@ -3092,7 +3115,7 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 				Ref<Texture2D> albedo_texture = material->get_texture(BaseMaterial3D::TEXTURE_ALBEDO);
 				GLTFTextureIndex gltf_texture_index = -1;
 
-				if (albedo_texture.is_valid() && albedo_texture->get_data().is_valid()) {
+				if (albedo_texture.is_valid() && albedo_texture->get_image().is_valid()) {
 					albedo_texture->set_name(material->get_name() + "_albedo");
 					gltf_texture_index = _set_texture(state, albedo_texture);
 				}
@@ -3105,9 +3128,9 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 
 			mr["metallicFactor"] = material->get_metallic();
 			mr["roughnessFactor"] = material->get_roughness();
-			bool has_roughness = material->get_texture(BaseMaterial3D::TEXTURE_ROUGHNESS).is_valid() && material->get_texture(BaseMaterial3D::TEXTURE_ROUGHNESS)->get_data().is_valid();
+			bool has_roughness = material->get_texture(BaseMaterial3D::TEXTURE_ROUGHNESS).is_valid() && material->get_texture(BaseMaterial3D::TEXTURE_ROUGHNESS)->get_image().is_valid();
 			bool has_ao = material->get_feature(BaseMaterial3D::FEATURE_AMBIENT_OCCLUSION) && material->get_texture(BaseMaterial3D::TEXTURE_AMBIENT_OCCLUSION).is_valid();
-			bool has_metalness = material->get_texture(BaseMaterial3D::TEXTURE_METALLIC).is_valid() && material->get_texture(BaseMaterial3D::TEXTURE_METALLIC)->get_data().is_valid();
+			bool has_metalness = material->get_texture(BaseMaterial3D::TEXTURE_METALLIC).is_valid() && material->get_texture(BaseMaterial3D::TEXTURE_METALLIC)->get_image().is_valid();
 			if (has_ao || has_roughness || has_metalness) {
 				Dictionary mrt;
 				Ref<Texture2D> roughness_texture = material->get_texture(BaseMaterial3D::TEXTURE_ROUGHNESS);
@@ -3126,10 +3149,10 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 				if (has_ao) {
 					height = ao_texture->get_height();
 					width = ao_texture->get_width();
-					ao_image = ao_texture->get_data();
+					ao_image = ao_texture->get_image();
 					Ref<ImageTexture> img_tex = ao_image;
 					if (img_tex.is_valid()) {
-						ao_image = img_tex->get_data();
+						ao_image = img_tex->get_image();
 					}
 					if (ao_image->is_compressed()) {
 						ao_image->decompress();
@@ -3139,10 +3162,10 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 				if (has_roughness) {
 					height = roughness_texture->get_height();
 					width = roughness_texture->get_width();
-					roughness_image = roughness_texture->get_data();
+					roughness_image = roughness_texture->get_image();
 					Ref<ImageTexture> img_tex = roughness_image;
 					if (img_tex.is_valid()) {
-						roughness_image = img_tex->get_data();
+						roughness_image = img_tex->get_image();
 					}
 					if (roughness_image->is_compressed()) {
 						roughness_image->decompress();
@@ -3152,17 +3175,17 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 				if (has_metalness) {
 					height = metallic_texture->get_height();
 					width = metallic_texture->get_width();
-					metallness_image = metallic_texture->get_data();
+					metallness_image = metallic_texture->get_image();
 					Ref<ImageTexture> img_tex = metallness_image;
 					if (img_tex.is_valid()) {
-						metallness_image = img_tex->get_data();
+						metallness_image = img_tex->get_image();
 					}
 					if (metallness_image->is_compressed()) {
 						metallness_image->decompress();
 					}
 				}
 				Ref<Texture2D> albedo_texture = material->get_texture(BaseMaterial3D::TEXTURE_ALBEDO);
-				if (albedo_texture.is_valid() && albedo_texture->get_data().is_valid()) {
+				if (albedo_texture.is_valid() && albedo_texture->get_image().is_valid()) {
 					height = albedo_texture->get_height();
 					width = albedo_texture->get_width();
 				}
@@ -3243,10 +3266,10 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 			{
 				Ref<Texture2D> normal_texture = material->get_texture(BaseMaterial3D::TEXTURE_NORMAL);
 				// Code for uncompressing RG normal maps
-				Ref<Image> img = normal_texture->get_data();
+				Ref<Image> img = normal_texture->get_image();
 				Ref<ImageTexture> img_tex = img;
 				if (img_tex.is_valid()) {
-					img = img_tex->get_data();
+					img = img_tex->get_image();
 				}
 				img->decompress();
 				img->convert(Image::FORMAT_RGBA8);
@@ -3265,7 +3288,7 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 			}
 			Ref<Texture2D> normal_texture = material->get_texture(BaseMaterial3D::TEXTURE_NORMAL);
 			GLTFTextureIndex gltf_texture_index = -1;
-			if (tex.is_valid() && tex->get_data().is_valid()) {
+			if (tex.is_valid() && tex->get_image().is_valid()) {
 				tex->set_name(material->get_name() + "_normal");
 				gltf_texture_index = _set_texture(state, tex);
 			}
@@ -3288,7 +3311,7 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> state) {
 			Dictionary et;
 			Ref<Texture2D> emission_texture = material->get_texture(BaseMaterial3D::TEXTURE_EMISSION);
 			GLTFTextureIndex gltf_texture_index = -1;
-			if (emission_texture.is_valid() && emission_texture->get_data().is_valid()) {
+			if (emission_texture.is_valid() && emission_texture->get_image().is_valid()) {
 				emission_texture->set_name(material->get_name() + "_emission");
 				gltf_texture_index = _set_texture(state, emission_texture);
 			}
@@ -3326,8 +3349,10 @@ Error GLTFDocument::_parse_materials(Ref<GLTFState> state) {
 
 		Ref<StandardMaterial3D> material;
 		material.instance();
-		if (d.has("name")) {
+		if (d.has("name") && !String(d["name"]).is_empty()) {
 			material->set_name(d["name"]);
+		} else {
+			material->set_name(vformat("material_%s", itos(i)));
 		}
 		material->set_flag(BaseMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
 		Dictionary pbr_spec_gloss_extensions;
@@ -3345,7 +3370,7 @@ Error GLTFDocument::_parse_materials(Ref<GLTFState> state) {
 				if (diffuse_texture_dict.has("index")) {
 					Ref<Texture2D> diffuse_texture = _get_texture(state, diffuse_texture_dict["index"]);
 					if (diffuse_texture.is_valid()) {
-						spec_gloss->diffuse_img = diffuse_texture->get_data();
+						spec_gloss->diffuse_img = diffuse_texture->get_image();
 						material->set_texture(BaseMaterial3D::TEXTURE_ALBEDO, diffuse_texture);
 					}
 				}
@@ -3373,7 +3398,7 @@ Error GLTFDocument::_parse_materials(Ref<GLTFState> state) {
 				if (spec_gloss_texture.has("index")) {
 					const Ref<Texture2D> orig_texture = _get_texture(state, spec_gloss_texture["index"]);
 					if (orig_texture.is_valid()) {
-						spec_gloss->spec_gloss_img = orig_texture->get_data();
+						spec_gloss->spec_gloss_img = orig_texture->get_image();
 					}
 				}
 			}
@@ -3864,8 +3889,10 @@ Error GLTFDocument::_parse_skins(Ref<GLTFState> state) {
 			state->nodes.write[node]->joint = true;
 		}
 
-		if (d.has("name")) {
+		if (d.has("name") && !String(d["name"]).is_empty()) {
 			skin->set_name(d["name"]);
+		} else {
+			skin->set_name(vformat("skin_%s", itos(i)));
 		}
 
 		if (d.has("skeleton")) {
@@ -4725,7 +4752,7 @@ Error GLTFDocument::_parse_animations(Ref<GLTFState> state) {
 			if (name.begins_with("loop") || name.ends_with("loop") || name.begins_with("cycle") || name.ends_with("cycle")) {
 				animation->set_loop(true);
 			}
-			animation->set_name(_sanitize_scene_name(name));
+			animation->set_name(_gen_unique_animation_name(state, name));
 		}
 
 		for (int j = 0; j < channels.size(); j++) {
@@ -5101,7 +5128,6 @@ Node3D *GLTFDocument::_generate_spatial(Ref<GLTFState> state, Node *scene_parent
 }
 void GLTFDocument::_convert_scene_node(Ref<GLTFState> state, Node *p_current, Node *p_root, const GLTFNodeIndex p_gltf_parent, const GLTFNodeIndex p_gltf_root) {
 	bool retflag = true;
-	Node3D *spatial = cast_to<Node3D>(p_current);
 	_check_visibility(p_current, retflag);
 	if (retflag) {
 		return;
@@ -5110,9 +5136,11 @@ void GLTFDocument::_convert_scene_node(Ref<GLTFState> state, Node *p_current, No
 	gltf_node.instance();
 	gltf_node->set_name(_gen_unique_name(state, p_current->get_name()));
 	if (cast_to<Node3D>(p_current)) {
+		Node3D *spatial = cast_to<Node3D>(p_current);
 		_convert_spatial(state, spatial, gltf_node);
 	}
 	if (cast_to<MeshInstance3D>(p_current)) {
+		Node3D *spatial = cast_to<Node3D>(p_current);
 		_convert_mesh_to_gltf(p_current, state, spatial, gltf_node);
 	} else if (cast_to<BoneAttachment3D>(p_current)) {
 		_convert_bone_attachment_to_gltf(p_current, state, gltf_node, retflag);
@@ -5124,18 +5152,22 @@ void GLTFDocument::_convert_scene_node(Ref<GLTFState> state, Node *p_current, No
 		return;
 	} else if (cast_to<MultiMeshInstance3D>(p_current)) {
 		_convert_mult_mesh_instance_to_gltf(p_current, p_gltf_parent, p_gltf_root, gltf_node, state, p_root);
+#ifdef MODULE_CSG_ENABLED
 	} else if (cast_to<CSGShape3D>(p_current)) {
 		if (p_current->get_parent() && cast_to<CSGShape3D>(p_current)->is_root_shape()) {
 			_convert_csg_shape_to_gltf(p_current, p_gltf_parent, gltf_node, state);
 		}
+#endif // MODULE_CSG_ENABLED
+#ifdef MODULE_GRIDMAP_ENABLED
 	} else if (cast_to<GridMap>(p_current)) {
 		_convert_grid_map_to_gltf(p_current, p_gltf_parent, p_gltf_root, gltf_node, state, p_root);
+#endif // MODULE_GRIDMAP_ENABLED
 	} else if (cast_to<Camera3D>(p_current)) {
 		Camera3D *camera = Object::cast_to<Camera3D>(p_current);
-		_convert_camera_to_gltf(camera, state, spatial, gltf_node);
+		_convert_camera_to_gltf(camera, state, camera, gltf_node);
 	} else if (cast_to<Light3D>(p_current)) {
 		Light3D *light = Object::cast_to<Light3D>(p_current);
-		_convert_light_to_gltf(light, state, spatial, gltf_node);
+		_convert_light_to_gltf(light, state, light, gltf_node);
 	} else if (cast_to<AnimationPlayer>(p_current)) {
 		AnimationPlayer *animation_player = Object::cast_to<AnimationPlayer>(p_current);
 		_convert_animation_player_to_gltf(animation_player, state, p_gltf_parent, p_gltf_root, gltf_node, p_current, p_root);
@@ -5154,6 +5186,7 @@ void GLTFDocument::_convert_scene_node(Ref<GLTFState> state, Node *p_current, No
 	}
 }
 
+#ifdef MODULE_CSG_ENABLED
 void GLTFDocument::_convert_csg_shape_to_gltf(Node *p_current, GLTFNodeIndex p_gltf_parent, Ref<GLTFNode> gltf_node, Ref<GLTFState> state) {
 	CSGShape3D *csg = Object::cast_to<CSGShape3D>(p_current);
 	csg->call("_update_shape");
@@ -5180,6 +5213,7 @@ void GLTFDocument::_convert_csg_shape_to_gltf(Node *p_current, GLTFNodeIndex p_g
 	gltf_node->xform = csg->get_meshes()[0];
 	gltf_node->set_name(_gen_unique_name(state, csg->get_name()));
 }
+#endif // MODULE_CSG_ENABLED
 
 void GLTFDocument::_create_gltf_node(Ref<GLTFState> state, Node *p_scene_parent, GLTFNodeIndex current_node_i,
 		GLTFNodeIndex p_parent_node_index, GLTFNodeIndex p_root_gltf_node, Ref<GLTFNode> gltf_node) {
@@ -5229,6 +5263,7 @@ void GLTFDocument::_convert_light_to_gltf(Light3D *light, Ref<GLTFState> state, 
 	}
 }
 
+#ifdef MODULE_GRIDMAP_ENABLED
 void GLTFDocument::_convert_grid_map_to_gltf(Node *p_scene_parent, const GLTFNodeIndex &p_parent_node_index, const GLTFNodeIndex &p_root_node_index, Ref<GLTFNode> gltf_node, Ref<GLTFState> state, Node *p_root_node) {
 	GridMap *grid_map = Object::cast_to<GridMap>(p_scene_parent);
 	ERR_FAIL_COND(!grid_map);
@@ -5260,6 +5295,7 @@ void GLTFDocument::_convert_grid_map_to_gltf(Node *p_scene_parent, const GLTFNod
 		new_gltf_node->set_name(_gen_unique_name(state, grid_map->get_mesh_library()->get_item_name(cell)));
 	}
 }
+#endif // MODULE_GRIDMAP_ENABLED
 
 void GLTFDocument::_convert_mult_mesh_instance_to_gltf(Node *p_scene_parent, const GLTFNodeIndex &p_parent_node_index, const GLTFNodeIndex &p_root_node_index, Ref<GLTFNode> gltf_node, Ref<GLTFState> state, Node *p_root_node) {
 	MultiMeshInstance3D *multi_mesh_instance = Object::cast_to<MultiMeshInstance3D>(p_scene_parent);
@@ -5275,8 +5311,7 @@ void GLTFDocument::_convert_mult_mesh_instance_to_gltf(Node *p_scene_parent, con
 				transform.origin =
 						Vector3(xform_2d.get_origin().x, 0, xform_2d.get_origin().y);
 				real_t rotation = xform_2d.get_rotation();
-				Quat quat;
-				quat.set_axis_angle(Vector3(0, 1, 0), rotation);
+				Quat quat(Vector3(0, 1, 0), rotation);
 				Size2 scale = xform_2d.get_scale();
 				transform.basis.set_quat_scale(quat,
 						Vector3(scale.x, 0, scale.y));
@@ -5557,7 +5592,7 @@ void GLTFDocument::_import_animation(Ref<GLTFState> state, AnimationPlayer *ap, 
 		animation->set_loop(true);
 	}
 
-	float length = 0;
+	float length = 0.0;
 
 	for (Map<int, GLTFAnimation::Track>::Element *track_i = anim->get_tracks().front(); track_i; track_i = track_i->next()) {
 		const GLTFAnimation::Track &track = track_i->get();
@@ -5608,8 +5643,8 @@ void GLTFDocument::_import_animation(Ref<GLTFState> state, AnimationPlayer *ap, 
 			animation->track_set_path(track_idx, node_path);
 			//first determine animation length
 
-			const float increment = 1.0 / float(bake_fps);
-			float time = 0.0;
+			const double increment = 1.0 / bake_fps;
+			double time = 0.0;
 
 			Vector3 base_pos;
 			Quat base_rot;
@@ -5699,8 +5734,8 @@ void GLTFDocument::_import_animation(Ref<GLTFState> state, AnimationPlayer *ap, 
 				}
 			} else {
 				// CATMULLROMSPLINE or CUBIC_SPLINE have to be baked, apologies.
-				const float increment = 1.0 / float(bake_fps);
-				float time = 0.0;
+				const double increment = 1.0 / bake_fps;
+				double time = 0.0;
 				bool last = false;
 				while (true) {
 					_interpolate_track<float>(track.weight_tracks[i].times, track.weight_tracks[i].values, time, gltf_interp);
@@ -6028,14 +6063,12 @@ GLTFAnimation::Track GLTFDocument::_convert_animation_track(Ref<GLTFState> state
 			p_track.rotation_track.interpolation = gltf_interpolation;
 
 			for (int32_t key_i = 0; key_i < key_count; key_i++) {
-				Quat rotation;
 				Vector3 rotation_degrees = p_animation->track_get_key_value(p_track_i, key_i);
 				Vector3 rotation_radian;
 				rotation_radian.x = Math::deg2rad(rotation_degrees.x);
 				rotation_radian.y = Math::deg2rad(rotation_degrees.y);
 				rotation_radian.z = Math::deg2rad(rotation_degrees.z);
-				rotation.set_euler(rotation_radian);
-				p_track.rotation_track.values.write[key_i] = rotation;
+				p_track.rotation_track.values.write[key_i] = Quat(rotation_radian);
 			}
 		} else if (path.find(":scale") != -1) {
 			p_track.scale_track.times = times;
@@ -6287,18 +6320,22 @@ void GLTFDocument::_convert_animation(Ref<GLTFState> state, AnimationPlayer *ap,
 				}
 			}
 		} else if (String(orig_track_path).find(":") == -1) {
-			const Node *node = ap->get_parent()->get_node_or_null(orig_track_path);
-			for (Map<GLTFNodeIndex, Node *>::Element *scene_node_i = state->scene_nodes.front(); scene_node_i; scene_node_i = scene_node_i->next()) {
-				if (scene_node_i->get() == node) {
-					GLTFNodeIndex node_index = scene_node_i->key();
-					Map<int, GLTFAnimation::Track>::Element *node_track_i = gltf_animation->get_tracks().find(node_index);
-					GLTFAnimation::Track track;
-					if (node_track_i) {
-						track = node_track_i->get();
+			ERR_CONTINUE(!ap->get_parent());
+			for (int32_t node_i = 0; node_i < ap->get_parent()->get_child_count(); node_i++) {
+				const Node *child = ap->get_parent()->get_child(node_i);
+				const Node *node = child->get_node_or_null(orig_track_path);
+				for (Map<GLTFNodeIndex, Node *>::Element *scene_node_i = state->scene_nodes.front(); scene_node_i; scene_node_i = scene_node_i->next()) {
+					if (scene_node_i->get() == node) {
+						GLTFNodeIndex node_index = scene_node_i->key();
+						Map<int, GLTFAnimation::Track>::Element *node_track_i = gltf_animation->get_tracks().find(node_index);
+						GLTFAnimation::Track track;
+						if (node_track_i) {
+							track = node_track_i->get();
+						}
+						track = _convert_animation_track(state, track, animation, Transform(), track_i, node_index);
+						gltf_animation->get_tracks().insert(node_index, track);
+						break;
 					}
-					track = _convert_animation_track(state, track, animation, Transform(), track_i, node_index);
-					gltf_animation->get_tracks().insert(node_index, track);
-					break;
 				}
 			}
 		}
@@ -6328,6 +6365,9 @@ Error GLTFDocument::parse(Ref<GLTFState> state, String p_path, bool p_read_binar
 			return FAILED;
 	}
 	f->close();
+
+	// get file's name, use for scene name if none
+	state->filename = p_path.get_file().get_slice(".", 0);
 
 	ERR_FAIL_COND_V(!state->json.has("asset"), Error::FAILED);
 

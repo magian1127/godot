@@ -30,6 +30,8 @@
 
 #include "dynamic_font_adv.h"
 
+#ifdef MODULE_FREETYPE_ENABLED
+
 #include FT_STROKER_H
 #include FT_ADVANCES_H
 #include FT_MULTIPLE_MASTERS_H
@@ -124,10 +126,10 @@ DynamicFontDataAdvanced::DataAtSize *DynamicFontDataAdvanced::get_data_for_size(
 		fds->size = p_size;
 		fds->ascent = (fds->face->size->metrics.ascender / 64.0) / oversampling * fds->scale_color_font;
 		fds->descent = (-fds->face->size->metrics.descender / 64.0) / oversampling * fds->scale_color_font;
-		fds->underline_position = -fds->face->underline_position / 64.0 / oversampling * fds->scale_color_font;
-		fds->underline_thickness = fds->face->underline_thickness / 64.0 / oversampling * fds->scale_color_font;
+		fds->underline_position = (-FT_MulFix(fds->face->underline_position, fds->face->size->metrics.y_scale) / 64.0) / oversampling * fds->scale_color_font;
+		fds->underline_thickness = (FT_MulFix(fds->face->underline_thickness, fds->face->size->metrics.y_scale) / 64.0) / oversampling * fds->scale_color_font;
 
-		//Load os2 TTF pable
+		//Load os2 TTF table
 		fds->os2 = (TT_OS2 *)FT_Get_Sfnt_Table(fds->face, FT_SFNT_OS2);
 
 		fds->hb_handle = hb_ft_font_create(fds->face, nullptr);
@@ -946,7 +948,7 @@ Vector2 DynamicFontDataAdvanced::draw_glyph(RID p_canvas, int p_size, const Vect
 		ERR_FAIL_COND_V(ch.texture_idx < -1 || ch.texture_idx >= fds->textures.size(), Vector2());
 
 		if (ch.texture_idx != -1) {
-			Point2 cpos = p_pos;
+			Point2i cpos = p_pos;
 			cpos += ch.align;
 			Color modulate = p_color;
 			if (FT_HAS_COLOR(fds->face)) {
@@ -977,7 +979,7 @@ Vector2 DynamicFontDataAdvanced::draw_glyph_outline(RID p_canvas, int p_size, in
 		ERR_FAIL_COND_V(ch.texture_idx < -1 || ch.texture_idx >= fds->textures.size(), Vector2());
 
 		if (ch.texture_idx != -1) {
-			Point2 cpos = p_pos;
+			Point2i cpos = p_pos;
 			cpos += ch.align;
 			Color modulate = p_color;
 			if (FT_HAS_COLOR(fds->face)) {
@@ -1001,3 +1003,5 @@ DynamicFontDataAdvanced::~DynamicFontDataAdvanced() {
 		FT_Done_FreeType(library);
 	}
 }
+
+#endif // MODULE_FREETYPE_ENABLED

@@ -32,6 +32,12 @@
 
 #include "core/string/translation.h"
 
+struct _MinSizeCache {
+	int min_size;
+	bool will_stretch;
+	int final_size;
+};
+
 bool GraphNode::_set(const StringName &p_name, const Variant &p_value) {
 	String str = p_name;
 	if (str.begins_with("opentype_features/")) {
@@ -51,7 +57,7 @@ bool GraphNode::_set(const StringName &p_name, const Variant &p_value) {
 				update();
 			}
 		}
-		_change_notify();
+		notify_property_list_changed();
 		return true;
 	}
 
@@ -71,6 +77,8 @@ bool GraphNode::_set(const StringName &p_name, const Variant &p_value) {
 		si.enable_left = p_value;
 	} else if (what == "left_type") {
 		si.type_left = p_value;
+	} else if (what == "left_icon") {
+		si.custom_slot_left = p_value;
 	} else if (what == "left_color") {
 		si.color_left = p_value;
 	} else if (what == "right_enabled") {
@@ -79,11 +87,13 @@ bool GraphNode::_set(const StringName &p_name, const Variant &p_value) {
 		si.type_right = p_value;
 	} else if (what == "right_color") {
 		si.color_right = p_value;
+	} else if (what == "right_icon") {
+		si.custom_slot_right = p_value;
 	} else {
 		return false;
 	}
 
-	set_slot(idx, si.enable_left, si.type_left, si.color_left, si.enable_right, si.type_right, si.color_right);
+	set_slot(idx, si.enable_left, si.type_left, si.color_left, si.enable_right, si.type_right, si.color_right, si.custom_slot_left, si.custom_slot_right);
 	update();
 	return true;
 }
@@ -120,12 +130,16 @@ bool GraphNode::_get(const StringName &p_name, Variant &r_ret) const {
 		r_ret = si.type_left;
 	} else if (what == "left_color") {
 		r_ret = si.color_left;
+	} else if (what == "left_icon") {
+		r_ret = si.custom_slot_left;
 	} else if (what == "right_enabled") {
 		r_ret = si.enable_right;
 	} else if (what == "right_type") {
 		r_ret = si.type_right;
 	} else if (what == "right_color") {
 		r_ret = si.color_right;
+	} else if (what == "right_icon") {
+		r_ret = si.custom_slot_right;
 	} else {
 		return false;
 	}
@@ -152,24 +166,34 @@ void GraphNode::_get_property_list(List<PropertyInfo> *p_list) const {
 		p_list->push_back(PropertyInfo(Variant::BOOL, base + "left_enabled"));
 		p_list->push_back(PropertyInfo(Variant::INT, base + "left_type"));
 		p_list->push_back(PropertyInfo(Variant::COLOR, base + "left_color"));
+		p_list->push_back(PropertyInfo(Variant::OBJECT, base + "left_icon", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_STORE_IF_NULL));
 		p_list->push_back(PropertyInfo(Variant::BOOL, base + "right_enabled"));
 		p_list->push_back(PropertyInfo(Variant::INT, base + "right_type"));
 		p_list->push_back(PropertyInfo(Variant::COLOR, base + "right_color"));
+		p_list->push_back(PropertyInfo(Variant::OBJECT, base + "right_icon", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_STORE_IF_NULL));
 
 		idx++;
 	}
 }
 
 void GraphNode::_resort() {
-	int sep = get_theme_constant("separation");
-	Ref<StyleBox> sb = get_theme_stylebox("frame");
-	bool first = true;
+	/** First pass, determine minimum size AND amount of stretchable elements */
 
-	Size2 minsize;
+	Size2i new_size = get_size();
+	Ref<StyleBox> sb = get_theme_stylebox("frame");
+
+	int sep = get_theme_constant("separation");
+
+	bool first = true;
+	int children_count = 0;
+	int stretch_min = 0;
+	int stretch_avail = 0;
+	float stretch_ratio_total = 0;
+	Map<Control *, _MinSizeCache> min_size_cache;
 
 	for (int i = 0; i < get_child_count(); i++) {
 		Control *c = Object::cast_to<Control>(get_child(i));
-		if (!c) {
+		if (!c || !c->is_visible_in_tree()) {
 			continue;
 		}
 		if (c->is_set_as_top_level()) {
@@ -177,38 +201,120 @@ void GraphNode::_resort() {
 		}
 
 		Size2i size = c->get_combined_minimum_size();
+		_MinSizeCache msc;
 
-		minsize.y += size.y;
-		minsize.x = MAX(minsize.x, size.x);
+		stretch_min += size.height;
+		msc.min_size = size.height;
+		msc.will_stretch = c->get_v_size_flags() & SIZE_EXPAND;
+
+		if (msc.will_stretch) {
+			stretch_avail += msc.min_size;
+			stretch_ratio_total += c->get_stretch_ratio();
+		}
+		msc.final_size = msc.min_size;
+		min_size_cache[c] = msc;
+		children_count++;
+	}
+
+	if (children_count == 0) {
+		return;
+	}
+
+	int stretch_max = new_size.height - (children_count - 1) * sep;
+	int stretch_diff = stretch_max - stretch_min;
+	if (stretch_diff < 0) {
+		//avoid negative stretch space
+		stretch_diff = 0;
+	}
+
+	stretch_avail += stretch_diff - sb->get_margin(SIDE_BOTTOM) - sb->get_margin(SIDE_TOP); //available stretch space.
+	/** Second, pass sucessively to discard elements that can't be stretched, this will run while stretchable
+		elements exist */
+
+	while (stretch_ratio_total > 0) { // first of all, don't even be here if no stretchable objects exist
+		bool refit_successful = true; //assume refit-test will go well
+
+		for (int i = 0; i < get_child_count(); i++) {
+			Control *c = Object::cast_to<Control>(get_child(i));
+			if (!c || !c->is_visible_in_tree()) {
+				continue;
+			}
+			if (c->is_set_as_top_level()) {
+				continue;
+			}
+
+			ERR_FAIL_COND(!min_size_cache.has(c));
+			_MinSizeCache &msc = min_size_cache[c];
+
+			if (msc.will_stretch) { //wants to stretch
+				//let's see if it can really stretch
+
+				int final_pixel_size = stretch_avail * c->get_stretch_ratio() / stretch_ratio_total;
+				if (final_pixel_size < msc.min_size) {
+					//if available stretching area is too small for widget,
+					//then remove it from stretching area
+					msc.will_stretch = false;
+					stretch_ratio_total -= c->get_stretch_ratio();
+					refit_successful = false;
+					stretch_avail -= msc.min_size;
+					msc.final_size = msc.min_size;
+					break;
+				} else {
+					msc.final_size = final_pixel_size;
+				}
+			}
+		}
+
+		if (refit_successful) { //uf refit went well, break
+			break;
+		}
+	}
+
+	/** Final pass, draw and stretch elements **/
+
+	int ofs = sb->get_margin(SIDE_TOP);
+
+	first = true;
+	int idx = 0;
+	cache_y.clear();
+	int w = new_size.width - sb->get_minimum_size().x;
+
+	for (int i = 0; i < get_child_count(); i++) {
+		Control *c = Object::cast_to<Control>(get_child(i));
+		if (!c || !c->is_visible_in_tree()) {
+			continue;
+		}
+		if (c->is_set_as_top_level()) {
+			continue;
+		}
+
+		_MinSizeCache &msc = min_size_cache[c];
 
 		if (first) {
 			first = false;
 		} else {
-			minsize.y += sep;
-		}
-	}
-
-	int vofs = 0;
-	int w = get_size().x - sb->get_minimum_size().x;
-
-	cache_y.clear();
-	for (int i = 0; i < get_child_count(); i++) {
-		Control *c = Object::cast_to<Control>(get_child(i));
-		if (!c) {
-			continue;
-		}
-		if (c->is_set_as_top_level()) {
-			continue;
+			ofs += sep;
 		}
 
-		Size2i size = c->get_combined_minimum_size();
+		int from = ofs;
+		int to = ofs + msc.final_size;
 
-		Rect2 r(sb->get_margin(SIDE_LEFT), sb->get_margin(SIDE_TOP) + vofs, w, size.y);
+		if (msc.will_stretch && idx == children_count - 1) {
+			//adjust so the last one always fits perfect
+			//compensating for numerical imprecision
 
-		fit_child_in_rect(c, r);
-		cache_y.push_back(vofs + size.y * 0.5);
+			to = new_size.height - sb->get_margin(SIDE_BOTTOM);
+		}
 
-		vofs += size.y + sep;
+		int size = to - from;
+
+		Rect2 rect(sb->get_margin(SIDE_LEFT), from, w, size);
+
+		fit_child_in_rect(c, rect);
+		cache_y.push_back(from - sb->get_margin(SIDE_TOP) + size * 0.5);
+
+		ofs = to;
+		idx++;
 	}
 
 	update();
@@ -355,7 +461,9 @@ void GraphNode::_shape() {
 void GraphNode::set_slot(int p_idx, bool p_enable_left, int p_type_left, const Color &p_color_left, bool p_enable_right, int p_type_right, const Color &p_color_right, const Ref<Texture2D> &p_custom_left, const Ref<Texture2D> &p_custom_right) {
 	ERR_FAIL_COND(p_idx < 0);
 
-	if (!p_enable_left && p_type_left == 0 && p_color_left == Color(1, 1, 1, 1) && !p_enable_right && p_type_right == 0 && p_color_right == Color(1, 1, 1, 1)) {
+	if (!p_enable_left && p_type_left == 0 && p_color_left == Color(1, 1, 1, 1) &&
+			!p_enable_right && p_type_right == 0 && p_color_right == Color(1, 1, 1, 1) &&
+			!p_custom_left.is_valid() && !p_custom_right.is_valid()) {
 		slot_info.erase(p_idx);
 		return;
 	}
@@ -372,6 +480,8 @@ void GraphNode::set_slot(int p_idx, bool p_enable_left, int p_type_left, const C
 	slot_info[p_idx] = s;
 	update();
 	connpos_dirty = true;
+
+	emit_signal("slot_updated", p_idx);
 }
 
 void GraphNode::clear_slot(int p_idx) {
@@ -472,7 +582,6 @@ void GraphNode::set_title(const String &p_title) {
 	_shape();
 
 	update();
-	_change_notify("title");
 	minimum_size_changed();
 }
 
@@ -699,7 +808,7 @@ void GraphNode::_gui_input(const Ref<InputEvent> &p_ev) {
 	if (mb.is_valid()) {
 		ERR_FAIL_COND_MSG(get_parent_control() == nullptr, "GraphNode must be the child of a GraphEdit node.");
 
-		if (mb->is_pressed() && mb->get_button_index() == BUTTON_LEFT) {
+		if (mb->is_pressed() && mb->get_button_index() == MOUSE_BUTTON_LEFT) {
 			Vector2 mpos = Vector2(mb->get_position().x, mb->get_position().y);
 			if (close_rect.size != Size2() && close_rect.has_point(mpos)) {
 				//send focus to parent
@@ -722,7 +831,7 @@ void GraphNode::_gui_input(const Ref<InputEvent> &p_ev) {
 			emit_signal("raise_request");
 		}
 
-		if (!mb->is_pressed() && mb->get_button_index() == BUTTON_LEFT) {
+		if (!mb->is_pressed() && mb->get_button_index() == MOUSE_BUTTON_LEFT) {
 			resizing = false;
 		}
 	}
@@ -826,6 +935,7 @@ void GraphNode::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "overlay", PROPERTY_HINT_ENUM, "Disabled,Breakpoint,Position"), "set_overlay", "get_overlay");
 
 	ADD_SIGNAL(MethodInfo("position_offset_changed"));
+	ADD_SIGNAL(MethodInfo("slot_updated", PropertyInfo(Variant::INT, "idx")));
 	ADD_SIGNAL(MethodInfo("dragged", PropertyInfo(Variant::VECTOR2, "from"), PropertyInfo(Variant::VECTOR2, "to")));
 	ADD_SIGNAL(MethodInfo("raise_request"));
 	ADD_SIGNAL(MethodInfo("close_request"));
@@ -838,12 +948,5 @@ void GraphNode::_bind_methods() {
 
 GraphNode::GraphNode() {
 	title_buf.instance();
-	overlay = OVERLAY_DISABLED;
-	show_close = false;
-	connpos_dirty = true;
 	set_mouse_filter(MOUSE_FILTER_STOP);
-	comment = false;
-	resizable = false;
-	resizing = false;
-	selected = false;
 }

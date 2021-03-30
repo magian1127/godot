@@ -474,20 +474,20 @@ private:
 					}
 					ProjectSettings::CustomMap initial_settings;
 					if (rasterizer_button_group->get_pressed_button()->get_meta("driver_name") == "Vulkan") {
-						initial_settings["rendering/quality/driver/driver_name"] = "Vulkan";
+						initial_settings["rendering/driver/driver_name"] = "Vulkan";
 					} else {
-						initial_settings["rendering/quality/driver/driver_name"] = "GLES2";
-						initial_settings["rendering/vram_compression/import_etc2"] = false;
-						initial_settings["rendering/vram_compression/import_etc"] = true;
+						initial_settings["rendering/driver/driver_name"] = "GLES2";
+						initial_settings["rendering/textures/vram_compression/import_etc2"] = false;
+						initial_settings["rendering/textures/vram_compression/import_etc"] = true;
 					}
 					initial_settings["application/config/name"] = project_name->get_text();
 					initial_settings["application/config/icon"] = "res://icon.png";
-					initial_settings["rendering/environment/default_environment"] = "res://default_env.tres";
+					initial_settings["rendering/environment/defaults/default_environment"] = "res://default_env.tres";
 
 					if (ProjectSettings::get_singleton()->save_custom(dir.plus_file("project.godot"), initial_settings, Vector<String>(), false) != OK) {
 						set_message(TTR("Couldn't create project.godot in project path."), MESSAGE_ERROR);
 					} else {
-						ResourceSaver::save(dir.plus_file("icon.png"), msg->get_theme_icon("DefaultProjectIcon", "EditorIcons"));
+						ResourceSaver::save(dir.plus_file("icon.png"), create_unscaled_default_project_icon());
 
 						FileAccess *f = FileAccess::open(dir.plus_file("default_env.tres"), FileAccess::WRITE);
 						if (!f) {
@@ -1375,11 +1375,10 @@ void ProjectList::create_project_item_control(int p_index) {
 	vb->add_child(path_hb);
 
 	Button *show = memnew(Button);
-	// Display a folder icon if the project directory can be opened, or a "broken file" icon if it can't
+	// Display a folder icon if the project directory can be opened, or a "broken file" icon if it can't.
 	show->set_icon(get_theme_icon(!item.missing ? "Load" : "FileBroken", "EditorIcons"));
-	show->set_flat(true);
 	if (!item.grayed) {
-		// Don't make the icon less prominent if the parent is already grayed out
+		// Don't make the icon less prominent if the parent is already grayed out.
 		show->set_modulate(Color(1, 1, 1, 0.5));
 	}
 	path_hb->add_child(show);
@@ -1742,7 +1741,7 @@ void ProjectList::_panel_input(const Ref<InputEvent> &p_ev, Node *p_hb) {
 	int clicked_index = p_hb->get_index();
 	const Item &clicked_project = _projects[clicked_index];
 
-	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == BUTTON_LEFT) {
+	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MOUSE_BUTTON_LEFT) {
 		if (mb->get_shift() && _selected_project_keys.size() > 0 && _last_clicked != "" && clicked_project.project_key != _last_clicked) {
 			int anchor_index = -1;
 			for (int i = 0; i < _projects.size(); ++i) {
@@ -2016,6 +2015,10 @@ void ProjectManager::_confirm_update_settings() {
 }
 
 void ProjectManager::_open_selected_projects() {
+	// Show loading text to tell the user that the project manager is busy loading.
+	// This is especially important for the HTML5 project manager.
+	loading_label->set_modulate(Color(1, 1, 1));
+
 	const Set<String> &selected_list = _project_list->get_selected_project_keys();
 
 	for (const Set<String>::Element *E = selected_list.front(); E; E = E->next()) {
@@ -2158,8 +2161,9 @@ void ProjectManager::_run_project() {
 }
 
 void ProjectManager::_scan_dir(const String &path, List<String> *r_projects) {
-	DirAccess *da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	da->change_dir(path);
+	DirAccessRef da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
+	Error error = da->change_dir(path);
+	ERR_FAIL_COND_MSG(error != OK, "Could not scan directory at: " + path);
 	da->list_dir_begin();
 	String n = da->get_next();
 	while (n != String()) {
@@ -2171,7 +2175,6 @@ void ProjectManager::_scan_dir(const String &path, List<String> *r_projects) {
 		n = da->get_next();
 	}
 	da->list_dir_end();
-	memdelete(da);
 }
 
 void ProjectManager::_scan_begin(const String &p_base) {
@@ -2269,11 +2272,6 @@ void ProjectManager::_restart_confirm() {
 	get_tree()->quit();
 }
 
-void ProjectManager::_exit_dialog() {
-	_dim_window();
-	get_tree()->quit();
-}
-
 void ProjectManager::_install_project(const String &p_zip_path, const String &p_title) {
 	npdialog->set_mode(ProjectDialog::MODE_INSTALL);
 	npdialog->set_zip_path(p_zip_path);
@@ -2282,6 +2280,11 @@ void ProjectManager::_install_project(const String &p_zip_path, const String &p_
 }
 
 void ProjectManager::_files_dropped(PackedStringArray p_files, int p_screen) {
+	if (p_files.size() == 1 && p_files[0].ends_with(".zip")) {
+		const String file = p_files[0].get_file();
+		_install_project(p_files[0], file.substr(0, file.length() - 4).capitalize());
+		return;
+	}
 	Set<String> folders_set;
 	DirAccess *da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	for (int i = 0; i < p_files.size(); i++) {
@@ -2347,7 +2350,6 @@ void ProjectManager::_on_search_term_changed(const String &p_term) {
 }
 
 void ProjectManager::_bind_methods() {
-	ClassDB::bind_method("_exit_dialog", &ProjectManager::_exit_dialog);
 	ClassDB::bind_method("_unhandled_key_input", &ProjectManager::_unhandled_key_input);
 	ClassDB::bind_method("_update_project_buttons", &ProjectManager::_update_project_buttons);
 }
@@ -2381,6 +2383,10 @@ ProjectManager::ProjectManager() {
 				if (DisplayServer::get_singleton()->screen_get_dpi(screen) >= 192 && DisplayServer::get_singleton()->screen_get_size(screen).y >= 1400) {
 					// hiDPI display.
 					scale = 2.0;
+				} else if (DisplayServer::get_singleton()->screen_get_size(screen).y >= 1700) {
+					// Likely a hiDPI display, but we aren't certain due to the returned DPI.
+					// Use an intermediate scale to handle this situation.
+					scale = 1.5;
 				} else if (DisplayServer::get_singleton()->screen_get_size(screen).y <= 800) {
 					// Small loDPI display. Use a smaller display scale so that editor elements fit more easily.
 					// Icons won't look great, but this is better than having editor elements overflow from its window.
@@ -2419,8 +2425,10 @@ ProjectManager::ProjectManager() {
 		// Define a minimum window size to prevent UI elements from overlapping or being cut off
 		DisplayServer::get_singleton()->window_set_min_size(Size2(750, 420) * EDSCALE);
 
-		// TODO: Resize windows on hiDPI displays on Windows and Linux and remove the line below
-		DisplayServer::get_singleton()->window_set_size(DisplayServer::get_singleton()->window_get_size() * MAX(1, EDSCALE));
+		// TODO: Resize windows on hiDPI displays on Windows and Linux and remove the lines below
+		float scale_factor = MAX(1, EDSCALE);
+		Vector2i window_size = DisplayServer::get_singleton()->window_get_size();
+		DisplayServer::get_singleton()->window_set_size(Vector2i(window_size.x * scale_factor, window_size.y * scale_factor));
 	}
 
 	// TRANSLATORS: This refers to the application where users manage their Godot projects.
@@ -2477,7 +2485,12 @@ ProjectManager::ProjectManager() {
 		search_box->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 		hb->add_child(search_box);
 
-		hb->add_spacer();
+		loading_label = memnew(Label(TTR("Loading, please wait...")));
+		loading_label->add_theme_font_override("font", get_theme_font("bold", "EditorFonts"));
+		loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+		hb->add_child(loading_label);
+		// Hide the label but make it still take up space. This prevents reflows when showing the label.
+		loading_label->set_modulate(Color(0, 0, 0, 0));
 
 		Label *sort_label = memnew(Label);
 		sort_label->set_text(TTR("Sort:"));
@@ -2684,8 +2697,26 @@ ProjectManager::ProjectManager() {
 
 	_load_recent_projects();
 
-	if (EditorSettings::get_singleton()->get("filesystem/directories/autoscan_project_path")) {
-		_scan_begin(EditorSettings::get_singleton()->get("filesystem/directories/autoscan_project_path"));
+	DirAccessRef dir_access = DirAccess::create(DirAccess::AccessType::ACCESS_FILESYSTEM);
+
+	String default_project_path = EditorSettings::get_singleton()->get("filesystem/directories/default_project_path");
+	if (!dir_access->dir_exists(default_project_path)) {
+		Error error = dir_access->make_dir_recursive(default_project_path);
+		if (error != OK) {
+			ERR_PRINT("Could not create default project directory at: " + default_project_path);
+		}
+	}
+
+	String autoscan_path = EditorSettings::get_singleton()->get("filesystem/directories/autoscan_project_path");
+	if (autoscan_path != "") {
+		if (dir_access->dir_exists(autoscan_path)) {
+			_scan_begin(autoscan_path);
+		} else {
+			Error error = dir_access->make_dir_recursive(autoscan_path);
+			if (error != OK) {
+				ERR_PRINT("Could not create project autoscan directory at: " + autoscan_path);
+			}
+		}
 	}
 
 	SceneTree::get_singleton()->get_root()->connect("files_dropped", callable_mp(this, &ProjectManager::_files_dropped));

@@ -18,12 +18,13 @@
 # yariv benj <yariv4400@gmail.com>, 2020.
 # Guy Dadon <guydadon14@gmail.com>, 2020.
 # bruvzg <bruvzg13@gmail.com>, 2020.
+# Omer I.S. <omeritzicschwartz@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Godot Engine editor\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2020-12-03 19:28+0000\n"
-"Last-Translator: Ziv D <wizdavid@gmail.com>\n"
+"PO-Revision-Date: 2021-02-21 10:51+0000\n"
+"Last-Translator: Omer I.S. <omeritzicschwartz@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/godot-engine/"
 "godot/he/>\n"
 "Language: he\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.5\n"
 
 #: core/math/expression.cpp modules/gdscript/gdscript_functions.cpp
 #: modules/visual_script/visual_script_builtin_funcs.cpp
@@ -379,9 +380,8 @@ msgid "Anim Insert"
 msgstr "הוסף הנפשה"
 
 #: editor/animation_track_editor.cpp
-#, fuzzy
 msgid "AnimationPlayer can't animate itself, only other players."
-msgstr "נגן הנפשות לא יכול להנפיש את עצמו, רק שחקנים אחרים."
+msgstr "נגן ההנפשות לא יכול להנפיש את עצמו, רק שחקנים אחרים."
 
 #: editor/animation_track_editor.cpp
 msgid "Anim Create & Insert"
@@ -662,7 +662,7 @@ msgstr "בחירת רצועות להעתקה"
 #: editor/plugins/animation_player_editor_plugin.cpp
 #: editor/plugins/script_text_editor.cpp
 #: editor/plugins/sprite_frames_editor_plugin.cpp editor/property_editor.cpp
-#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
+#: editor/scene_tree_dock.cpp scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Copy"
 msgstr "העתקה"
 
@@ -900,9 +900,8 @@ msgid "Connect a Signal to a Method"
 msgstr "שגיאת חיבור"
 
 #: editor/connections_dialog.cpp
-#, fuzzy
 msgid "Edit Connection:"
-msgstr "שגיאת חיבור"
+msgstr "עריכת חיבור:"
 
 #: editor/connections_dialog.cpp
 msgid "Are you sure you want to remove all connections from the \"%s\" signal?"
@@ -1102,7 +1101,7 @@ msgstr "דפדפן משאבים יתומים"
 #: editor/plugins/sprite_frames_editor_plugin.cpp editor/project_export.cpp
 #: editor/project_settings_editor.cpp editor/scene_tree_dock.cpp
 msgid "Delete"
-msgstr "למחוק"
+msgstr "מחיקה"
 
 #: editor/dependency_editor.cpp
 msgid "Owns"
@@ -1194,9 +1193,8 @@ msgid "License"
 msgstr "רישיון"
 
 #: editor/editor_about.cpp
-#, fuzzy
 msgid "Third-party Licenses"
-msgstr "רישיון צד שלישי"
+msgstr "רשיונות צד שלישי"
 
 #: editor/editor_about.cpp
 msgid ""
@@ -1657,9 +1655,8 @@ msgid "Script Editor"
 msgstr "פתיחת עורך סקריפטים"
 
 #: editor/editor_feature_profile.cpp
-#, fuzzy
 msgid "Asset Library"
-msgstr "ייצוא ספריה"
+msgstr "ספריית משאבים"
 
 #: editor/editor_feature_profile.cpp
 msgid "Scene Tree Editing"
@@ -1874,8 +1871,8 @@ msgid "Open a File or Directory"
 msgstr "פתיחת קובץ או תיקייה"
 
 #: editor/editor_file_dialog.cpp editor/editor_node.cpp
-#: editor/editor_properties.cpp editor/inspector_dock.cpp
-#: editor/plugins/animation_player_editor_plugin.cpp
+#: editor/editor_properties.cpp editor/import_defaults_editor.cpp
+#: editor/inspector_dock.cpp editor/plugins/animation_player_editor_plugin.cpp
 #: editor/plugins/script_editor_plugin.cpp scene/gui/file_dialog.cpp
 msgid "Save"
 msgstr "שמירה"
@@ -2532,7 +2529,8 @@ msgid "Unable to enable addon plugin at: '%s' parsing of config failed."
 msgstr "לא ניתן לפתוח את תוסף ההרחבות בנתיב: '%s' פענוח ההגדרות נכשל."
 
 #: editor/editor_node.cpp
-msgid "Unable to find script field for addon plugin at: 'res://addons/%s'."
+#, fuzzy
+msgid "Unable to find script field for addon plugin at: '%s'."
 msgstr "לא ניתן למצוא שדה סקריפט עבור תוסף הרחבה בנתיב 'res://addons/%s'."
 
 #: editor/editor_node.cpp
@@ -2952,14 +2950,6 @@ msgid "Help"
 msgstr "עזרה"
 
 #: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/script_text_editor.cpp
-#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
-#: editor/plugins/visual_shader_editor_plugin.cpp editor/project_manager.cpp
-#: editor/project_settings_editor.cpp editor/settings_config_dialog.cpp
-msgid "Search"
-msgstr "חיפוש"
-
-#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
 #: editor/plugins/shader_editor_plugin.cpp
 msgid "Online Docs"
 msgstr "מסמכים מקוונים"
@@ -3118,6 +3108,24 @@ msgstr "מיזוג עם נוכחיים"
 #: editor/editor_node.cpp
 msgid "Open & Run a Script"
 msgstr "פתיחה והרצה של סקריפט"
+
+#: editor/editor_node.cpp
+msgid ""
+"The following files are newer on disk.\n"
+"What action should be taken?"
+msgstr ""
+"הקבצים הבאים הם חדשים בכונן.\n"
+"באילו פעולות לנקוט?"
+
+#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Reload"
+msgstr "רענון"
+
+#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Resave"
+msgstr "שמירה מחדש"
 
 #: editor/editor_node.cpp
 msgid "New Inherited"
@@ -3328,7 +3336,7 @@ msgstr ""
 #: editor/plugins/script_text_editor.cpp
 #: editor/plugins/sprite_frames_editor_plugin.cpp
 #: editor/plugins/tile_map_editor_plugin.cpp editor/property_editor.cpp
-#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
+#: editor/scene_tree_dock.cpp scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Paste"
 msgstr "הדבקה"
 
@@ -3636,6 +3644,11 @@ msgstr "מועדפים:"
 #: editor/filesystem_dock.cpp
 msgid "Status: Import of file failed. Please fix file and reimport manually."
 msgstr "מצב: ייבוא הקובץ נכשל. נא לתקן את הקובץ ולייבא מחדש ידנית."
+
+#: editor/filesystem_dock.cpp
+msgid ""
+"Importing has been disabled for this file, so it can't be opened for editing."
+msgstr ""
 
 #: editor/filesystem_dock.cpp
 msgid "Cannot move/rename resources root."
@@ -4046,6 +4059,25 @@ msgstr ""
 #: editor/import/resource_importer_scene.cpp
 msgid "Saving..."
 msgstr "שמירה…"
+
+#: editor/import_defaults_editor.cpp
+#, fuzzy
+msgid "Select Importer"
+msgstr "נא לבחור מפרקים לייצוא"
+
+#: editor/import_defaults_editor.cpp
+#, fuzzy
+msgid "Importer:"
+msgstr "ייבוא"
+
+#: editor/import_defaults_editor.cpp
+#, fuzzy
+msgid "Reset to Defaults"
+msgstr "טעינת בררת המחדל"
+
+#: editor/import_dock.cpp
+msgid "Keep File (No Import)"
+msgstr ""
 
 #: editor/import_dock.cpp
 msgid "%d Files"
@@ -5030,7 +5062,8 @@ msgid "Got:"
 msgstr "התקבל:"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
-msgid "Failed sha256 hash check"
+#, fuzzy
+msgid "Failed SHA-256 hash check"
 msgstr "בדיקת האש sha256 נכשלה"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
@@ -5134,7 +5167,6 @@ msgid "Sort:"
 msgstr "מיון:"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
-#: editor/project_settings_editor.cpp
 msgid "Category:"
 msgstr "קטגוריה:"
 
@@ -5498,9 +5530,8 @@ msgstr ""
 #: editor/plugins/canvas_item_editor_plugin.cpp
 #: editor/plugins/texture_region_editor_plugin.cpp
 #: editor/plugins/tile_set_editor_plugin.cpp scene/gui/graph_edit.cpp
-#, fuzzy
 msgid "Zoom Reset"
-msgstr "להתרחק"
+msgstr "איפוס התקריב"
 
 #: editor/plugins/canvas_item_editor_plugin.cpp
 #: editor/plugins/spatial_editor_plugin.cpp
@@ -6987,6 +7018,14 @@ msgstr "סגירת מסמכים"
 msgid "Run"
 msgstr "הרצה"
 
+#: editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/script_text_editor.cpp
+#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
+#: editor/plugins/visual_shader_editor_plugin.cpp editor/project_manager.cpp
+#: editor/project_settings_editor.cpp editor/settings_config_dialog.cpp
+msgid "Search"
+msgstr "חיפוש"
+
 #: editor/plugins/script_editor_plugin.cpp editor/script_editor_debugger.cpp
 msgid "Step Into"
 msgstr "לצעוד לתוך"
@@ -7041,16 +7080,6 @@ msgid ""
 msgstr ""
 "הקבצים הבאים הם חדשים בכונן.\n"
 "באילו פעולות לנקוט?:"
-
-#: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Reload"
-msgstr "רענון"
-
-#: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Resave"
-msgstr "שמירה מחדש"
 
 #: editor/plugins/script_editor_plugin.cpp editor/script_editor_debugger.cpp
 msgid "Debugger"
@@ -7150,8 +7179,8 @@ msgstr "מחיקת נקודות"
 msgid "Go To"
 msgstr ""
 
-#: editor/plugins/script_text_editor.cpp scene/gui/line_edit.cpp
-#: scene/gui/text_edit.cpp
+#: editor/plugins/script_text_editor.cpp editor/scene_tree_dock.cpp
+#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Cut"
 msgstr "גזירה"
 
@@ -7278,13 +7307,12 @@ msgid "Go to Previous Breakpoint"
 msgstr "מעבר לנקודת העצירה הקודמת"
 
 #: editor/plugins/shader_editor_plugin.cpp
-#, fuzzy
 msgid ""
 "This shader has been modified on on disk.\n"
 "What action should be taken?"
 msgstr ""
 "הקבצים הבאים הם חדשים בכונן.\n"
-"באילו פעולות לנקוט?:"
+"באילו פעולות לנקוט?"
 
 #: editor/plugins/shader_editor_plugin.cpp
 msgid "Shader"
@@ -7389,6 +7417,10 @@ msgstr ""
 
 #: editor/plugins/spatial_editor_plugin.cpp
 msgid "Yaw"
+msgstr ""
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Size"
 msgstr ""
 
 #: editor/plugins/spatial_editor_plugin.cpp
@@ -10053,6 +10085,13 @@ msgid "Projects"
 msgstr "מיזם"
 
 #: editor/project_manager.cpp
+#, fuzzy
+msgid "Loading, please wait..."
+msgstr ""
+"הקבצים נסרקים,\n"
+"נא להמתין…"
+
+#: editor/project_manager.cpp
 msgid "Last Modified"
 msgstr ""
 
@@ -10423,6 +10462,11 @@ msgstr ""
 msgid "Plugins"
 msgstr ""
 
+#: editor/project_settings_editor.cpp
+#, fuzzy
+msgid "Import Defaults"
+msgstr "טעינת בררת המחדל"
+
 #: editor/property_editor.cpp
 msgid "Preset..."
 msgstr "ערכה מוגדרת…"
@@ -10682,6 +10726,16 @@ msgid "Instance Child Scene"
 msgstr "יצירת מופע לסצנה הצאצאית"
 
 #: editor/scene_tree_dock.cpp
+#, fuzzy
+msgid "Can't paste root node into the same scene."
+msgstr "לא יכול לפעול על מפרקים מסצנה זרה!"
+
+#: editor/scene_tree_dock.cpp
+#, fuzzy
+msgid "Paste Node(s)"
+msgstr "הדבקת מפרקים"
+
+#: editor/scene_tree_dock.cpp
 msgid "Detach Script"
 msgstr "ניתוק סקריפט"
 
@@ -10803,6 +10857,11 @@ msgstr "לא יכול לפעול על מפרקים שהסצנה הנוכחית �
 #: editor/scene_tree_dock.cpp
 msgid "Attach Script"
 msgstr "חיבור סקריפט"
+
+#: editor/scene_tree_dock.cpp
+#, fuzzy
+msgid "Cut Node(s)"
+msgstr "גזירת מפרקים"
 
 #: editor/scene_tree_dock.cpp
 msgid "Remove Node(s)"
@@ -12439,6 +12498,14 @@ msgstr ""
 msgid "An empty CollisionPolygon2D has no effect on collision."
 msgstr "ל־CollisionPolygon2D ריק אין השפעה על התנגשות."
 
+#: scene/2d/collision_polygon_2d.cpp
+msgid "Invalid polygon. At least 3 points are needed in 'Solids' build mode."
+msgstr ""
+
+#: scene/2d/collision_polygon_2d.cpp
+msgid "Invalid polygon. At least 2 points are needed in 'Segments' build mode."
+msgstr ""
+
 #: scene/2d/collision_shape_2d.cpp
 msgid ""
 "CollisionShape2D only serves to provide a collision shape to a "
@@ -12735,11 +12802,6 @@ msgid ""
 msgstr ""
 "מנהל הווידאו GLES2 אינו תומך ב- GIProbes.\n"
 "השתמש ב-BakedLightmap במקום."
-
-#: scene/3d/interpolated_camera.cpp
-msgid ""
-"InterpolatedCamera has been deprecated and will be removed in Godot 4.0."
-msgstr ""
 
 #: scene/3d/light.cpp
 msgid "A SpotLight with an angle wider than 90 degrees cannot cast shadows."
