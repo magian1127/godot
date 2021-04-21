@@ -1641,6 +1641,8 @@ void AnimationTimelineEdit::_play_position_draw() {
 }
 
 void AnimationTimelineEdit::_gui_input(const Ref<InputEvent> &p_event) {
+	ERR_FAIL_COND(p_event.is_null());
+
 	Ref<InputEventMouseButton> mb = p_event;
 
 	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MOUSE_BUTTON_LEFT && hsize_rect.has_point(mb->get_position())) {
@@ -2522,6 +2524,8 @@ String AnimationTrackEdit::get_tooltip(const Point2 &p_pos) const {
 }
 
 void AnimationTrackEdit::_gui_input(const Ref<InputEvent> &p_event) {
+	ERR_FAIL_COND(p_event.is_null());
+
 	if (p_event->is_pressed()) {
 		if (ED_GET_SHORTCUT("animation_editor/duplicate_selection")->is_shortcut(p_event)) {
 			emit_signal("duplicate_request");
@@ -2730,7 +2734,7 @@ void AnimationTrackEdit::_gui_input(const Ref<InputEvent> &p_event) {
 		path_popup->set_size(path_rect.size);
 		path_popup->popup();
 		path->grab_focus();
-		path->set_cursor_position(path->get_text().length());
+		path->set_caret_column(path->get_text().length());
 		clicking_on_name = false;
 	}
 

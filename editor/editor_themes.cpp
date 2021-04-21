@@ -963,7 +963,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("read_only", "LineEdit", font_disabled_color);
 	theme->set_color("font_color", "LineEdit", font_color);
 	theme->set_color("font_selected_color", "LineEdit", mono_color);
-	theme->set_color("cursor_color", "LineEdit", font_color);
+	theme->set_color("caret_color", "LineEdit", font_color);
 	theme->set_color("selection_color", "LineEdit", selection_color);
 	theme->set_color("clear_button_color", "LineEdit", font_color);
 	theme->set_color("clear_button_color_pressed", "LineEdit", accent_color);
@@ -1282,6 +1282,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("preset_bg", "ColorPicker", theme->get_icon("GuiMiniCheckerboard", "EditorIcons"));
 	theme->set_icon("overbright_indicator", "ColorPicker", theme->get_icon("OverbrightIndicator", "EditorIcons"));
 	theme->set_icon("bar_arrow", "ColorPicker", theme->get_icon("ColorPickerBarArrow", "EditorIcons"));
+	theme->set_icon("picker_cursor", "ColorPicker", theme->get_icon("PickerCursor", "EditorIcons"));
 
 	theme->set_icon("bg", "ColorPickerButton", theme->get_icon("GuiMiniCheckerboard", "EditorIcons"));
 

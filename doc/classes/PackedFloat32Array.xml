@@ -80,13 +80,6 @@
 				Inserts a new element at a given position in the array. The position must be valid, or at the end of the array ([code]idx == size()[/code]).
 			</description>
 		</method>
-		<method name="reverse">
-			<return type="void">
-			</return>
-			<description>
-				Reverses the order of the elements in the array.
-			</description>
-		</method>
 		<method name="is_empty" qualifiers="const">
 			<return type="bool">
 			</return>
@@ -118,6 +111,14 @@
 			<description>
 			</description>
 		</method>
+		<method name="operator []" qualifiers="operator">
+			<return type="float">
+			</return>
+			<argument index="0" name="index" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
 		<method name="push_back">
 			<return type="bool">
 			</return>
@@ -143,6 +144,13 @@
 			</argument>
 			<description>
 				Sets the size of the array. If the array is grown, reserves elements at the end of the array. If the array is shrunk, truncates the array to the new size.
+			</description>
+		</method>
+		<method name="reverse">
+			<return type="void">
+			</return>
+			<description>
+				Reverses the order of the elements in the array.
 			</description>
 		</method>
 		<method name="set">

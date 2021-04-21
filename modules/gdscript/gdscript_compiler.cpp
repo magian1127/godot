@@ -262,7 +262,7 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 					GDScriptNativeClass *nc = nullptr;
 					while (scr) {
 						if (scr->constants.has(identifier)) {
-							return GDScriptCodeGenerator::Address(GDScriptCodeGenerator::Address::CLASS_CONSTANT, gen->add_or_get_name(identifier)); // TODO: Get type here.
+							return codegen.add_constant(scr->constants[identifier]); // TODO: Get type here.
 						}
 						if (scr->native.is_valid()) {
 							nc = scr->native.ptr();
@@ -319,7 +319,8 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 
 			if (GDScriptLanguage::get_singleton()->get_global_map().has(identifier)) {
 				int idx = GDScriptLanguage::get_singleton()->get_global_map()[identifier];
-				return GDScriptCodeGenerator::Address(GDScriptCodeGenerator::Address::GLOBAL, idx); // TODO: Get type.
+				Variant global = GDScriptLanguage::get_singleton()->get_global_array()[idx];
+				return codegen.add_constant(global); // TODO: Get type.
 			}
 
 			// Try global classes.
@@ -347,7 +348,9 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 
 #ifdef TOOLS_ENABLED
 			if (GDScriptLanguage::get_singleton()->get_named_globals_map().has(identifier)) {
-				return GDScriptCodeGenerator::Address(GDScriptCodeGenerator::Address::NAMED_GLOBAL, gen->add_or_get_name(identifier)); // TODO: Get type.
+				GDScriptCodeGenerator::Address global = codegen.add_temporary(); // TODO: Get type.
+				gen->write_store_named_global(global, identifier);
+				return global;
 			}
 #endif
 
@@ -708,7 +711,7 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 		case GDScriptParser::Node::UNARY_OPERATOR: {
 			const GDScriptParser::UnaryOpNode *unary = static_cast<const GDScriptParser::UnaryOpNode *>(p_expression);
 
-			GDScriptCodeGenerator::Address result = codegen.add_temporary();
+			GDScriptCodeGenerator::Address result = codegen.add_temporary(_gdtype_from_datatype(unary->get_datatype()));
 
 			GDScriptCodeGenerator::Address operand = _parse_expression(codegen, r_error, unary->operand);
 			if (r_error) {
@@ -726,7 +729,7 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 		case GDScriptParser::Node::BINARY_OPERATOR: {
 			const GDScriptParser::BinaryOpNode *binary = static_cast<const GDScriptParser::BinaryOpNode *>(p_expression);
 
-			GDScriptCodeGenerator::Address result = codegen.add_temporary();
+			GDScriptCodeGenerator::Address result = codegen.add_temporary(_gdtype_from_datatype(binary->get_datatype()));
 
 			switch (binary->operation) {
 				case GDScriptParser::BinaryOpNode::OP_LOGIC_AND: {
@@ -777,6 +780,10 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 						if (type.mode == GDScriptCodeGenerator::Address::TEMPORARY) {
 							gen->pop_temporary();
 						}
+					}
+
+					if (operand.mode == GDScriptCodeGenerator::Address::TEMPORARY) {
+						gen->pop_temporary();
 					}
 				} break;
 				default: {
@@ -2009,6 +2016,8 @@ Error GDScriptCompiler::_parse_setter_getter(GDScript *p_script, const GDScriptP
 	} else {
 		func_name = "@" + p_variable->identifier->name + "_getter";
 	}
+
+	codegen.function_name = func_name;
 
 	GDScriptDataType return_type;
 	if (p_is_setter) {
