@@ -468,6 +468,7 @@ float CanvasItemEditor::snap_angle(float p_target, float p_start) const {
 }
 
 void CanvasItemEditor::_unhandled_key_input(const Ref<InputEvent> &p_ev) {
+	ERR_FAIL_COND(p_ev.is_null());
 
 	Ref<InputEventKey> k = p_ev;
 
@@ -783,11 +784,15 @@ void CanvasItemEditor::_find_canvas_items_in_rect(const Rect2 &p_rect, Node *p_n
 
 bool CanvasItemEditor::_select_click_on_item(CanvasItem *item, Point2 p_click_pos, bool p_append) {
 	bool still_selected = true;
-	if (p_append) {
+	if (p_append && !editor_selection->get_selected_node_list().empty()) {
 		if (editor_selection->is_selected(item)) {
 			// Already in the selection, remove it from the selected nodes
 			editor_selection->remove_node(item);
 			still_selected = false;
+
+			if (editor_selection->get_selected_node_list().size() == 1) {
+				editor->push_item(editor_selection->get_selected_node_list()[0]);
+			}
 		} else {
 			// Add the item to the selection
 			editor_selection->add_node(item);
@@ -2440,6 +2445,9 @@ bool CanvasItemEditor::_gui_input_select(const Ref<InputEvent> &p_event) {
 					SWAP(bsfrom.y, bsto.y);
 
 				_find_canvas_items_in_rect(Rect2(bsfrom, bsto - bsfrom), scene, &selitems);
+				if (selitems.size() == 1 && editor_selection->get_selected_node_list().empty()) {
+					editor->push_item(selitems[0]);
+				}
 				for (List<CanvasItem *>::Element *E = selitems.front(); E; E = E->next()) {
 					editor_selection->add_node(E->get());
 				}
@@ -5159,7 +5167,6 @@ void CanvasItemEditor::_focus_selection(int p_op) {
 			rect = rect.merge(canvas_item_rect);
 		}
 	};
-	if (count == 0) return;
 
 	if (p_op == VIEW_CENTER_TO_SELECTION) {
 

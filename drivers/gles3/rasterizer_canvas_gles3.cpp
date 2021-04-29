@@ -906,6 +906,8 @@ void RasterizerCanvasGLES3::render_batches(Item *p_current_clip, bool &r_reclip,
 								amount = multi_mesh->size;
 							}
 
+							glVertexAttrib4f(VS::ARRAY_COLOR, 1.0, 1.0, 1.0, 1.0);
+
 							for (int j = 0; j < mesh_data->surfaces.size(); j++) {
 								RasterizerStorageGLES3::Surface *s = mesh_data->surfaces[j];
 								// materials are ignored in 2D meshes, could be added but many things (ie, lighting mode, reading from screen, etc) would break as they are not meant be set up at this point of drawing
@@ -1493,7 +1495,11 @@ void RasterizerCanvasGLES3::render_joined_item(const BItemJoined &p_bij, RenderI
 		Light *light = r_ris.item_group_light;
 		bool light_used = false;
 		VS::CanvasLightMode mode = VS::CANVAS_LIGHT_MODE_ADD;
-		state.canvas_item_modulate = p_ci->final_modulate; // remove the canvas modulate
+
+		// we leave this set to 1, 1, 1, 1 if using software because the colors are baked into the vertices
+		if (p_bij.is_single_item()) {
+			state.canvas_item_modulate = p_ci->final_modulate; // remove the canvas modulate
+		}
 
 		while (light) {
 

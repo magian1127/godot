@@ -70,6 +70,7 @@ void SceneTreeDock::_input(Ref<InputEvent> p_event) {
 }
 
 void SceneTreeDock::_unhandled_key_input(Ref<InputEvent> p_event) {
+	ERR_FAIL_COND(p_event.is_null());
 
 	if (get_viewport()->get_modal_stack_top())
 		return; //ignore because of modal window
@@ -137,7 +138,11 @@ void SceneTreeDock::instance_scenes(const Vector<String> &p_files, Node *p_paren
 		parent = scene_tree->get_selected();
 	}
 
-	if (!parent || !edited_scene) {
+	if (!parent) {
+		parent = edited_scene;
+	}
+
+	if (!parent) {
 		if (p_files.size() == 1) {
 			accept->set_text(TTR("No parent to instance a child at."));
 		} else {
@@ -896,7 +901,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			Node *scene = editor_data->get_edited_scene_root();
 
 			if (!scene) {
-				accept->set_text(TTR("This operation can't be done without a scene."));
+				accept->set_text(TTR("Saving the branch as a scene requires having a scene open in the editor."));
 				accept->popup_centered_minsize();
 				break;
 			}
@@ -904,7 +909,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			List<Node *> selection = editor_selection->get_selected_node_list();
 
 			if (selection.size() != 1) {
-				accept->set_text(TTR("This operation requires a single selected node."));
+				accept->set_text(vformat(TTR("Saving the branch as a scene requires selecting only one node, but you have selected %d nodes."), selection.size()));
 				accept->popup_centered_minsize();
 				break;
 			}
@@ -912,13 +917,13 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			Node *tocopy = selection.front()->get();
 
 			if (tocopy == scene) {
-				accept->set_text(TTR("Can not perform with the root node."));
+				accept->set_text(TTR("Can't save the root node branch as an instanced scene.\nTo create an editable copy of the current scene, duplicate it using the FileSystem dock context menu\nor create an inherited scene using Scene > New Inherited Scene... instead."));
 				accept->popup_centered_minsize();
 				break;
 			}
 
 			if (tocopy != editor_data->get_edited_scene_root() && tocopy->get_filename() != "") {
-				accept->set_text(TTR("This operation can't be done on instanced scenes."));
+				accept->set_text(TTR("Can't save the branch of an already instanced scene.\nTo create a variation of a scene, you can make an inherited scene based on the instanced scene using Scene > New Inherited Scene... instead."));
 				accept->popup_centered_minsize();
 				break;
 			}
