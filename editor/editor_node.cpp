@@ -1024,14 +1024,23 @@ void EditorNode::save_resource_as(const Ref<Resource> &p_resource, const String 
 	file->clear_filters();
 
 	List<String> preferred;
-	for (int i = 0; i < extensions.size(); i++) {
-
-		if (p_resource->is_class("Script") && (extensions[i] == "tres" || extensions[i] == "res" || extensions[i] == "xml")) {
+	for (List<String>::Element *E = extensions.front(); E; E = E->next()) {
+		if (p_resource->is_class("Script") && (E->get() == "tres" || E->get() == "res")) {
 			//this serves no purpose and confused people
 			continue;
 		}
-		file->add_filter("*." + extensions[i] + " ; " + extensions[i].to_upper());
-		preferred.push_back(extensions[i]);
+		file->add_filter("*." + E->get() + " ; " + E->get().to_upper());
+		preferred.push_back(E->get());
+	}
+	// Lowest priority extension
+	List<String>::Element *res_element = preferred.find("res");
+	if (res_element) {
+		preferred.move_to_back(res_element);
+	}
+	// Highest priority extension
+	List<String>::Element *tres_element = preferred.find("tres");
+	if (tres_element) {
+		preferred.move_to_front(tres_element);
 	}
 
 	if (p_at_path != String()) {
@@ -2241,16 +2250,16 @@ void EditorNode::_run(bool p_current, const String &p_custom) {
 
 	args = ProjectSettings::get_singleton()->get("editor/main_run_args");
 	skip_breakpoints = ScriptEditor::get_singleton()->get_debugger()->is_skip_breakpoints();
+	emit_signal("play_pressed");
 
 	Error error = editor_run.run(run_filename, args, breakpoints, skip_breakpoints);
 
 	if (error != OK) {
-
+		emit_signal("stop_pressed");
 		show_accept(TTR("Could not start subprocess!"), TTR("OK"));
 		return;
 	}
 
-	emit_signal("play_pressed");
 	if (p_current) {
 		play_scene_button->set_pressed(true);
 		play_scene_button->set_icon(gui_base->get_icon("Reload", "EditorIcons"));
