@@ -68,6 +68,23 @@ public:
 	virtual Error save(String p_path) = 0;
 };
 
+class HMACContext : public Reference {
+	GDCLASS(HMACContext, Reference);
+
+protected:
+	static void _bind_methods();
+	static HMACContext *(*_create)();
+
+public:
+	static HMACContext *create();
+
+	virtual Error start(HashingContext::HashType p_hash_type, PoolByteArray p_key) = 0;
+	virtual Error update(PoolByteArray p_data) = 0;
+	virtual PoolByteArray finish() = 0;
+
+	HMACContext() {}
+};
+
 class Crypto : public Reference {
 	GDCLASS(Crypto, Reference);
 
@@ -89,12 +106,18 @@ public:
 	virtual Vector<uint8_t> encrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_plaintext) = 0;
 	virtual Vector<uint8_t> decrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_ciphertext) = 0;
 
+	PoolByteArray hmac_digest(HashingContext::HashType p_hash_type, PoolByteArray p_key, PoolByteArray p_msg);
+
+	// Compares two PoolByteArrays for equality without leaking timing information in order to prevent timing attacks.
+	// @see: https://paragonie.com/blog/2015/11/preventing-timing-attacks-on-string-comparison-with-double-hmac-strategy
+	bool constant_time_compare(PoolByteArray p_trusted, PoolByteArray p_received);
+
 	Crypto();
 };
 
 class ResourceFormatLoaderCrypto : public ResourceFormatLoader {
 public:
-	virtual RES load(const String &p_path, const String &p_original_path = "", Error *r_error = NULL);
+	virtual RES load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr);
 	virtual void get_recognized_extensions(List<String> *p_extensions) const;
 	virtual bool handles_type(const String &p_type) const;
 	virtual String get_resource_type(const String &p_path) const;

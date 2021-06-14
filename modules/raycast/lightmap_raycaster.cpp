@@ -30,7 +30,9 @@
 
 #include "lightmap_raycaster.h"
 
+#ifdef __SSE2__
 #include <pmmintrin.h>
+#endif
 
 LightmapRaycaster *LightmapRaycasterEmbree::create_embree_raycaster() {
 	return memnew(LightmapRaycasterEmbree);
@@ -41,7 +43,6 @@ void LightmapRaycasterEmbree::make_default_raycaster() {
 }
 
 void LightmapRaycasterEmbree::filter_function(const struct RTCFilterFunctionNArguments *p_args) {
-
 	RTCHit *hit = (RTCHit *)p_args->hit;
 
 	unsigned int geomID = hit->geomID;
@@ -121,7 +122,6 @@ uint8_t LightmapRaycasterEmbree::AlphaTextureData::sample(float u, float v) cons
 }
 
 void LightmapRaycasterEmbree::add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) {
-
 	RTCGeometry embree_mesh = rtcNewGeometry(embree_device, RTC_GEOMETRY_TYPE_TRIANGLE);
 
 	rtcSetGeometryVertexAttributeCount(embree_mesh, 2);
@@ -180,8 +180,10 @@ void embree_error_handler(void *p_user_data, RTCError p_code, const char *p_str)
 }
 
 LightmapRaycasterEmbree::LightmapRaycasterEmbree() {
+#ifdef __SSE2__
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
+#endif
 
 	embree_device = rtcNewDevice(nullptr);
 	rtcSetDeviceErrorFunction(embree_device, &embree_error_handler, nullptr);
@@ -189,11 +191,16 @@ LightmapRaycasterEmbree::LightmapRaycasterEmbree() {
 }
 
 LightmapRaycasterEmbree::~LightmapRaycasterEmbree() {
+#ifdef __SSE2__
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF);
 	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_OFF);
+#endif
 
-	if (embree_scene != nullptr)
+	if (embree_scene != nullptr) {
 		rtcReleaseScene(embree_scene);
-	if (embree_device != nullptr)
+	}
+
+	if (embree_device != nullptr) {
 		rtcReleaseDevice(embree_device);
+	}
 }

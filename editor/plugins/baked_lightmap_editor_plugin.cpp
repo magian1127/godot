@@ -70,11 +70,7 @@ void BakedLightmapEditorPlugin::_bake_select_file(const String &p_file) {
 				EditorNode::get_singleton()->show_warning(TTR("Some mesh is invalid. Make sure the UV2 channel values are contained within the [0.0,1.0] square region."));
 				break;
 			case BakedLightmap::BAKE_ERROR_NO_LIGHTMAPPER:
-#ifdef OSX_ENABLED
-				EditorNode::get_singleton()->show_warning(TTR("Godot editor was built without ray tracing support; lightmaps can't be baked.\nIf you are using an Apple Silicon-based Mac, try forcing Rosetta emulation on Godot.app in the application settings\nthen restart the editor."));
-#else
-				EditorNode::get_singleton()->show_warning(TTR("Godot editor was built without ray tracing support; lightmaps can't be baked."));
-#endif
+				EditorNode::get_singleton()->show_warning(TTR("Godot editor was built without ray tracing support, lightmaps can't be baked."));
 				break;
 			default: {
 			}
@@ -87,31 +83,28 @@ void BakedLightmapEditorPlugin::_bake() {
 }
 
 void BakedLightmapEditorPlugin::edit(Object *p_object) {
-
 	BakedLightmap *s = Object::cast_to<BakedLightmap>(p_object);
-	if (!s)
+	if (!s) {
 		return;
+	}
 
 	lightmap = s;
 }
 
 bool BakedLightmapEditorPlugin::handles(Object *p_object) const {
-
 	return p_object->is_class("BakedLightmap");
 }
 
 void BakedLightmapEditorPlugin::make_visible(bool p_visible) {
-
 	if (p_visible) {
 		bake->show();
 	} else {
-
 		bake->hide();
 	}
 }
 
-EditorProgress *BakedLightmapEditorPlugin::tmp_progress = NULL;
-EditorProgress *BakedLightmapEditorPlugin::tmp_subprogress = NULL;
+EditorProgress *BakedLightmapEditorPlugin::tmp_progress = nullptr;
+EditorProgress *BakedLightmapEditorPlugin::tmp_subprogress = nullptr;
 
 bool BakedLightmapEditorPlugin::bake_func_step(float p_progress, const String &p_description, void *, bool p_force_refresh) {
 	if (!tmp_progress) {
@@ -142,13 +135,11 @@ void BakedLightmapEditorPlugin::bake_func_end() {
 }
 
 void BakedLightmapEditorPlugin::_bind_methods() {
-
 	ClassDB::bind_method("_bake", &BakedLightmapEditorPlugin::_bake);
 	ClassDB::bind_method("_bake_select_file", &BakedLightmapEditorPlugin::_bake_select_file);
 }
 
 BakedLightmapEditorPlugin::BakedLightmapEditorPlugin(EditorNode *p_node) {
-
 	editor = p_node;
 	bake = memnew(ToolButton);
 	bake->set_icon(editor->get_gui_base()->get_icon("Bake", "EditorIcons"));
@@ -164,7 +155,7 @@ BakedLightmapEditorPlugin::BakedLightmapEditorPlugin(EditorNode *p_node) {
 	bake->add_child(file_dialog);
 
 	add_control_to_container(CONTAINER_SPATIAL_EDITOR_MENU, bake);
-	lightmap = NULL;
+	lightmap = nullptr;
 
 	BakedLightmap::bake_step_function = bake_func_step;
 	BakedLightmap::bake_substep_function = bake_func_substep;

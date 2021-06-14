@@ -34,7 +34,6 @@
 #include "core/node_path.h"
 #include "core/string_name.h"
 class SceneStringNames {
-
 	friend void register_scene_types();
 	friend void unregister_scene_types();
 
@@ -43,7 +42,7 @@ class SceneStringNames {
 	static void create() { singleton = memnew(SceneStringNames); }
 	static void free() {
 		memdelete(singleton);
-		singleton = NULL;
+		singleton = nullptr;
 	}
 
 	SceneStringNames();

@@ -50,9 +50,8 @@
  */
 template <class TKey, class TValue,
 		class Hasher = HashMapHasherDefault,
-		class Comparator = HashMapComparatorDefault<TKey> >
+		class Comparator = HashMapComparatorDefault<TKey>>
 class OAHashMap {
-
 private:
 	TValue *values;
 	TKey *keys;
@@ -92,7 +91,7 @@ private:
 		uint32_t pos = hash % capacity;
 		uint32_t distance = 0;
 
-		while (42) {
+		while (true) {
 			if (hashes[pos] == EMPTY_HASH) {
 				return false;
 			}
@@ -112,7 +111,6 @@ private:
 	}
 
 	void _insert_with_hash(uint32_t p_hash, const TKey &p_key, const TValue &p_value) {
-
 		uint32_t hash = p_hash;
 		uint32_t distance = 0;
 		uint32_t pos = hash % capacity;
@@ -120,7 +118,7 @@ private:
 		TKey key = p_key;
 		TValue value = p_value;
 
-		while (42) {
+		while (true) {
 			if (hashes[pos] == EMPTY_HASH) {
 				_construct(pos, hash, key, value);
 
@@ -142,7 +140,6 @@ private:
 	}
 
 	void _resize_and_rehash(uint32_t p_new_capacity) {
-
 		uint32_t old_capacity = capacity;
 		capacity = p_new_capacity;
 
@@ -188,9 +185,7 @@ public:
 	}
 
 	void clear() {
-
 		for (uint32_t i = 0; i < capacity; i++) {
-
 			if (hashes[i] == EMPTY_HASH) {
 				continue;
 			}
@@ -204,7 +199,6 @@ public:
 	}
 
 	void insert(const TKey &p_key, const TValue &p_value) {
-
 		if (num_elements + 1 > 0.9 * capacity) {
 			_resize_and_rehash();
 		}
@@ -304,7 +298,6 @@ public:
 	}
 
 	Iterator next_iter(const Iterator &p_iter) const {
-
 		if (!p_iter.valid) {
 			return p_iter;
 		}
@@ -312,8 +305,8 @@ public:
 		Iterator it;
 		it.valid = false;
 		it.pos = p_iter.pos;
-		it.key = NULL;
-		it.value = NULL;
+		it.key = nullptr;
+		it.value = nullptr;
 
 		for (uint32_t i = it.pos; i < capacity; i++) {
 			it.pos = i + 1;
@@ -335,7 +328,6 @@ public:
 	OAHashMap &operator=(const OAHashMap &) = delete; // Same for assignment operator.
 
 	OAHashMap(uint32_t p_initial_capacity = 64) {
-
 		capacity = p_initial_capacity;
 		num_elements = 0;
 
@@ -349,9 +341,7 @@ public:
 	}
 
 	~OAHashMap() {
-
 		for (uint32_t i = 0; i < capacity; i++) {
-
 			if (hashes[i] == EMPTY_HASH) {
 				continue;
 			}

@@ -84,7 +84,8 @@ enum JoystickList {
 	JOY_BUTTON_19 = 19,
 	JOY_BUTTON_20 = 20,
 	JOY_BUTTON_21 = 21,
-	JOY_BUTTON_MAX = 22,
+	JOY_BUTTON_22 = 22,
+	JOY_BUTTON_MAX = 23,
 
 	JOY_L = JOY_BUTTON_4,
 	JOY_R = JOY_BUTTON_5,
@@ -98,12 +99,13 @@ enum JoystickList {
 	JOY_DPAD_DOWN = JOY_BUTTON_13,
 	JOY_DPAD_LEFT = JOY_BUTTON_14,
 	JOY_DPAD_RIGHT = JOY_BUTTON_15,
-	JOY_MISC1 = JOY_BUTTON_16,
-	JOY_PADDLE1 = JOY_BUTTON_17,
-	JOY_PADDLE2 = JOY_BUTTON_18,
-	JOY_PADDLE3 = JOY_BUTTON_19,
-	JOY_PADDLE4 = JOY_BUTTON_20,
-	JOY_TOUCHPAD = JOY_BUTTON_21,
+	JOY_GUIDE = JOY_BUTTON_16,
+	JOY_MISC1 = JOY_BUTTON_17,
+	JOY_PADDLE1 = JOY_BUTTON_18,
+	JOY_PADDLE2 = JOY_BUTTON_19,
+	JOY_PADDLE3 = JOY_BUTTON_20,
+	JOY_PADDLE4 = JOY_BUTTON_21,
+	JOY_TOUCHPAD = JOY_BUTTON_22,
 
 	JOY_SONY_CIRCLE = JOY_BUTTON_1,
 	JOY_SONY_X = JOY_BUTTON_0,
@@ -264,12 +266,12 @@ public:
 };
 
 class InputEventKey : public InputEventWithModifiers {
-
 	GDCLASS(InputEventKey, InputEventWithModifiers);
 
 	bool pressed; /// otherwise release
 
 	uint32_t scancode; ///< check keyboard.h , KeyCode enum, without modifier masks
+	uint32_t physical_scancode;
 	uint32_t unicode; ///unicode
 
 	bool echo; /// true if this is an echo key
@@ -284,6 +286,9 @@ public:
 	void set_scancode(uint32_t p_scancode);
 	uint32_t get_scancode() const;
 
+	void set_physical_scancode(uint32_t p_scancode);
+	uint32_t get_physical_scancode() const;
+
 	void set_unicode(uint32_t p_unicode);
 	uint32_t get_unicode() const;
 
@@ -291,6 +296,7 @@ public:
 	virtual bool is_echo() const;
 
 	uint32_t get_scancode_with_modifiers() const;
+	uint32_t get_physical_scancode_with_modifiers() const;
 
 	virtual bool action_match(const Ref<InputEvent> &p_event, bool *p_pressed, float *p_strength, float p_deadzone) const;
 	virtual bool shortcut_match(const Ref<InputEvent> &p_event) const;
@@ -303,7 +309,6 @@ public:
 };
 
 class InputEventMouse : public InputEventWithModifiers {
-
 	GDCLASS(InputEventMouse, InputEventWithModifiers);
 
 	int button_mask;
@@ -328,7 +333,6 @@ public:
 };
 
 class InputEventMouseButton : public InputEventMouse {
-
 	GDCLASS(InputEventMouseButton, InputEventMouse);
 
 	float factor;
@@ -362,7 +366,6 @@ public:
 };
 
 class InputEventMouseMotion : public InputEventMouse {
-
 	GDCLASS(InputEventMouseMotion, InputEventMouse);
 
 	Vector2 tilt;
@@ -395,7 +398,6 @@ public:
 };
 
 class InputEventJoypadMotion : public InputEvent {
-
 	GDCLASS(InputEventJoypadMotion, InputEvent);
 	int axis; ///< Joypad axis
 	float axis_value; ///< -1 to 1
@@ -474,7 +476,6 @@ public:
 };
 
 class InputEventScreenDrag : public InputEvent {
-
 	GDCLASS(InputEventScreenDrag, InputEvent);
 	int index;
 	Vector2 pos;
@@ -504,7 +505,6 @@ public:
 };
 
 class InputEventAction : public InputEvent {
-
 	GDCLASS(InputEventAction, InputEvent);
 
 	StringName action;
@@ -536,7 +536,6 @@ public:
 };
 
 class InputEventGesture : public InputEventWithModifiers {
-
 	GDCLASS(InputEventGesture, InputEventWithModifiers);
 
 	Vector2 pos;
@@ -550,7 +549,6 @@ public:
 };
 
 class InputEventMagnifyGesture : public InputEventGesture {
-
 	GDCLASS(InputEventMagnifyGesture, InputEventGesture);
 	real_t factor;
 
@@ -568,7 +566,6 @@ public:
 };
 
 class InputEventPanGesture : public InputEventGesture {
-
 	GDCLASS(InputEventPanGesture, InputEventGesture);
 	Vector2 delta;
 
