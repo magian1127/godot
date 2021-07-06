@@ -245,10 +245,12 @@
 			Icon set in [code].ico[/code] format used on Windows to set the game's icon. This is done automatically on start by calling [method OS.set_native_icon].
 		</member>
 		<member name="application/run/disable_stderr" type="bool" setter="" getter="" default="false">
-			If [code]true[/code], disables printing to standard error in an exported build.
+			If [code]true[/code], disables printing to standard error. If [code]true[/code], this also hides error and warning messages printed by [method @GDScript.push_error] and [method @GDScript.push_warning]. See also [member application/run/disable_stdout].
+			Changes to this setting will only be applied upon restarting the application.
 		</member>
 		<member name="application/run/disable_stdout" type="bool" setter="" getter="" default="false">
-			If [code]true[/code], disables printing to standard output in an exported build.
+			If [code]true[/code], disables printing to standard output. This is equivalent to starting the editor or project with the [code]--quiet[/code] command line argument. See also [member application/run/disable_stderr].
+			Changes to this setting will only be applied upon restarting the application.
 		</member>
 		<member name="application/run/flush_stdout_on_print" type="bool" setter="" getter="" default="false">
 			If [code]true[/code], flushes the standard output stream every time a line is printed. This affects both terminal logging and file logging.
@@ -288,7 +290,7 @@
 			If [code]true[/code], microphone input will be allowed. This requires appropriate permissions to be set when exporting to Android or iOS.
 		</member>
 		<member name="audio/mix_rate" type="int" setter="" getter="" default="44100">
-			Mixing rate used for audio. In general, it's better to not touch this and leave it to the host operating system.
+			The mixing rate used for audio (in Hz). In general, it's better to not touch this and leave it to the host operating system.
 		</member>
 		<member name="audio/output_latency" type="int" setter="" getter="" default="15">
 			Output latency in milliseconds for audio. Lower values will result in lower audio latency at the cost of increased CPU usage. Low values may result in audible cracking on slower hardware.
@@ -1047,7 +1049,8 @@
 			[b]Note:[/b] This property is only read when the project starts. To change the physics FPS at runtime, set [member Engine.iterations_per_second] instead.
 		</member>
 		<member name="physics/common/physics_jitter_fix" type="float" setter="" getter="" default="0.5">
-			Fix to improve physics jitter, specially on monitors where refresh rate is different than the physics FPS.
+			Controls how much physics ticks are synchronized with real time. For 0 or less, the ticks are synchronized. Such values are recommended for network games, where clock synchronization matters. Higher values cause higher deviation of in-game clock and real clock, but allows smoothing out framerate jitters. The default value of 0.5 should be fine for most; values above 2 could cause the game to react to dropped frames with a noticeable delay and are not recommended.
+			[b]Note:[/b] For best results, when using a custom physics interpolation solution, the physics jitter fix should be disabled by setting [member physics/common/physics_jitter_fix] to [code]0[/code].
 			[b]Note:[/b] This property is only read when the project starts. To change the physics FPS at runtime, set [member Engine.physics_jitter_fix] instead.
 		</member>
 		<member name="rendering/2d/opengl/batching_send_null" type="int" setter="" getter="" default="0">
@@ -1221,6 +1224,7 @@
 		<member name="rendering/quality/filters/use_debanding" type="bool" setter="" getter="" default="false">
 			If [code]true[/code], uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
 			[b]Note:[/b] Only available on the GLES3 backend. [member rendering/quality/depth/hdr] must also be [code]true[/code] for debanding to be effective.
+			[b]Note:[/b] There are known issues with debanding breaking rendering on mobile platforms. Due to this, it is recommended to leave this option disabled when targeting mobile platforms.
 		</member>
 		<member name="rendering/quality/filters/use_fxaa" type="bool" setter="" getter="" default="false">
 			Enables FXAA in the root Viewport. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K.

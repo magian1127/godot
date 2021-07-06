@@ -372,6 +372,25 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "plugins/" + found_plugins[i].name), false));
 	}
 
+	for (int i = 0; i < found_plugins.size(); i++) {
+		// Editable plugin plist values
+		PluginConfigIOS plugin = found_plugins[i];
+		const String *K = nullptr;
+
+		while ((K = plugin.plist.next(K))) {
+			String key = *K;
+			PluginConfigIOS::PlistItem item = plugin.plist[key];
+			switch (item.type) {
+				case PluginConfigIOS::PlistItemType::STRING_INPUT: {
+					String preset_name = "plugins_plist/" + key;
+					r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, preset_name), item.value));
+				} break;
+				default:
+					continue;
+			}
+		}
+	}
+
 	plugins_changed.clear();
 	plugins = found_plugins;
 
@@ -1479,13 +1498,28 @@ Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset>
 
 		while ((K = plugin.plist.next(K))) {
 			String key = *K;
-			String value = plugin.plist[key];
+			PluginConfigIOS::PlistItem item = plugin.plist[key];
+
+			String value;
+
+			switch (item.type) {
+				case PluginConfigIOS::PlistItemType::STRING_INPUT: {
+					String preset_name = "plugins_plist/" + key;
+					String input_value = p_preset->get(preset_name);
+					value = "<string>" + input_value + "</string>";
+				} break;
+				default:
+					value = item.value;
+					break;
+			}
 
 			if (key.empty() || value.empty()) {
 				continue;
 			}
 
-			plist_values[key] = value;
+			String plist_key = "<key>" + key + "</key>";
+
+			plist_values[plist_key] = value;
 		}
 
 		// CPP Code
@@ -1512,7 +1546,7 @@ Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset>
 				continue;
 			}
 
-			p_config_data.plist_content += "<key>" + key + "</key><string>" + value + "</string>\n";
+			p_config_data.plist_content += key + value + "\n";
 		}
 	}
 
@@ -1767,7 +1801,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 				print_line("Creating " + dir_name);
 				Error dir_err = tmp_app_path->make_dir_recursive(dir_name);
 				if (dir_err) {
-					ERR_PRINTS("Can't create '" + dir_name + "'.");
+					ERR_PRINT("Can't create '" + dir_name + "'.");
 					unzClose(src_pkg_zip);
 					memdelete(tmp_app_path);
 					return ERR_CANT_CREATE;
@@ -1777,7 +1811,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 			/* write the file */
 			FileAccess *f = FileAccess::open(file, FileAccess::WRITE);
 			if (!f) {
-				ERR_PRINTS("Can't write '" + file + "'.");
+				ERR_PRINT("Can't write '" + file + "'.");
 				unzClose(src_pkg_zip);
 				memdelete(tmp_app_path);
 				return ERR_CANT_CREATE;
@@ -1801,7 +1835,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 	unzClose(src_pkg_zip);
 
 	if (!found_library) {
-		ERR_PRINTS("Requested template library '" + library_to_use + "' not found. It might be missing from your template archive.");
+		ERR_PRINT("Requested template library '" + library_to_use + "' not found. It might be missing from your template archive.");
 		memdelete(tmp_app_path);
 		return ERR_FILE_NOT_FOUND;
 	}
@@ -1817,7 +1851,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 			bool dir_exists = tmp_app_path->dir_exists(static_lib_path);
 			Error lib_copy_err = dir_exists ? tmp_app_path->copy_dir(static_lib_path, dest_lib_file_path) : tmp_app_path->copy(static_lib_path, dest_lib_file_path);
 			if (lib_copy_err != OK) {
-				ERR_PRINTS("Can't copy '" + static_lib_path + "'.");
+				ERR_PRINT("Can't copy '" + static_lib_path + "'.");
 				memdelete(tmp_app_path);
 				return lib_copy_err;
 			}
@@ -1886,7 +1920,7 @@ Error EditorExportPlatformIOS::export_project(const Ref<EditorExportPreset> &p_p
 	String project_file_name = dest_dir + binary_name + ".xcodeproj/project.pbxproj";
 	FileAccess *f = FileAccess::open(project_file_name, FileAccess::WRITE);
 	if (!f) {
-		ERR_PRINTS("Can't write '" + project_file_name + "'.");
+		ERR_PRINT("Can't write '" + project_file_name + "'.");
 		return ERR_CANT_CREATE;
 	};
 	f->store_buffer(project_file_data.ptr(), project_file_data.size());

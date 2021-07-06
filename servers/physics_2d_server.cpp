@@ -166,10 +166,11 @@ float Physics2DShapeQueryParameters::get_margin() const {
 	return margin;
 }
 
-void Physics2DShapeQueryParameters::set_collision_mask(int p_collision_mask) {
+void Physics2DShapeQueryParameters::set_collision_mask(uint32_t p_collision_mask) {
 	collision_mask = p_collision_mask;
 }
-int Physics2DShapeQueryParameters::get_collision_mask() const {
+
+uint32_t Physics2DShapeQueryParameters::get_collision_mask() const {
 	return collision_mask;
 }
 
@@ -405,38 +406,12 @@ void Physics2DDirectSpaceState::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_rest_info", "shape"), &Physics2DDirectSpaceState::_get_rest_info);
 }
 
-int Physics2DShapeQueryResult::get_result_count() const {
-	return result.size();
-}
-RID Physics2DShapeQueryResult::get_result_rid(int p_idx) const {
-	return result[p_idx].rid;
-}
-ObjectID Physics2DShapeQueryResult::get_result_object_id(int p_idx) const {
-	return result[p_idx].collider_id;
-}
-Object *Physics2DShapeQueryResult::get_result_object(int p_idx) const {
-	return result[p_idx].collider;
-}
-int Physics2DShapeQueryResult::get_result_object_shape(int p_idx) const {
-	return result[p_idx].shape;
-}
-
-Physics2DShapeQueryResult::Physics2DShapeQueryResult() {
-}
-
-void Physics2DShapeQueryResult::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_result_count"), &Physics2DShapeQueryResult::get_result_count);
-	ClassDB::bind_method(D_METHOD("get_result_rid", "idx"), &Physics2DShapeQueryResult::get_result_rid);
-	ClassDB::bind_method(D_METHOD("get_result_object_id", "idx"), &Physics2DShapeQueryResult::get_result_object_id);
-	ClassDB::bind_method(D_METHOD("get_result_object", "idx"), &Physics2DShapeQueryResult::get_result_object);
-	ClassDB::bind_method(D_METHOD("get_result_object_shape", "idx"), &Physics2DShapeQueryResult::get_result_object_shape);
-}
-
 ///////////////////////////////
 
 Vector2 Physics2DTestMotionResult::get_motion() const {
 	return result.motion;
 }
+
 Vector2 Physics2DTestMotionResult::get_motion_remainder() const {
 	return result.remainder;
 }
@@ -444,15 +419,19 @@ Vector2 Physics2DTestMotionResult::get_motion_remainder() const {
 Vector2 Physics2DTestMotionResult::get_collision_point() const {
 	return result.collision_point;
 }
+
 Vector2 Physics2DTestMotionResult::get_collision_normal() const {
 	return result.collision_normal;
 }
+
 Vector2 Physics2DTestMotionResult::get_collider_velocity() const {
 	return result.collider_velocity;
 }
+
 ObjectID Physics2DTestMotionResult::get_collider_id() const {
 	return result.collider_id;
 }
+
 RID Physics2DTestMotionResult::get_collider_rid() const {
 	return result.collider;
 }
@@ -485,12 +464,6 @@ void Physics2DTestMotionResult::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::_RID, "collider_rid"), "", "get_collider_rid");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "collider"), "", "get_collider");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collider_shape"), "", "get_collider_shape");
-}
-
-Physics2DTestMotionResult::Physics2DTestMotionResult() {
-	colliding = false;
-	result.collider_id = 0;
-	result.collider_shape = 0;
 }
 
 ///////////////////////////////////////

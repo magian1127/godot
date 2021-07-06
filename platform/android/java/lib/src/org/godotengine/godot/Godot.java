@@ -72,10 +72,8 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings.Secure;
 import android.view.Display;
-import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -264,7 +262,7 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 	static int singleton_count = 0;
 
 	public interface ResultCallback {
-		public void callback(int requestCode, int resultCode, Intent data);
+		void callback(int requestCode, int resultCode, Intent data);
 	}
 	public ResultCallback result_callback;
 
