@@ -94,46 +94,6 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.7\n"
 
-#: core/command_queue_mt.cpp core/message_queue.cpp main/main.cpp
-msgid "Memory"
-msgstr "内存"
-
-#: core/command_queue_mt.cpp core/message_queue.cpp
-#: core/register_core_types.cpp drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles2/rasterizer_scene_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
-#: servers/visual_server.cpp
-msgid "Limits"
-msgstr "限制"
-
-#: core/command_queue_mt.cpp
-msgid "Command Queue"
-msgstr "命令队列"
-
-#: core/command_queue_mt.cpp
-msgid "Multithreading Queue Size Kb"
-msgstr "多线程队列大小Kb"
-
-#: core/io/file_access_network.cpp core/register_core_types.cpp
-#: editor/editor_settings.cpp main/main.cpp
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Network"
-msgstr "网络"
-
-#: core/io/file_access_network.cpp
-msgid "Remote Fs"
-msgstr "远程FS"
-
-#: core/io/file_access_network.cpp
-msgid "Page Size"
-msgstr "页面大小"
-
-#: core/io/file_access_network.cpp
-msgid "Page Read Ahead"
-msgstr "预读页面"
-
 #: core/math/expression.cpp modules/gdscript/gdscript_functions.cpp
 #: modules/visual_script/visual_script_builtin_funcs.cpp
 msgid "Invalid type argument to convert(), use TYPE_* constants."
@@ -147,7 +107,7 @@ msgstr "应为长度为 1 的字符串（1个字符）。"
 #: modules/mono/glue/gd_glue.cpp
 #: modules/visual_script/visual_script_builtin_funcs.cpp
 msgid "Not enough bytes for decoding bytes, or invalid format."
-msgstr "没有足够的字节可解码或格式无效。"
+msgstr "解码字节数不够，或格式无效。"
 
 #: core/math/expression.cpp
 msgid "Invalid input %i (not passed) in expression"
@@ -177,269 +137,6 @@ msgstr "构造 '%s' 的参数无效"
 msgid "On call to '%s':"
 msgstr "在调用 '%s' 时："
 
-#: core/message_queue.cpp
-msgid "Message Queue"
-msgstr "消息队列"
-
-#: core/message_queue.cpp
-msgid "Max Size Kb"
-msgstr "最大KB"
-
-#: core/os/input.cpp editor/editor_help.cpp editor/editor_settings.cpp
-#: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/script_text_editor.cpp
-#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
-#: modules/gdscript/editor/gdscript_highlighter.cpp
-#: modules/gdscript/gdscript_editor.cpp
-#: modules/gdscript/language_server/gdscript_text_document.cpp
-#: modules/mono/csharp_script.cpp scene/animation/animation_player.cpp
-#: scene/gui/control.cpp scene/gui/line_edit.cpp scene/main/node.cpp
-#: scene/resources/material.cpp
-msgid "Text Editor"
-msgstr "文本编辑器"
-
-#: core/os/input.cpp editor/editor_settings.cpp modules/gdscript/gdscript.cpp
-#: modules/gdscript/gdscript_editor.cpp
-#: modules/gdscript/language_server/gdscript_text_document.cpp
-#: scene/animation/animation_player.cpp scene/gui/control.cpp
-#: scene/main/node.cpp scene/resources/material.cpp
-msgid "Completion"
-msgstr "完成"
-
-#: core/os/input.cpp editor/editor_settings.cpp
-#: modules/gdscript/gdscript_editor.cpp
-#: modules/gdscript/language_server/gdscript_text_document.cpp
-#: scene/animation/animation_player.cpp scene/gui/control.cpp
-#: scene/main/node.cpp scene/resources/material.cpp
-msgid "Use Single Quotes"
-msgstr "使用单引号"
-
-#: core/project_settings.cpp editor/editor_node.cpp main/main.cpp
-msgid "Application"
-msgstr "应用"
-
-#: core/project_settings.cpp main/main.cpp
-msgid "Config"
-msgstr "配置"
-
-#: core/project_settings.cpp
-msgid "Project Settings Override"
-msgstr "覆盖项目设置"
-
-#: core/project_settings.cpp editor/editor_autoload_settings.cpp
-#: editor/editor_help_search.cpp editor/editor_profiler.cpp
-#: editor/project_manager.cpp editor/settings_config_dialog.cpp
-msgid "Name"
-msgstr "名称"
-
-#: core/project_settings.cpp editor/editor_help.cpp
-msgid "Description"
-msgstr "描述"
-
-#: core/project_settings.cpp editor/editor_node.cpp editor/editor_settings.cpp
-#: editor/plugins/script_editor_plugin.cpp editor/project_manager.cpp
-#: main/main.cpp
-msgid "Run"
-msgstr "运行"
-
-#: core/project_settings.cpp editor/editor_node.cpp
-#: editor/run_settings_dialog.cpp main/main.cpp
-msgid "Main Scene"
-msgstr "主场景"
-
-#: core/project_settings.cpp
-msgid "Disable Stdout"
-msgstr "禁用标准输出"
-
-#: core/project_settings.cpp
-msgid "Disable Stderr"
-msgstr "禁用标准错误"
-
-#: core/project_settings.cpp
-msgid "Use Custom User Dir"
-msgstr "使用自定义用户目录"
-
-#: core/project_settings.cpp
-msgid "Custom User Dir Name"
-msgstr "自定义用户目录名称"
-
-#: core/project_settings.cpp editor/editor_audio_buses.cpp main/main.cpp
-#: servers/audio_server.cpp
-msgid "Audio"
-msgstr "音频"
-
-#: core/project_settings.cpp
-msgid "Default Bus Layout"
-msgstr "默认总线布局"
-
-#: core/project_settings.cpp editor/editor_export.cpp
-#: editor/editor_file_system.cpp editor/editor_node.cpp
-#: editor/editor_settings.cpp editor/script_create_dialog.cpp
-msgid "Editor"
-msgstr "编辑器"
-
-#: core/project_settings.cpp
-msgid "Search In File Extensions"
-msgstr "搜索文件扩展名"
-
-#: core/project_settings.cpp
-msgid "Script Templates Search Path"
-msgstr "脚本模板搜索路径"
-
-#: core/project_settings.cpp
-msgid "Input"
-msgstr "输入"
-
-#: core/project_settings.cpp
-msgid "Ui Accept"
-msgstr "Ui Accept"
-
-#: core/project_settings.cpp
-msgid "Ui Select"
-msgstr "Ui Select"
-
-#: core/project_settings.cpp
-msgid "Ui Cancel"
-msgstr "Ui Cancel"
-
-#: core/project_settings.cpp
-msgid "Ui Focus Next"
-msgstr "Ui Focus Next"
-
-#: core/project_settings.cpp
-msgid "Ui Focus Prev"
-msgstr "Ui Focus Prev"
-
-#: core/project_settings.cpp
-msgid "Ui Left"
-msgstr "Ui Left"
-
-#: core/project_settings.cpp
-msgid "Ui Right"
-msgstr "Ui Right"
-
-#: core/project_settings.cpp
-msgid "Ui Up"
-msgstr "Ui Up"
-
-#: core/project_settings.cpp
-msgid "Ui Down"
-msgstr "Ui Down"
-
-#: core/project_settings.cpp
-msgid "Ui Page Up"
-msgstr "Ui Page Up"
-
-#: core/project_settings.cpp
-msgid "Ui Page Down"
-msgstr "Ui Page Down"
-
-#: core/project_settings.cpp
-msgid "Ui Home"
-msgstr "Ui Home"
-
-#: core/project_settings.cpp
-msgid "Ui End"
-msgstr "Ui End"
-
-#: core/project_settings.cpp editor/editor_node.cpp editor/editor_settings.cpp
-#: editor/plugins/script_editor_plugin.cpp editor/project_export.cpp
-#: main/main.cpp modules/gdscript/gdscript.cpp
-#: modules/visual_script/visual_script.cpp scene/main/scene_tree.cpp
-#: servers/visual_server.cpp
-msgid "Debug"
-msgstr "调试"
-
-#: core/project_settings.cpp main/main.cpp modules/gdscript/gdscript.cpp
-#: modules/visual_script/visual_script.cpp
-msgid "Settings"
-msgstr "设定"
-
-#: core/project_settings.cpp editor/script_editor_debugger.cpp
-#: modules/mono/mono_gd/gd_mono.cpp
-msgid "Profiler"
-msgstr "性能分析器"
-
-#: core/project_settings.cpp
-msgid "Max Functions"
-msgstr "最大函数数量"
-
-#: core/project_settings.cpp
-msgid "Compression"
-msgstr "压缩"
-
-#: core/project_settings.cpp
-msgid "Formats"
-msgstr "格式"
-
-#: core/project_settings.cpp
-msgid "Zstd"
-msgstr "Zstd"
-
-#: core/project_settings.cpp
-msgid "Long Distance Matching"
-msgstr "长距匹配"
-
-#: core/project_settings.cpp
-msgid "Compression Level"
-msgstr "压缩级别"
-
-#: core/project_settings.cpp
-msgid "Window Log Size"
-msgstr "窗口日志大小"
-
-#: core/project_settings.cpp
-msgid "Zlib"
-msgstr "Zlib"
-
-#: core/project_settings.cpp
-msgid "Gzip"
-msgstr "Gzip"
-
-#: core/project_settings.cpp platform/android/export/export.cpp
-msgid "Android"
-msgstr "安卓"
-
-#: core/project_settings.cpp
-msgid "Modules"
-msgstr "模块"
-
-#: core/register_core_types.cpp
-msgid "Tcp"
-msgstr "TCP"
-
-#: core/register_core_types.cpp
-msgid "Connect Timeout Seconds"
-msgstr "连接超时秒数"
-
-#: core/register_core_types.cpp
-msgid "Packet Peer Stream"
-msgstr "数据包对等流"
-
-#: core/register_core_types.cpp
-msgid "Max Buffer Po2"
-msgstr "最大缓冲区Po2"
-
-#: core/register_core_types.cpp editor/editor_settings.cpp main/main.cpp
-msgid "Ssl"
-msgstr "SSL"
-
-#: core/register_core_types.cpp main/main.cpp
-msgid "Certificates"
-msgstr "CA证书"
-
-#: core/translation.cpp editor/project_settings_editor.cpp
-msgid "Locale"
-msgstr "区域"
-
-#: core/translation.cpp
-msgid "Test"
-msgstr "测试"
-
-#: core/translation.cpp
-msgid "Fallback"
-msgstr "回退"
-
 #: core/ustring.cpp
 msgid "B"
 msgstr "B"
@@ -467,133 +164,6 @@ msgstr "PiB"
 #: core/ustring.cpp
 msgid "EiB"
 msgstr "EiB"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles2/rasterizer_scene_gles2.cpp
-#: drivers/gles2/rasterizer_storage_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-#: drivers/gles3/rasterizer_gles3.cpp drivers/gles3/rasterizer_scene_gles3.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
-#: modules/lightmapper_cpu/register_types.cpp scene/main/scene_tree.cpp
-#: servers/visual/visual_server_scene.cpp servers/visual_server.cpp
-msgid "Rendering"
-msgstr "渲染"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles2/rasterizer_scene_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp
-msgid "Buffers"
-msgstr "缓冲区"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-msgid "Canvas Polygon Buffer Size Kb"
-msgstr "画布多边形缓冲区大小KB"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-msgid "Canvas Polygon Index Buffer Size Kb"
-msgstr "画布多边形索引缓冲区大小KB"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles2/rasterizer_storage_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-#: drivers/gles3/rasterizer_gles3.cpp drivers/gles3/rasterizer_scene_gles3.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
-#: modules/lightmapper_cpu/register_types.cpp scene/main/scene_tree.cpp
-#: servers/visual/visual_server_scene.cpp servers/visual_server.cpp
-msgid "Quality"
-msgstr "质量"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp editor/editor_settings.cpp
-#: main/main.cpp scene/2d/physics_body_2d.cpp scene/resources/world_2d.cpp
-#: servers/physics_2d/broad_phase_2d_hash_grid.cpp
-#: servers/physics_2d/physics_2d_server_wrap_mt.h
-#: servers/physics_2d/space_2d_sw.cpp servers/visual_server.cpp
-msgid "2d"
-msgstr "2D"
-
-#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
-#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
-#: editor/plugins/canvas_item_editor_plugin.cpp main/main.cpp
-msgid "Use Pixel Snap"
-msgstr "使用像素吸附"
-
-#: drivers/gles2/rasterizer_scene_gles2.cpp
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Immediate Buffer Size Kb"
-msgstr "直接缓冲区大小KB"
-
-#: drivers/gles2/rasterizer_storage_gles2.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp
-msgid "Lightmapping"
-msgstr "光照贴图"
-
-#: drivers/gles2/rasterizer_storage_gles2.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp
-msgid "Use Bicubic Sampling"
-msgstr "使用双三次采样"
-
-#: drivers/gles2/rasterizer_storage_gles2.cpp
-#: drivers/gles3/rasterizer_storage_gles3.cpp
-msgid "Use Bicubic Sampling.mobile"
-msgstr "使用双三次采样.mobile"
-
-#: drivers/gles3/rasterizer_gles3.cpp scene/main/scene_tree.cpp
-#: servers/visual_server.cpp
-msgid "Filters"
-msgstr "过滤器"
-
-#: drivers/gles3/rasterizer_gles3.cpp
-msgid "Anisotropic Filter Level"
-msgstr "各向异性过滤级别"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Max Renderable Elements"
-msgstr "最大可渲染元素"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Max Renderable Lights"
-msgstr "最大可渲染灯光"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Max Renderable Reflections"
-msgstr "最大可渲染反射"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Max Lights Per Object"
-msgstr "对象的最大灯光数"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Subsurface Scattering"
-msgstr "表面散射"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Scale"
-msgstr "缩放"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Follow Surface"
-msgstr "沿着曲面"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Weight Samples"
-msgstr "重度采样"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "Voxel Cone Tracing"
-msgstr "三维像素锥跟踪"
-
-#: drivers/gles3/rasterizer_scene_gles3.cpp
-msgid "High Quality"
-msgstr "高质量"
-
-#: drivers/gles3/rasterizer_storage_gles3.cpp
-msgid "Blend Shape Max Buffer Size Kb"
-msgstr "混合形状最大缓冲区大小KB"
 
 #: editor/animation_bezier_editor.cpp
 msgid "Free"
@@ -842,26 +412,6 @@ msgstr "更改动画循环模式"
 #: editor/animation_track_editor.cpp
 msgid "Remove Anim Track"
 msgstr "移除轨道"
-
-#: editor/animation_track_editor.cpp editor/editor_settings.cpp
-#: editor/plugins/mesh_library_editor_plugin.cpp
-#: editor/plugins/path_editor_plugin.cpp
-#: editor/plugins/polygon_2d_editor_plugin.cpp
-#: editor/plugins/spatial_editor_plugin.cpp
-#: editor/plugins/tile_map_editor_plugin.cpp editor/scene_tree_dock.cpp
-#: editor/spatial_editor_gizmos.cpp modules/csg/csg_gizmos.cpp
-#: modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Editors"
-msgstr "编辑器"
-
-#: editor/animation_track_editor.cpp editor/editor_settings.cpp
-#: editor/plugins/animation_player_editor_plugin.cpp editor/scene_tree_dock.cpp
-msgid "Animation"
-msgstr "动画"
-
-#: editor/animation_track_editor.cpp editor/editor_settings.cpp
-msgid "Confirm Insert Track"
-msgstr "确认插入轨道"
 
 #: editor/animation_track_editor.cpp
 msgid "Create NEW track for %s and insert key?"
@@ -1163,7 +713,7 @@ msgstr "选择要复制的轨道"
 #: editor/plugins/animation_player_editor_plugin.cpp
 #: editor/plugins/script_text_editor.cpp
 #: editor/plugins/sprite_frames_editor_plugin.cpp editor/property_editor.cpp
-#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
+#: editor/scene_tree_dock.cpp scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Copy"
 msgstr "复制"
 
@@ -1260,7 +810,7 @@ msgstr "缩小"
 msgid "Reset Zoom"
 msgstr "重置缩放"
 
-#: editor/code_editor.cpp modules/gdscript/gdscript.cpp
+#: editor/code_editor.cpp
 msgid "Warnings"
 msgstr "警告"
 
@@ -1506,8 +1056,7 @@ msgid "Resource"
 msgstr "资源"
 
 #: editor/dependency_editor.cpp editor/editor_autoload_settings.cpp
-#: editor/plugins/path_editor_plugin.cpp editor/project_manager.cpp
-#: editor/project_settings_editor.cpp
+#: editor/project_manager.cpp editor/project_settings_editor.cpp
 msgid "Path"
 msgstr "路径"
 
@@ -1844,6 +1393,10 @@ msgid "Delete Effect"
 msgstr "删除效果"
 
 #: editor/editor_audio_buses.cpp
+msgid "Audio"
+msgstr "音频"
+
+#: editor/editor_audio_buses.cpp
 msgid "Add Audio Bus"
 msgstr "添加音频总线"
 
@@ -1978,7 +1531,6 @@ msgid "Remove Autoload"
 msgstr "移除 Autoload"
 
 #: editor/editor_autoload_settings.cpp editor/editor_plugin_settings.cpp
-#: modules/gdscript/gdscript.cpp servers/visual_server.cpp
 msgid "Enable"
 msgstr "启用"
 
@@ -2004,6 +1556,12 @@ msgstr "路径："
 #: editor/editor_autoload_settings.cpp
 msgid "Node Name:"
 msgstr "节点名称："
+
+#: editor/editor_autoload_settings.cpp editor/editor_help_search.cpp
+#: editor/editor_profiler.cpp editor/project_manager.cpp
+#: editor/settings_config_dialog.cpp
+msgid "Name"
+msgstr "名称"
 
 #: editor/editor_autoload_settings.cpp
 msgid "Singleton"
@@ -2032,19 +1590,6 @@ msgstr "[空]"
 #: editor/editor_data.cpp
 msgid "[unsaved]"
 msgstr "[未保存]"
-
-#: editor/editor_data.cpp editor/editor_node.cpp editor/editor_settings.cpp
-#: editor/scene_tree_dock.cpp
-msgid "Interface"
-msgstr "界面"
-
-#: editor/editor_data.cpp editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Scene Tabs"
-msgstr "场景标签"
-
-#: editor/editor_data.cpp editor/editor_settings.cpp
-msgid "Show Extension"
-msgstr "显示扩展名"
 
 #: editor/editor_dir_dialog.cpp
 msgid "Please select a base directory first."
@@ -2156,10 +1701,6 @@ msgstr "找不到模板文件："
 msgid "On 32-bit exports the embedded PCK cannot be bigger than 4 GiB."
 msgstr "以 32 位平台导出时，内嵌的 PCK 不能大于 4GB。"
 
-#: editor/editor_export.cpp
-msgid "Convert Text Resources To Binary On Export"
-msgstr "在导出时将文本资源转换为二进制文件"
-
 #: editor/editor_feature_profile.cpp
 msgid "3D Editor"
 msgstr "3D 编辑器"
@@ -2169,7 +1710,6 @@ msgid "Script Editor"
 msgstr "脚本编辑器"
 
 #: editor/editor_feature_profile.cpp
-#: editor/plugins/asset_library_editor_plugin.cpp
 msgid "Asset Library"
 msgstr "素材库"
 
@@ -2271,8 +1811,6 @@ msgid "Import"
 msgstr "导入"
 
 #: editor/editor_feature_profile.cpp editor/project_export.cpp
-#: platform/android/export/export.cpp platform/javascript/export/export.cpp
-#: platform/uwp/export/export.cpp platform/windows/export/export.cpp
 msgid "Export"
 msgstr "导出"
 
@@ -2307,10 +1845,6 @@ msgstr "导出配置文件"
 #: editor/editor_feature_profile.cpp
 msgid "Manage Editor Feature Profiles"
 msgstr "管理编辑器功能配置文件"
-
-#: editor/editor_feature_profile.cpp
-msgid "Default Feature Profile"
-msgstr "默认功能配置文件"
 
 #: editor/editor_file_dialog.cpp scene/gui/file_dialog.cpp
 msgid "Select Current Folder"
@@ -2371,8 +1905,8 @@ msgid "Open a File or Directory"
 msgstr "打开文件或目录"
 
 #: editor/editor_file_dialog.cpp editor/editor_node.cpp
-#: editor/editor_properties.cpp editor/inspector_dock.cpp
-#: editor/plugins/animation_player_editor_plugin.cpp
+#: editor/editor_properties.cpp editor/import_defaults_editor.cpp
+#: editor/inspector_dock.cpp editor/plugins/animation_player_editor_plugin.cpp
 #: editor/plugins/script_editor_plugin.cpp scene/gui/file_dialog.cpp
 msgid "Save"
 msgstr "保存"
@@ -2477,10 +2011,6 @@ msgstr "文件 %s 有不同类型的多个导入器，已中止导入"
 msgid "(Re)Importing Assets"
 msgstr "正在导入或重新导入素材"
 
-#: editor/editor_file_system.cpp
-msgid "Reimport Missing Imported Files"
-msgstr "重新导入丢失的导入文件"
-
 #: editor/editor_help.cpp editor/plugins/spatial_editor_plugin.cpp
 msgid "Top"
 msgstr "顶部"
@@ -2497,6 +2027,10 @@ msgstr "继承："
 #: editor/editor_help.cpp
 msgid "Inherited by:"
 msgstr "派生："
+
+#: editor/editor_help.cpp
+msgid "Description"
+msgstr "描述"
 
 #: editor/editor_help.cpp
 msgid "Online Tutorials"
@@ -2557,15 +2091,6 @@ msgid ""
 msgstr ""
 "当前没有此方法的说明。请帮我们[color=$color][url=$url]贡献一个[/url][/"
 "color]！"
-
-#: editor/editor_help.cpp editor/editor_node.cpp editor/editor_settings.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Help"
-msgstr "帮助"
-
-#: editor/editor_help.cpp
-msgid "Sort Functions Alphabetically"
-msgstr "按字母顺序排序函数"
 
 #: editor/editor_help_search.cpp editor/editor_node.cpp
 #: editor/plugins/script_editor_plugin.cpp
@@ -2693,7 +2218,6 @@ msgid "Up"
 msgstr "上传"
 
 #: editor/editor_network_profiler.cpp editor/editor_node.cpp
-#: scene/main/node.cpp
 msgid "Node"
 msgstr "节点"
 
@@ -2896,7 +2420,7 @@ msgstr "没有设置要运行的场景。"
 
 #: editor/editor_node.cpp
 msgid "Save scene before running..."
-msgstr "运行前保存场景。。。"
+msgstr "运行前保存场景..."
 
 #: editor/editor_node.cpp
 msgid "Could not start subprocess!"
@@ -3037,8 +2561,8 @@ msgid "Unable to enable addon plugin at: '%s' parsing of config failed."
 msgstr "无法在 “%s” 上启用加载项插件：配置解析失败。"
 
 #: editor/editor_node.cpp
-msgid "Unable to find script field for addon plugin at: 'res://addons/%s'."
-msgstr "无法在 “res://addons/%s” 中找到加载项插件的脚本字段。"
+msgid "Unable to find script field for addon plugin at: '%s'."
+msgstr "无法在 “%s” 上找到加载项的 script 字段。"
 
 #: editor/editor_node.cpp
 msgid "Unable to load addon script from path: '%s'."
@@ -3172,110 +2696,6 @@ msgid "%d more files"
 msgstr "其它 %d 个文件"
 
 #: editor/editor_node.cpp
-msgid "Main Run Args"
-msgstr "主运行参数"
-
-#: editor/editor_node.cpp
-msgid "Always Show Close Button"
-msgstr "总是显示关闭按钮"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Resize If Many Tabs"
-msgstr "如果有多个标签则调整大小"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Minimum Width"
-msgstr "最小宽度"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Output"
-msgstr "输出"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Always Clear Output On Play"
-msgstr "播放时始终清除输出"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Always Open Output On Play"
-msgstr "播放时始终打开输出"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Always Close Output On Stop"
-msgstr "停止时始终关闭输出"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Auto Save"
-msgstr "自动保存"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Save Before Running"
-msgstr "运行前保存"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Save Each Scene On Quit"
-msgstr "退出时保存每个场景"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Quit Confirmation"
-msgstr "确认退出"
-
-#: editor/editor_node.cpp
-msgid "Show Update Spinner"
-msgstr "更新显示下拉列表"
-
-#: editor/editor_node.cpp
-msgid "Update Continuously"
-msgstr "持续更新"
-
-#: editor/editor_node.cpp
-msgid "Restore Scenes On Load"
-msgstr "在加载时还原场景"
-
-#: editor/editor_node.cpp editor/editor_settings.cpp
-msgid "Show Thumbnail On Hover"
-msgstr "悬停显示缩略图"
-
-#: editor/editor_node.cpp
-msgid "Inspector"
-msgstr "检查器"
-
-#: editor/editor_node.cpp
-msgid "Capitalize Properties"
-msgstr "大写属性"
-
-#: editor/editor_node.cpp
-msgid "Default Float Step"
-msgstr "默认浮点数位数"
-
-#: editor/editor_node.cpp
-msgid "Disable Folding"
-msgstr "禁用折叠"
-
-#: editor/editor_node.cpp
-msgid "Auto Unfold Foreign Scenes"
-msgstr "自动展开无关场景"
-
-#: editor/editor_node.cpp
-msgid "Horizontal Vector2 Editing"
-msgstr "水平2维向量编辑"
-
-#: editor/editor_node.cpp
-msgid "Horizontal Vector Types Editing"
-msgstr "水平向量类型编辑"
-
-#: editor/editor_node.cpp
-msgid "Open Resources In Current Inspector"
-msgstr "在当前检查器中打开资源"
-
-#: editor/editor_node.cpp
-msgid "Resources To Open In New Inspector"
-msgstr "在新的检查器中打开的资源"
-
-#: editor/editor_node.cpp
-msgid "Default Color Picker Mode"
-msgstr "默认拾色器模式"
-
-#: editor/editor_node.cpp
 msgid "Dock Position"
 msgstr "面板位置"
 
@@ -3370,7 +2790,7 @@ msgid "Miscellaneous project or scene-wide tools."
 msgstr "其他项目或全场景工具。"
 
 #: editor/editor_node.cpp editor/project_manager.cpp
-#: editor/script_create_dialog.cpp modules/mono/editor/csharp_project.cpp
+#: editor/script_create_dialog.cpp
 msgid "Project"
 msgstr "项目"
 
@@ -3402,8 +2822,7 @@ msgstr "安装 Android 构建模板..."
 msgid "Open Project Data Folder"
 msgstr "打开项目数据文件夹"
 
-#: editor/editor_node.cpp editor/editor_settings.cpp
-#: editor/plugins/tile_set_editor_plugin.cpp
+#: editor/editor_node.cpp editor/plugins/tile_set_editor_plugin.cpp
 msgid "Tools"
 msgstr "工具"
 
@@ -3414,6 +2833,11 @@ msgstr "孤立资源浏览器..."
 #: editor/editor_node.cpp
 msgid "Quit to Project List"
 msgstr "退出到项目列表"
+
+#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/project_export.cpp
+msgid "Debug"
+msgstr "调试"
 
 #: editor/editor_node.cpp
 msgid "Deploy with Remote Debug"
@@ -3499,6 +2923,10 @@ msgstr ""
 "启用该选项时，任何保存的脚本都会被正在运行的项目重新加载。\n"
 "当使用于远程设备时，启用网络文件系统能提高编辑效率。"
 
+#: editor/editor_node.cpp editor/script_create_dialog.cpp
+msgid "Editor"
+msgstr "编辑器"
+
 #: editor/editor_node.cpp
 msgid "Editor Settings..."
 msgstr "编辑器设置..."
@@ -3543,13 +2971,9 @@ msgstr "管理编辑器功能..."
 msgid "Manage Export Templates..."
 msgstr "管理导出模板..."
 
-#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/script_text_editor.cpp
-#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
-#: editor/plugins/visual_shader_editor_plugin.cpp editor/project_manager.cpp
-#: editor/project_settings_editor.cpp editor/settings_config_dialog.cpp
-msgid "Search"
-msgstr "搜索"
+#: editor/editor_node.cpp editor/plugins/shader_editor_plugin.cpp
+msgid "Help"
+msgstr "帮助"
 
 #: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
 #: editor/plugins/shader_editor_plugin.cpp
@@ -3630,6 +3054,10 @@ msgid "Spins when the editor window redraws."
 msgstr "编辑器窗口重绘时旋转。"
 
 #: editor/editor_node.cpp
+msgid "Update Continuously"
+msgstr "持续更新"
+
+#: editor/editor_node.cpp
 msgid "Update When Changed"
 msgstr "当有更改时更新"
 
@@ -3642,8 +3070,16 @@ msgid "FileSystem"
 msgstr "文件系统"
 
 #: editor/editor_node.cpp
+msgid "Inspector"
+msgstr "检查器"
+
+#: editor/editor_node.cpp
 msgid "Expand Bottom Panel"
 msgstr "展开底部面板"
+
+#: editor/editor_node.cpp
+msgid "Output"
+msgstr "输出"
 
 #: editor/editor_node.cpp
 msgid "Don't Save"
@@ -3703,6 +3139,24 @@ msgstr "与现有合并"
 #: editor/editor_node.cpp
 msgid "Open & Run a Script"
 msgstr "打开并运行脚本"
+
+#: editor/editor_node.cpp
+msgid ""
+"The following files are newer on disk.\n"
+"What action should be taken?"
+msgstr ""
+"磁盘中的下列文件较新。\n"
+"应该执行什么操作？"
+
+#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Reload"
+msgstr "重新加载"
+
+#: editor/editor_node.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Resave"
+msgstr "重新保存"
 
 #: editor/editor_node.cpp
 msgid "New Inherited"
@@ -3821,26 +3275,13 @@ msgstr "仅自己"
 msgid "Frame #:"
 msgstr "帧 #："
 
-#: editor/editor_profiler.cpp servers/visual_server.cpp
+#: editor/editor_profiler.cpp
 msgid "Time"
 msgstr "时间"
 
 #: editor/editor_profiler.cpp
 msgid "Calls"
 msgstr "调用"
-
-#: editor/editor_profiler.cpp editor/plugins/script_editor_plugin.cpp
-#: editor/script_editor_debugger.cpp
-msgid "Debugger"
-msgstr "调试器"
-
-#: editor/editor_profiler.cpp
-msgid "Profiler Frame History Size"
-msgstr "分析器框架历史记录大小"
-
-#: editor/editor_profiler.cpp
-msgid "Profiler Frame Max Functions"
-msgstr "分析器框架最大函数"
 
 #: editor/editor_properties.cpp
 msgid "Edit Text:"
@@ -3850,7 +3291,7 @@ msgstr "编辑文本："
 msgid "On"
 msgstr "启用"
 
-#: editor/editor_properties.cpp scene/register_scene_types.cpp
+#: editor/editor_properties.cpp
 msgid "Layer"
 msgstr "层"
 
@@ -3924,7 +3365,7 @@ msgstr "唯一化"
 #: editor/plugins/script_text_editor.cpp
 #: editor/plugins/sprite_frames_editor_plugin.cpp
 #: editor/plugins/tile_map_editor_plugin.cpp editor/property_editor.cpp
-#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
+#: editor/scene_tree_dock.cpp scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Paste"
 msgstr "粘贴"
 
@@ -3993,847 +3434,6 @@ msgstr "无法运行脚本："
 #: editor/editor_run_script.cpp
 msgid "Did you forget the '_run' method?"
 msgstr "是否遗漏了 _run() 方法？"
-
-#: editor/editor_settings.cpp
-msgid "Editor Language"
-msgstr "编辑器语言"
-
-#: editor/editor_settings.cpp
-msgid "Editor Setting Translation"
-msgstr "翻译编辑器设置"
-
-#: editor/editor_settings.cpp
-msgid "Property Name Translation"
-msgstr "翻译属性名称"
-
-#: editor/editor_settings.cpp
-msgid "Display Scale"
-msgstr "显示比例"
-
-#: editor/editor_settings.cpp
-msgid "Custom Display Scale"
-msgstr "自定义显示标准"
-
-#: editor/editor_settings.cpp
-msgid "Main Font Size"
-msgstr "主要字体大小"
-
-#: editor/editor_settings.cpp
-msgid "Code Font Size"
-msgstr "代码字体大小"
-
-#: editor/editor_settings.cpp
-msgid "Font Antialiased"
-msgstr "字体抗锯齿"
-
-#: editor/editor_settings.cpp
-msgid "Font Hinting"
-msgstr "字体提示"
-
-#: editor/editor_settings.cpp
-msgid "Main Font"
-msgstr "主要字体"
-
-#: editor/editor_settings.cpp
-msgid "Main Font Bold"
-msgstr "主要加粗字体"
-
-#: editor/editor_settings.cpp
-msgid "Code Font"
-msgstr "代码字体"
-
-#: editor/editor_settings.cpp
-msgid "Dim Editor On Dialog Popup"
-msgstr "弹出对话框暗淡编辑器"
-
-#: editor/editor_settings.cpp main/main.cpp
-msgid "Low Processor Mode Sleep Usec"
-msgstr "低处理器模式休眠微秒"
-
-#: editor/editor_settings.cpp
-msgid "Unfocused Low Processor Mode Sleep Usec"
-msgstr "失去焦点低处理器模式休眠微秒"
-
-#: editor/editor_settings.cpp
-msgid "Separate Distraction Mode"
-msgstr "单独分解模式"
-
-#: editor/editor_settings.cpp
-msgid "Automatically Open Screenshots"
-msgstr "自动打开截图"
-
-#: editor/editor_settings.cpp
-msgid "Hide Console Window"
-msgstr "隐藏控制台窗口"
-
-#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/script_text_editor.cpp editor/plugins/text_editor.cpp
-#: editor/plugins/theme_editor_plugin.cpp scene/register_scene_types.cpp
-msgid "Theme"
-msgstr "主题"
-
-#: editor/editor_settings.cpp editor/import_dock.cpp
-msgid "Preset"
-msgstr "预设"
-
-#: editor/editor_settings.cpp
-msgid "Icon And Font Color"
-msgstr "图标和字体颜色"
-
-#: editor/editor_settings.cpp
-msgid "Base Color"
-msgstr "基本颜色"
-
-#: editor/editor_settings.cpp
-msgid "Accent Color"
-msgstr "强调颜色"
-
-#: editor/editor_settings.cpp
-msgid "Contrast"
-msgstr "对比度"
-
-#: editor/editor_settings.cpp
-msgid "Relationship Line Opacity"
-msgstr "关联线条不透明度"
-
-#: editor/editor_settings.cpp
-msgid "Highlight Tabs"
-msgstr "高亮显示标签"
-
-#: editor/editor_settings.cpp
-msgid "Border Size"
-msgstr "边框尺寸"
-
-#: editor/editor_settings.cpp
-msgid "Use Graph Node Headers"
-msgstr "使用图表节点标题"
-
-#: editor/editor_settings.cpp
-msgid "Additional Spacing"
-msgstr "附加间距"
-
-#: editor/editor_settings.cpp
-msgid "Custom Theme"
-msgstr "自制主题"
-
-#: editor/editor_settings.cpp
-msgid "Show Script Button"
-msgstr "显示脚本按钮"
-
-#: editor/editor_settings.cpp editor/fileserver/editor_file_server.cpp
-msgid "Filesystem"
-msgstr "文件系统"
-
-#: editor/editor_settings.cpp
-msgid "Directories"
-msgstr "目录"
-
-#: editor/editor_settings.cpp
-msgid "Autoscan Project Path"
-msgstr "自动扫描项目路径"
-
-#: editor/editor_settings.cpp
-msgid "Default Project Path"
-msgstr "默认项目路径"
-
-#: editor/editor_settings.cpp
-msgid "On Save"
-msgstr "当保存时"
-
-#: editor/editor_settings.cpp
-msgid "Compress Binary Resources"
-msgstr "压缩二进制资源"
-
-#: editor/editor_settings.cpp
-msgid "Safe Save On Backup Then Rename"
-msgstr "安全保存备份然后重命名"
-
-#: editor/editor_settings.cpp
-msgid "File Dialog"
-msgstr "文件对话框"
-
-#: editor/editor_settings.cpp
-msgid "Show Hidden Files"
-msgstr "显示隐藏文件"
-
-#: editor/editor_settings.cpp
-msgid "Display Mode"
-msgstr "显示模式"
-
-#: editor/editor_settings.cpp
-msgid "Thumbnail Size"
-msgstr "缩略图大小"
-
-#: editor/editor_settings.cpp
-msgid "Docks"
-msgstr "停靠"
-
-#: editor/editor_settings.cpp
-msgid "Scene Tree"
-msgstr "场景树"
-
-#: editor/editor_settings.cpp
-msgid "Start Create Dialog Fully Expanded"
-msgstr "开始创建对话框时完全展开"
-
-#: editor/editor_settings.cpp
-msgid "Always Show Folders"
-msgstr "总是显示文件夹"
-
-#: editor/editor_settings.cpp
-msgid "Property Editor"
-msgstr "属性编辑器"
-
-#: editor/editor_settings.cpp
-msgid "Auto Refresh Interval"
-msgstr "自动刷新间隔"
-
-#: editor/editor_settings.cpp
-msgid "Color Theme"
-msgstr "颜色主题"
-
-#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
-#: editor/plugins/text_editor.cpp
-msgid "Line Spacing"
-msgstr "行间距"
-
-#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
-#: modules/gdscript/editor/gdscript_highlighter.cpp
-msgid "Highlighting"
-msgstr "高亮显示"
-
-#: editor/editor_settings.cpp
-msgid "Syntax Highlighting"
-msgstr "语法高亮"
-
-#: editor/editor_settings.cpp
-msgid "Highlight All Occurrences"
-msgstr "突出显示所有事件"
-
-#: editor/editor_settings.cpp
-msgid "Highlight Current Line"
-msgstr "突出显示当前行"
-
-#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
-msgid "Highlight Type Safe Lines"
-msgstr "突出显示类型安全行"
-
-#: editor/editor_settings.cpp modules/gdscript/gdscript_editor.cpp
-#: modules/mono/csharp_script.cpp
-msgid "Indent"
-msgstr "缩进"
-
-#: editor/editor_settings.cpp editor/script_editor_debugger.cpp
-#: modules/gdscript/gdscript_editor.cpp modules/mono/csharp_script.cpp
-msgid "Type"
-msgstr "类型"
-
-#: editor/editor_settings.cpp main/main.cpp
-#: modules/gdscript/gdscript_editor.cpp modules/mono/csharp_script.cpp
-#: servers/visual_server.cpp
-msgid "Size"
-msgstr "尺寸"
-
-#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
-msgid "Auto Indent"
-msgstr "自动缩进"
-
-#: editor/editor_settings.cpp
-msgid "Convert Indent On Save"
-msgstr "转换缩进保存"
-
-#: editor/editor_settings.cpp
-msgid "Draw Tabs"
-msgstr "绘制标签"
-
-#: editor/editor_settings.cpp
-msgid "Draw Spaces"
-msgstr "绘制空格"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-#: editor/plugins/tile_set_editor_plugin.cpp scene/main/scene_tree.cpp
-msgid "Navigation"
-msgstr "导航"
-
-#: editor/editor_settings.cpp
-msgid "Smooth Scrolling"
-msgstr "平滑滚动"
-
-#: editor/editor_settings.cpp
-msgid "V Scroll Speed"
-msgstr "垂直滚动速度"
-
-#: editor/editor_settings.cpp
-msgid "Show Minimap"
-msgstr "显示小地图"
-
-#: editor/editor_settings.cpp
-msgid "Minimap Width"
-msgstr "小地图宽度"
-
-#: editor/editor_settings.cpp
-msgid "Appearance"
-msgstr "外观"
-
-#: editor/editor_settings.cpp
-msgid "Show Line Numbers"
-msgstr "显示行号"
-
-#: editor/editor_settings.cpp
-msgid "Line Numbers Zero Padded"
-msgstr "填充零行号"
-
-#: editor/editor_settings.cpp
-msgid "Show Bookmark Gutter"
-msgstr "显示书签区"
-
-#: editor/editor_settings.cpp
-msgid "Show Breakpoint Gutter"
-msgstr "显示断点区"
-
-#: editor/editor_settings.cpp
-msgid "Show Info Gutter"
-msgstr "显示信息区"
-
-#: editor/editor_settings.cpp
-msgid "Code Folding"
-msgstr "代码折叠"
-
-#: editor/editor_settings.cpp
-msgid "Word Wrap"
-msgstr "自动换行"
-
-#: editor/editor_settings.cpp
-msgid "Show Line Length Guideline"
-msgstr "显示行长参考"
-
-#: editor/editor_settings.cpp
-msgid "Line Length Guideline Column"
-msgstr "行长参考列"
-
-#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
-msgid "Script List"
-msgstr "脚本列表"
-
-#: editor/editor_settings.cpp
-msgid "Show Members Overview"
-msgstr "显示成员概述"
-
-#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Files"
-msgstr "文档"
-
-#: editor/editor_settings.cpp
-msgid "Trim Trailing Whitespace On Save"
-msgstr "保存时移除尾部空白"
-
-#: editor/editor_settings.cpp
-msgid "Autosave Interval Secs"
-msgstr "自动保存间隔秒数"
-
-#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
-msgid "Restore Scripts On Load"
-msgstr "在加载时还原脚本"
-
-#: editor/editor_settings.cpp
-msgid "Create Signal Callbacks"
-msgstr "创建新信号回调"
-
-#: editor/editor_settings.cpp
-msgid "Sort Members Outline Alphabetically"
-msgstr "按字母顺序对成员进行排序"
-
-#: editor/editor_settings.cpp scene/gui/line_edit.cpp
-msgid "Cursor"
-msgstr "光标"
-
-#: editor/editor_settings.cpp
-msgid "Scroll Past End Of File"
-msgstr "滚动到文件末尾"
-
-#: editor/editor_settings.cpp
-msgid "Block Caret"
-msgstr "块插入符"
-
-#: editor/editor_settings.cpp scene/gui/line_edit.cpp
-msgid "Caret Blink"
-msgstr "插入闪烁符号"
-
-#: editor/editor_settings.cpp scene/gui/line_edit.cpp
-msgid "Caret Blink Speed"
-msgstr "插入闪烁符号速度"
-
-#: editor/editor_settings.cpp
-msgid "Right Click Moves Caret"
-msgstr "单击右键插入符号"
-
-#: editor/editor_settings.cpp
-msgid "Idle Parse Delay"
-msgstr "闲置解析延迟"
-
-#: editor/editor_settings.cpp
-msgid "Auto Brace Complete"
-msgstr "支持自动完成"
-
-#: editor/editor_settings.cpp
-msgid "Code Complete Delay"
-msgstr "完成代码延迟"
-
-#: editor/editor_settings.cpp
-msgid "Put Callhint Tooltip Below Current Line"
-msgstr "将调用提示工具放在当前行下方"
-
-#: editor/editor_settings.cpp
-msgid "Callhint Tooltip Offset"
-msgstr "调用提示工具位置偏移"
-
-#: editor/editor_settings.cpp
-msgid "Complete File Paths"
-msgstr "完整的文件路径"
-
-#: editor/editor_settings.cpp modules/gdscript/gdscript_editor.cpp
-msgid "Add Type Hints"
-msgstr "添加类型提示"
-
-#: editor/editor_settings.cpp
-msgid "Show Help Index"
-msgstr "显示帮助索引"
-
-#: editor/editor_settings.cpp
-msgid "Help Font Size"
-msgstr "帮助字体大小"
-
-#: editor/editor_settings.cpp
-msgid "Help Source Font Size"
-msgstr "帮助源字体大小"
-
-#: editor/editor_settings.cpp
-msgid "Help Title Font Size"
-msgstr "帮助标题字体大小"
-
-#: editor/editor_settings.cpp editor/plugins/mesh_library_editor_plugin.cpp
-#: modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Grid Map"
-msgstr "网格地图"
-
-#: editor/editor_settings.cpp modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Pick Distance"
-msgstr "捕获距离"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-#: main/main.cpp modules/bullet/register_types.cpp
-#: modules/bullet/shape_bullet.cpp modules/bullet/space_bullet.cpp
-#: scene/3d/physics_body.cpp scene/resources/world.cpp
-#: servers/physics/space_sw.cpp
-msgid "3d"
-msgstr "3D"
-
-#: editor/editor_settings.cpp
-msgid "Primary Grid Color"
-msgstr "主网格颜色"
-
-#: editor/editor_settings.cpp
-msgid "Secondary Grid Color"
-msgstr "次网格颜色"
-
-#: editor/editor_settings.cpp
-msgid "Selection Box Color"
-msgstr "选择框颜色"
-
-#: editor/editor_settings.cpp
-msgid "Primary Grid Steps"
-msgstr "主网格步长"
-
-#: editor/editor_settings.cpp
-msgid "Grid Size"
-msgstr "网格尺寸"
-
-#: editor/editor_settings.cpp
-msgid "Grid Division Level Max"
-msgstr "最大网格划分级别"
-
-#: editor/editor_settings.cpp
-msgid "Grid Division Level Min"
-msgstr "最小网格划分级别"
-
-#: editor/editor_settings.cpp
-msgid "Grid Division Level Bias"
-msgstr "网格划分级别偏差"
-
-#: editor/editor_settings.cpp
-msgid "Grid Xz Plane"
-msgstr "网格Xz平面"
-
-#: editor/editor_settings.cpp
-msgid "Grid Xy Plane"
-msgstr "网格Xy平面"
-
-#: editor/editor_settings.cpp
-msgid "Grid Yz Plane"
-msgstr "网格Yz平面"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-msgid "Default Fov"
-msgstr "默认视角"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-msgid "Default Z Near"
-msgstr "默认Z近值"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-msgid "Default Z Far"
-msgstr "默认Z远值"
-
-#: editor/editor_settings.cpp
-msgid "Navigation Scheme"
-msgstr "导航方案"
-
-#: editor/editor_settings.cpp
-msgid "Invert Y Axis"
-msgstr "反转Y轴"
-
-#: editor/editor_settings.cpp
-msgid "Invert X Axis"
-msgstr "反转X轴"
-
-#: editor/editor_settings.cpp
-msgid "Zoom Style"
-msgstr "变焦样式"
-
-#: editor/editor_settings.cpp
-msgid "Emulate 3 Button Mouse"
-msgstr "模拟3键鼠标"
-
-#: editor/editor_settings.cpp
-msgid "Orbit Modifier"
-msgstr "轨道调节器"
-
-#: editor/editor_settings.cpp
-msgid "Pan Modifier"
-msgstr "平移调节器"
-
-#: editor/editor_settings.cpp
-msgid "Zoom Modifier"
-msgstr "缩放调节器"
-
-#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
-msgid "Warped Mouse Panning"
-msgstr "扭曲鼠标平移"
-
-#: editor/editor_settings.cpp
-msgid "Navigation Feel"
-msgstr "触摸导航"
-
-#: editor/editor_settings.cpp
-msgid "Orbit Sensitivity"
-msgstr "轨道灵敏度"
-
-#: editor/editor_settings.cpp
-msgid "Orbit Inertia"
-msgstr "轨道惯性"
-
-#: editor/editor_settings.cpp
-msgid "Translation Inertia"
-msgstr "转换惯性"
-
-#: editor/editor_settings.cpp
-msgid "Zoom Inertia"
-msgstr "变焦惯性"
-
-#: editor/editor_settings.cpp
-msgid "Manipulation Orbit Inertia"
-msgstr "操作轨道惯性"
-
-#: editor/editor_settings.cpp
-msgid "Manipulation Translation Inertia"
-msgstr "操纵平移惯性"
-
-#: editor/editor_settings.cpp
-msgid "Freelook"
-msgstr "自由视角"
-
-#: editor/editor_settings.cpp
-msgid "Freelook Navigation Scheme"
-msgstr "自由视角导航方案"
-
-#: editor/editor_settings.cpp
-msgid "Freelook Inertia"
-msgstr "自由惯性"
-
-#: editor/editor_settings.cpp
-msgid "Freelook Base Speed"
-msgstr "自由视角基本速度"
-
-#: editor/editor_settings.cpp
-msgid "Freelook Activation Modifier"
-msgstr "自由视角激活调节器"
-
-#: editor/editor_settings.cpp
-msgid "Freelook Speed Zoom Link"
-msgstr "自由视角速度变焦链接"
-
-#: editor/editor_settings.cpp
-msgid "Grid Color"
-msgstr "网格颜色"
-
-#: editor/editor_settings.cpp
-msgid "Guides Color"
-msgstr "指南颜色"
-
-#: editor/editor_settings.cpp
-msgid "Smart Snapping Line Color"
-msgstr "智能捕获线颜色"
-
-#: editor/editor_settings.cpp
-msgid "Bone Width"
-msgstr "骨宽"
-
-#: editor/editor_settings.cpp
-msgid "Bone Color1"
-msgstr "骨色1"
-
-#: editor/editor_settings.cpp
-msgid "Bone Color2"
-msgstr "骨色2"
-
-#: editor/editor_settings.cpp
-msgid "Bone Selected Color"
-msgstr "骨选择色"
-
-#: editor/editor_settings.cpp
-msgid "Bone Ik Color"
-msgstr "骨IK色"
-
-#: editor/editor_settings.cpp
-msgid "Bone Outline Color"
-msgstr "骨轮廓色"
-
-#: editor/editor_settings.cpp
-msgid "Bone Outline Size"
-msgstr "骨轮廓尺寸"
-
-#: editor/editor_settings.cpp
-msgid "Viewport Border Color"
-msgstr "视窗边框颜色"
-
-#: editor/editor_settings.cpp
-msgid "Constrain Editor View"
-msgstr "约束编辑视图"
-
-#: editor/editor_settings.cpp
-msgid "Simple Panning"
-msgstr "简单平移"
-
-#: editor/editor_settings.cpp
-msgid "Scroll To Pan"
-msgstr "平移滚动"
-
-#: editor/editor_settings.cpp
-msgid "Pan Speed"
-msgstr "平移速度"
-
-#: editor/editor_settings.cpp editor/plugins/polygon_2d_editor_plugin.cpp
-msgid "Poly Editor"
-msgstr "多边形编辑器"
-
-#: editor/editor_settings.cpp
-msgid "Point Grab Radius"
-msgstr "点抓取半径"
-
-#: editor/editor_settings.cpp editor/plugins/polygon_2d_editor_plugin.cpp
-msgid "Show Previous Outline"
-msgstr "显示上一个大纲"
-
-#: editor/editor_settings.cpp editor/scene_tree_dock.cpp
-msgid "Autorename Animation Tracks"
-msgstr "自动重命名动画轨道"
-
-#: editor/editor_settings.cpp
-msgid "Onion Layers Past Color"
-msgstr "洋葱层过去的颜色"
-
-#: editor/editor_settings.cpp
-msgid "Onion Layers Future Color"
-msgstr "洋葱层未来的颜色"
-
-#: editor/editor_settings.cpp
-msgid "Window Placement"
-msgstr "窗口设置"
-
-#: editor/editor_settings.cpp
-msgid "Rect"
-msgstr "矩形"
-
-#: editor/editor_settings.cpp
-msgid "Rect Custom Position"
-msgstr "自定义矩形位置"
-
-#: editor/editor_settings.cpp
-msgid "Screen"
-msgstr "屏幕"
-
-#: editor/editor_settings.cpp
-msgid "Font Size"
-msgstr "字体大小"
-
-#: editor/editor_settings.cpp
-msgid "Remote Host"
-msgstr "远程主机"
-
-#: editor/editor_settings.cpp
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Remote Port"
-msgstr "远程端口"
-
-#: editor/editor_settings.cpp
-msgid "Editor Ssl Certificates"
-msgstr "编辑SSL证书"
-
-#. TRANSLATORS: This refers to the application where users manage their Godot projects.
-#: editor/editor_settings.cpp editor/project_manager.cpp
-msgid "Project Manager"
-msgstr "项目管理器"
-
-#: editor/editor_settings.cpp
-msgid "Sorting Order"
-msgstr "排序顺序"
-
-#: editor/editor_settings.cpp
-msgid "Symbol Color"
-msgstr "符号颜色"
-
-#: editor/editor_settings.cpp
-msgid "Keyword Color"
-msgstr "关键字颜色"
-
-#: editor/editor_settings.cpp
-msgid "Base Type Color"
-msgstr "基本类型颜色"
-
-#: editor/editor_settings.cpp
-msgid "Engine Type Color"
-msgstr "引擎类型颜色"
-
-#: editor/editor_settings.cpp
-msgid "User Type Color"
-msgstr "用户类颜色"
-
-#: editor/editor_settings.cpp
-msgid "Comment Color"
-msgstr "注释颜色"
-
-#: editor/editor_settings.cpp
-msgid "String Color"
-msgstr "字符串颜色"
-
-#: editor/editor_settings.cpp
-msgid "Background Color"
-msgstr "背景颜色"
-
-#: editor/editor_settings.cpp
-msgid "Completion Background Color"
-msgstr "完成背景色"
-
-#: editor/editor_settings.cpp
-msgid "Completion Selected Color"
-msgstr "完成选择颜色"
-
-#: editor/editor_settings.cpp
-msgid "Completion Existing Color"
-msgstr "完成现有颜色"
-
-#: editor/editor_settings.cpp
-msgid "Completion Scroll Color"
-msgstr "完成滚动颜色"
-
-#: editor/editor_settings.cpp
-msgid "Completion Font Color"
-msgstr "完成字体颜色"
-
-#: editor/editor_settings.cpp
-msgid "Text Color"
-msgstr "文本颜色"
-
-#: editor/editor_settings.cpp
-msgid "Line Number Color"
-msgstr "行号颜色"
-
-#: editor/editor_settings.cpp
-msgid "Safe Line Number Color"
-msgstr "安全行号颜色"
-
-#: editor/editor_settings.cpp
-msgid "Caret Color"
-msgstr "插入符号颜色"
-
-#: editor/editor_settings.cpp
-msgid "Caret Background Color"
-msgstr "插入符号背景色"
-
-#: editor/editor_settings.cpp
-msgid "Text Selected Color"
-msgstr "文本选择颜色"
-
-#: editor/editor_settings.cpp
-msgid "Selection Color"
-msgstr "选择颜色"
-
-#: editor/editor_settings.cpp
-msgid "Brace Mismatch Color"
-msgstr "括号不匹配颜色"
-
-#: editor/editor_settings.cpp
-msgid "Current Line Color"
-msgstr "当前行颜色"
-
-#: editor/editor_settings.cpp
-msgid "Line Length Guideline Color"
-msgstr "行长度参考颜色"
-
-#: editor/editor_settings.cpp
-msgid "Word Highlighted Color"
-msgstr "单词高亮颜色"
-
-#: editor/editor_settings.cpp
-msgid "Number Color"
-msgstr "数字颜色"
-
-#: editor/editor_settings.cpp
-msgid "Function Color"
-msgstr "函数颜色"
-
-#: editor/editor_settings.cpp
-msgid "Member Variable Color"
-msgstr "成员变量颜色"
-
-#: editor/editor_settings.cpp
-msgid "Mark Color"
-msgstr "标记颜色"
-
-#: editor/editor_settings.cpp
-msgid "Bookmark Color"
-msgstr "书签颜色"
-
-#: editor/editor_settings.cpp
-msgid "Breakpoint Color"
-msgstr "断点颜色"
-
-#: editor/editor_settings.cpp
-msgid "Executing Line Color"
-msgstr "执行行颜色"
-
-#: editor/editor_settings.cpp
-msgid "Code Folding Color"
-msgstr "代码折叠颜色"
-
-#: editor/editor_settings.cpp
-msgid "Search Result Color"
-msgstr "搜索结果颜色"
-
-#: editor/editor_settings.cpp
-msgid "Search Result Border Color"
-msgstr "搜索结果边框颜色"
 
 #: editor/editor_spin_slider.cpp
 msgid "Hold Ctrl to round to integers. Hold Shift for more precise changes."
@@ -5063,18 +3663,6 @@ msgstr "下载模板"
 #: editor/export_template_manager.cpp
 msgid "Select mirror from list: (Shift+Click: Open in Browser)"
 msgstr "从列表中选择镜像：（Shift+单击：在浏览器中打开）"
-
-#: editor/fileserver/editor_file_server.cpp
-msgid "File Server"
-msgstr "文件服务"
-
-#: editor/fileserver/editor_file_server.cpp modules/mono/mono_gd/gd_mono.cpp
-msgid "Port"
-msgstr "端口"
-
-#: editor/fileserver/editor_file_server.cpp
-msgid "Password"
-msgstr "密码"
 
 #: editor/filesystem_dock.cpp
 msgid "Favorites"
@@ -5393,14 +3981,6 @@ msgstr "分组编辑器"
 msgid "Manage Groups"
 msgstr "管理分组"
 
-#: editor/import/editor_import_collada.cpp
-msgid "Collada"
-msgstr "Collada"
-
-#: editor/import/editor_import_collada.cpp
-msgid "Use Ambient"
-msgstr "使用环境光"
-
 #: editor/import/resource_importer_scene.cpp
 msgid "Import as Single Scene"
 msgstr "导入为单一场景"
@@ -5513,6 +4093,10 @@ msgstr "清除 “%s” 的默认值"
 #: editor/import_dock.cpp
 msgid "Import As:"
 msgstr "导入为："
+
+#: editor/import_dock.cpp
+msgid "Preset"
+msgstr "预设"
 
 #: editor/import_dock.cpp
 msgid "Reimport"
@@ -6046,6 +4630,10 @@ msgid "Animation Tools"
 msgstr "动画工具"
 
 #: editor/plugins/animation_player_editor_plugin.cpp
+msgid "Animation"
+msgstr "动画"
+
+#: editor/plugins/animation_player_editor_plugin.cpp
 msgid "Edit Transitions..."
 msgstr "编辑过渡方式..."
 
@@ -6081,7 +4669,7 @@ msgstr "过去"
 msgid "Future"
 msgstr "未来"
 
-#: editor/plugins/animation_player_editor_plugin.cpp scene/main/scene_tree.cpp
+#: editor/plugins/animation_player_editor_plugin.cpp
 msgid "Depth"
 msgstr "深度"
 
@@ -6150,7 +4738,7 @@ msgstr "过渡已存在！"
 
 #: editor/plugins/animation_state_machine_editor.cpp
 msgid "Add Transition"
-msgstr "添加转换"
+msgstr "添加过渡"
 
 #: editor/plugins/animation_state_machine_editor.cpp
 #: modules/visual_script/visual_script_editor.cpp
@@ -6191,7 +4779,7 @@ msgstr "节点已移除"
 
 #: editor/plugins/animation_state_machine_editor.cpp
 msgid "Transition Removed"
-msgstr "转换已移除"
+msgstr "过渡已移除"
 
 #: editor/plugins/animation_state_machine_editor.cpp
 msgid "Set Start Node (Autoplay)"
@@ -6414,7 +5002,7 @@ msgstr "无法将响应保存到："
 
 #: editor/plugins/asset_library_editor_plugin.cpp
 msgid "Write error."
-msgstr "写错误。"
+msgstr "写入错误。"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
 msgid "Request failed, too many redirects"
@@ -6445,7 +5033,7 @@ msgid "Got:"
 msgstr "获得:"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
-msgid "Failed sha256 hash check"
+msgid "Failed SHA-256 hash check"
 msgstr "SHA-256 哈希值校验失败"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
@@ -6479,10 +5067,6 @@ msgstr "安装..."
 #: editor/plugins/asset_library_editor_plugin.cpp
 msgid "Retry"
 msgstr "重试"
-
-#: editor/plugins/asset_library_editor_plugin.cpp
-msgid "Use Threads"
-msgstr "使用线程"
 
 #: editor/plugins/asset_library_editor_plugin.cpp
 msgid "Download Error"
@@ -6553,7 +5137,6 @@ msgid "Sort:"
 msgstr "排序："
 
 #: editor/plugins/asset_library_editor_plugin.cpp
-#: editor/project_settings_editor.cpp
 msgid "Category:"
 msgstr "分类："
 
@@ -6988,6 +5571,10 @@ msgid "Snap Relative"
 msgstr "相对吸附"
 
 #: editor/plugins/canvas_item_editor_plugin.cpp
+msgid "Use Pixel Snap"
+msgstr "使用像素吸附"
+
+#: editor/plugins/canvas_item_editor_plugin.cpp
 msgid "Smart Snapping"
 msgstr "智能吸附"
 
@@ -7229,7 +5816,7 @@ msgstr "清除发射遮罩"
 
 #: editor/plugins/cpu_particles_2d_editor_plugin.cpp
 #: editor/plugins/particles_2d_editor_plugin.cpp
-#: editor/plugins/particles_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
+#: editor/plugins/particles_editor_plugin.cpp
 msgid "Particles"
 msgstr "粒子"
 
@@ -7270,7 +5857,7 @@ msgstr "发射色彩"
 
 #: editor/plugins/cpu_particles_editor_plugin.cpp
 msgid "CPUParticles"
-msgstr "CPUParticles"
+msgstr "CPU粒子"
 
 #: editor/plugins/cpu_particles_editor_plugin.cpp
 #: editor/plugins/particles_editor_plugin.cpp
@@ -7284,11 +5871,11 @@ msgstr "从节点创建发射点"
 
 #: editor/plugins/curve_editor_plugin.cpp
 msgid "Flat 0"
-msgstr "Flat 0"
+msgstr "平面 0"
 
 #: editor/plugins/curve_editor_plugin.cpp
 msgid "Flat 1"
-msgstr "Flat 1"
+msgstr "平面 1"
 
 #: editor/plugins/curve_editor_plugin.cpp editor/property_editor.cpp
 msgid "Ease In"
@@ -7582,12 +6169,6 @@ msgstr "从场景中导入"
 msgid "Update from Scene"
 msgstr "从场景中更新"
 
-#: editor/plugins/mesh_library_editor_plugin.cpp
-#: editor/plugins/tile_map_editor_plugin.cpp
-#: modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Preview Size"
-msgstr "预览尺寸"
-
 #: editor/plugins/multimesh_editor_plugin.cpp
 msgid "No mesh source specified (and no MultiMesh set in node)."
 msgstr "未指定网格源（且节点中没有设置 MultiMesh 集）。"
@@ -7846,7 +6427,6 @@ msgstr "关闭曲线"
 #: editor/plugins/path_2d_editor_plugin.cpp
 #: editor/plugins/path_editor_plugin.cpp editor/plugins/theme_editor_plugin.cpp
 #: editor/plugins/visual_shader_editor_plugin.cpp editor/project_export.cpp
-#: servers/visual_server.cpp
 msgid "Options"
 msgstr "选项"
 
@@ -7895,18 +6475,6 @@ msgstr "移除内控点"
 #: editor/plugins/path_editor_plugin.cpp
 msgid "Split Segment (in curve)"
 msgstr "拆分线段（在曲线中）"
-
-#: editor/plugins/path_editor_plugin.cpp
-#: editor/plugins/spatial_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
-#: modules/csg/csg_gizmos.cpp
-msgid "3d Gizmos"
-msgstr "3D装置"
-
-#: editor/plugins/path_editor_plugin.cpp
-#: editor/plugins/spatial_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
-#: modules/csg/csg_gizmos.cpp
-msgid "Gizmo Colors"
-msgstr "装置颜色"
 
 #: editor/plugins/physical_bone_plugin.cpp
 msgid "Move Joint"
@@ -8180,11 +6748,6 @@ msgid "Close and save changes?"
 msgstr "关闭并保存更改吗？"
 
 #: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Auto Reload Scripts On External Change"
-msgstr "在外部更改时自动重新加载脚本"
-
-#: editor/plugins/script_editor_plugin.cpp
 msgid "Error writing TextFile:"
 msgstr "写入文本文件时出错："
 
@@ -8260,10 +6823,6 @@ msgstr "主题另存为..."
 #: editor/plugins/script_editor_plugin.cpp
 msgid "%s Class Reference"
 msgstr "%s 类引用"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Auto Reload And Parse Scripts On Save"
-msgstr "保存时自动重新加载和解析脚本"
 
 #: editor/plugins/script_editor_plugin.cpp
 #: editor/plugins/script_text_editor.cpp
@@ -8344,6 +6903,11 @@ msgid "History Next"
 msgstr "前进"
 
 #: editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/theme_editor_plugin.cpp
+msgid "Theme"
+msgstr "主题"
+
+#: editor/plugins/script_editor_plugin.cpp
 msgid "Import Theme..."
 msgstr "导入主题..."
 
@@ -8362,6 +6926,18 @@ msgstr "关闭全部"
 #: editor/plugins/script_editor_plugin.cpp
 msgid "Close Docs"
 msgstr "关闭文档"
+
+#: editor/plugins/script_editor_plugin.cpp editor/project_manager.cpp
+msgid "Run"
+msgstr "运行"
+
+#: editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/script_text_editor.cpp
+#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
+#: editor/plugins/visual_shader_editor_plugin.cpp editor/project_manager.cpp
+#: editor/project_settings_editor.cpp editor/settings_config_dialog.cpp
+msgid "Search"
+msgstr "搜索"
 
 #: editor/plugins/script_editor_plugin.cpp editor/script_editor_debugger.cpp
 msgid "Step Into"
@@ -8416,67 +6992,13 @@ msgstr ""
 "磁盘中的下列文件已更新。\n"
 "请选择执行哪项操作？："
 
-#: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Reload"
-msgstr "重新加载"
-
-#: editor/plugins/script_editor_plugin.cpp
-#: editor/plugins/shader_editor_plugin.cpp
-msgid "Resave"
-msgstr "重新保存"
+#: editor/plugins/script_editor_plugin.cpp editor/script_editor_debugger.cpp
+msgid "Debugger"
+msgstr "调试器"
 
 #: editor/plugins/script_editor_plugin.cpp
 msgid "Search Results"
 msgstr "搜索结果"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Open Dominant Script On Scene Change"
-msgstr "在场景更改时打开主脚本"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "External"
-msgstr "外部"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Use External Editor"
-msgstr "使用外部编辑器"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Exec Path"
-msgstr "执行路径"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Script Temperature Enabled"
-msgstr "启用脚本热度"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Highlight Current Script"
-msgstr "高亮显示当前脚本"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Script Temperature History Size"
-msgstr "脚本热度历史记录大小"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Current Script Background Color"
-msgstr "当前脚本背景色"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Group Help Pages"
-msgstr "分组帮助页面"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Sort Scripts By"
-msgstr "脚本排序依据"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "List Script Names As"
-msgstr "列出脚本名称清单"
-
-#: editor/plugins/script_editor_plugin.cpp
-msgid "Exec Flags"
-msgstr "执行标记"
 
 #: editor/plugins/script_editor_plugin.cpp
 msgid "Clear Recent Scripts"
@@ -8562,8 +7084,8 @@ msgstr "断点"
 msgid "Go To"
 msgstr "转到"
 
-#: editor/plugins/script_text_editor.cpp scene/gui/line_edit.cpp
-#: scene/gui/text_edit.cpp
+#: editor/plugins/script_text_editor.cpp editor/scene_tree_dock.cpp
+#: scene/gui/line_edit.cpp scene/gui/text_edit.cpp
 msgid "Cut"
 msgstr "剪切"
 
@@ -8623,6 +7145,10 @@ msgstr "将缩进转为空格"
 #: editor/plugins/script_text_editor.cpp
 msgid "Convert Indent to Tabs"
 msgstr "将缩进转为制表符"
+
+#: editor/plugins/script_text_editor.cpp
+msgid "Auto Indent"
+msgstr "自动缩进"
 
 #: editor/plugins/script_text_editor.cpp
 msgid "Find in Files..."
@@ -8713,7 +7239,7 @@ msgstr "将骨骼重置为放松姿势"
 msgid "Create physical bones"
 msgstr "创建物理骨骼"
 
-#: editor/plugins/skeleton_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
+#: editor/plugins/skeleton_editor_plugin.cpp
 msgid "Skeleton"
 msgstr "骨架"
 
@@ -8780,6 +7306,10 @@ msgstr "俯仰角"
 #: editor/plugins/spatial_editor_plugin.cpp
 msgid "Yaw"
 msgstr "偏航角"
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Size"
+msgstr "大小"
 
 #: editor/plugins/spatial_editor_plugin.cpp
 msgid "Objects Drawn"
@@ -9177,22 +7707,6 @@ msgid "Post"
 msgstr "后置"
 
 #: editor/plugins/spatial_editor_plugin.cpp
-msgid "Manipulator Gizmo Size"
-msgstr "操作装置大小"
-
-#: editor/plugins/spatial_editor_plugin.cpp
-msgid "Manipulator Gizmo Opacity"
-msgstr "操作装置不透明度"
-
-#: editor/plugins/spatial_editor_plugin.cpp
-msgid "Show Viewport Rotation Gizmo"
-msgstr "显示视口旋转装置"
-
-#: editor/plugins/spatial_editor_plugin.cpp
-msgid "Instanced"
-msgstr "实例化"
-
-#: editor/plugins/spatial_editor_plugin.cpp
 msgid "Nameless gizmo"
 msgstr "无名控制器"
 
@@ -9582,7 +8096,7 @@ msgid "Data Type:"
 msgstr "数据类型："
 
 #: editor/plugins/theme_editor_plugin.cpp
-#: editor/plugins/tile_set_editor_plugin.cpp main/main.cpp
+#: editor/plugins/tile_set_editor_plugin.cpp
 msgid "Icon"
 msgstr "图标"
 
@@ -9614,26 +8128,6 @@ msgstr "修复无效的图块"
 #: modules/gridmap/grid_map_editor_plugin.cpp
 msgid "Cut Selection"
 msgstr "剪切选中项"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Tile Map"
-msgstr "瓦片地图"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Palette Item Hseparation"
-msgstr "调色板项目分离"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Show Tile Names"
-msgstr "显示图块名称"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Show Tile Ids"
-msgstr "显示图块ID"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Sort Tiles By Name"
-msgstr "图块按名称排序"
 
 #: editor/plugins/tile_map_editor_plugin.cpp
 msgid "Paint TileMap"
@@ -9674,11 +8168,6 @@ msgstr "启用优先级"
 #: editor/plugins/tile_map_editor_plugin.cpp
 msgid "Filter tiles"
 msgstr "筛选图块"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-#: modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Palette Min Width"
-msgstr "调色板最小宽度"
 
 #: editor/plugins/tile_map_editor_plugin.cpp
 msgid "Give a TileSet resource to this TileMap to use its tiles."
@@ -9728,15 +8217,6 @@ msgstr "垂直翻转"
 msgid "Clear Transform"
 msgstr "清除变换"
 
-#: editor/plugins/tile_map_editor_plugin.cpp
-msgid "Bucket Fill Preview"
-msgstr "批量填充预览"
-
-#: editor/plugins/tile_map_editor_plugin.cpp
-#: modules/gridmap/grid_map_editor_plugin.cpp
-msgid "Editor Side"
-msgstr "编辑侧边"
-
 #: editor/plugins/tile_set_editor_plugin.cpp
 msgid "Add Texture(s) to TileSet."
 msgstr "添加纹理到图块集。"
@@ -9785,13 +8265,17 @@ msgstr "选择上一个形状、子图块、图块。"
 msgid "Region"
 msgstr "区域"
 
-#: editor/plugins/tile_set_editor_plugin.cpp scene/main/scene_tree.cpp
+#: editor/plugins/tile_set_editor_plugin.cpp
 msgid "Collision"
 msgstr "碰撞"
 
 #: editor/plugins/tile_set_editor_plugin.cpp
 msgid "Occlusion"
 msgstr "遮挡"
+
+#: editor/plugins/tile_set_editor_plugin.cpp
+msgid "Navigation"
+msgstr "导航"
 
 #: editor/plugins/tile_set_editor_plugin.cpp
 msgid "Bitmask"
@@ -11448,9 +9932,18 @@ msgstr ""
 "确定要扫描文件夹 %s 中的现有 Godot 项目吗？ \n"
 "这可能需要一段时间。"
 
+#. TRANSLATORS: This refers to the application where users manage their Godot projects.
+#: editor/project_manager.cpp
+msgid "Project Manager"
+msgstr "项目管理器"
+
 #: editor/project_manager.cpp
 msgid "Projects"
 msgstr "项目"
+
+#: editor/project_manager.cpp
+msgid "Loading, please wait..."
+msgstr "正在加载，请稍候..."
 
 #: editor/project_manager.cpp
 msgid "Last Modified"
@@ -11787,6 +10280,10 @@ msgid "Remaps by Locale:"
 msgstr "依照区域重定向："
 
 #: editor/project_settings_editor.cpp
+msgid "Locale"
+msgstr "区域"
+
+#: editor/project_settings_editor.cpp
 msgid "Locales Filter"
 msgstr "筛选区域"
 
@@ -12027,6 +10524,10 @@ msgid "Current Scene"
 msgstr "当前场景"
 
 #: editor/run_settings_dialog.cpp
+msgid "Main Scene"
+msgstr "主场景"
+
+#: editor/run_settings_dialog.cpp
 msgid "Main Scene Arguments:"
 msgstr "主场景参数："
 
@@ -12059,6 +10560,14 @@ msgstr "替换为分支场景"
 #: editor/scene_tree_dock.cpp
 msgid "Instance Child Scene"
 msgstr "实例化子场景"
+
+#: editor/scene_tree_dock.cpp
+msgid "Can't paste root node into the same scene."
+msgstr "不能将根节点粘贴进相同场景。"
+
+#: editor/scene_tree_dock.cpp
+msgid "Paste Node(s)"
+msgstr "粘贴节点"
 
 #: editor/scene_tree_dock.cpp
 msgid "Detach Script"
@@ -12181,6 +10690,10 @@ msgstr "无法操作此节点，因为当前场景继承自该节点！"
 #: editor/scene_tree_dock.cpp
 msgid "Attach Script"
 msgstr "添加脚本"
+
+#: editor/scene_tree_dock.cpp
+msgid "Cut Node(s)"
+msgstr "剪切节点"
 
 #: editor/scene_tree_dock.cpp
 msgid "Remove Node(s)"
@@ -12307,18 +10820,6 @@ msgstr "本地"
 #: editor/scene_tree_dock.cpp
 msgid "Clear Inheritance? (No Undo!)"
 msgstr "是否清除继承？（无法撤销！）"
-
-#: editor/scene_tree_dock.cpp
-msgid "Show Scene Tree Root Selection"
-msgstr "显示场景树根选择"
-
-#: editor/scene_tree_dock.cpp
-msgid "Derive Script Globals By Name"
-msgstr "通过名称派生脚本全局变量"
-
-#: editor/scene_tree_dock.cpp
-msgid "Use Favorites Root Selection"
-msgstr "使用收藏夹根选择"
 
 #: editor/scene_tree_editor.cpp
 msgid "Toggle Visible"
@@ -12611,16 +11112,8 @@ msgid "Stack Frames"
 msgstr "栈帧"
 
 #: editor/script_editor_debugger.cpp
-msgid "Auto Switch To Remote Scene Tree"
-msgstr "自动切换到远程场景树"
-
-#: editor/script_editor_debugger.cpp
-msgid "Remote Scene Tree Refresh Interval"
-msgstr "远程场景树刷新间隔"
-
-#: editor/script_editor_debugger.cpp
-msgid "Remote Inspect Refresh Interval"
-msgstr "远程监视面板刷新间隔"
+msgid "Profiler"
+msgstr "性能分析器"
 
 #: editor/script_editor_debugger.cpp
 msgid "Network Profiler"
@@ -12657,6 +11150,10 @@ msgstr "将列表导出为 CSV 文件"
 #: editor/script_editor_debugger.cpp
 msgid "Resource Path"
 msgstr "资源路径"
+
+#: editor/script_editor_debugger.cpp
+msgid "Type"
+msgstr "类型"
 
 #: editor/script_editor_debugger.cpp
 msgid "Format"
@@ -12719,16 +11216,8 @@ msgid "Change Light Radius"
 msgstr "设置光照半径"
 
 #: editor/spatial_editor_gizmos.cpp
-msgid "Stream Player 3d"
-msgstr "流播放3D"
-
-#: editor/spatial_editor_gizmos.cpp
 msgid "Change AudioStreamPlayer3D Emission Angle"
 msgstr "改变 AudioStreamPlayer3D 发射角"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Camera"
-msgstr "摄像机"
 
 #: editor/spatial_editor_gizmos.cpp
 msgid "Change Camera FOV"
@@ -12739,18 +11228,6 @@ msgid "Change Camera Size"
 msgstr "修改摄像机尺寸"
 
 #: editor/spatial_editor_gizmos.cpp
-msgid "Joint"
-msgstr "关节"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Shape"
-msgstr "形状"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Visibility Notifier"
-msgstr "可见性通知"
-
-#: editor/spatial_editor_gizmos.cpp
 msgid "Change Notifier AABB"
 msgstr "修改通知器 AABB"
 
@@ -12759,20 +11236,8 @@ msgid "Change Particles AABB"
 msgstr "修改粒子 AABB"
 
 #: editor/spatial_editor_gizmos.cpp
-msgid "Reflection Probe"
-msgstr "反射探针"
-
-#: editor/spatial_editor_gizmos.cpp
 msgid "Change Probe Extents"
 msgstr "修改探针范围"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Gi Probe"
-msgstr "GI探针"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Baked Indirect Light"
-msgstr "烘焙间接光"
 
 #: editor/spatial_editor_gizmos.cpp modules/csg/csg_gizmos.cpp
 msgid "Change Sphere Shape Radius"
@@ -12801,424 +11266,6 @@ msgstr "修改圆柱形高度"
 #: editor/spatial_editor_gizmos.cpp
 msgid "Change Ray Shape Length"
 msgstr "修改射线形状长度"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Navigation Edge"
-msgstr "导航边缘"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Navigation Edge Disabled"
-msgstr "禁用导航边缘"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Navigation Solid"
-msgstr "导航实体"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Navigation Solid Disabled"
-msgstr "禁用导航实体"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Joint Body A"
-msgstr "关节体A"
-
-#: editor/spatial_editor_gizmos.cpp
-msgid "Joint Body B"
-msgstr "关节体B"
-
-#: main/main.cpp modules/bullet/register_types.cpp
-#: modules/bullet/shape_bullet.cpp modules/bullet/space_bullet.cpp
-#: scene/2d/physics_body_2d.cpp scene/3d/physics_body.cpp
-#: scene/main/scene_tree.cpp scene/resources/world.cpp
-#: scene/resources/world_2d.cpp servers/physics/space_sw.cpp
-#: servers/physics_2d/broad_phase_2d_hash_grid.cpp
-#: servers/physics_2d/physics_2d_server_wrap_mt.h
-#: servers/physics_2d/space_2d_sw.cpp
-msgid "Physics"
-msgstr "物理"
-
-#: main/main.cpp
-msgid "Godot Physics"
-msgstr "Godot物理"
-
-#: main/main.cpp servers/visual/visual_server_scene.cpp
-msgid "Use Bvh"
-msgstr "使用Bvh"
-
-#: main/main.cpp
-msgid "Crash Handler"
-msgstr "崩溃处理程序"
-
-#: main/main.cpp
-msgid "Message"
-msgstr "信息"
-
-#: main/main.cpp
-msgid "Multithreaded Server"
-msgstr "多线程服务器"
-
-#: main/main.cpp
-msgid "Rid Pool Prealloc"
-msgstr "RID池分配"
-
-#: main/main.cpp
-msgid "Debugger Stdout"
-msgstr "调试器输出"
-
-#: main/main.cpp
-msgid "Max Chars Per Second"
-msgstr "每秒最大字符数"
-
-#: main/main.cpp
-msgid "Max Messages Per Frame"
-msgstr "每秒最大消息数"
-
-#: main/main.cpp
-msgid "Max Errors Per Second"
-msgstr "每秒最大错误数"
-
-#: main/main.cpp
-msgid "Max Warnings Per Second"
-msgstr "每秒最大警告数"
-
-#: main/main.cpp
-msgid "Logging"
-msgstr "日志"
-
-#: main/main.cpp
-msgid "File Logging"
-msgstr "文件日志"
-
-#: main/main.cpp
-msgid "Enable File Logging"
-msgstr "启用文件日志"
-
-#: main/main.cpp
-msgid "Enable File Logging.pc"
-msgstr "启用文件日志.pc"
-
-#: main/main.cpp
-msgid "Log Path"
-msgstr "日志路径"
-
-#: main/main.cpp
-msgid "Max Log Files"
-msgstr "最大日志文件数"
-
-#: main/main.cpp
-msgid "Driver"
-msgstr "驱动"
-
-#: main/main.cpp
-msgid "Driver Name"
-msgstr "驱动名称"
-
-#: main/main.cpp
-msgid "Fallback To Gles2"
-msgstr "回退到GLES2"
-
-#: main/main.cpp
-msgid "Use Nvidia Rect Flicker Workaround"
-msgstr "使用英伟达矩形闪烁方案"
-
-#: main/main.cpp platform/uwp/os_uwp.cpp
-msgid "Display"
-msgstr "显示"
-
-#: main/main.cpp platform/uwp/os_uwp.cpp
-msgid "Window"
-msgstr "窗口"
-
-#: main/main.cpp
-msgid "Width"
-msgstr "宽度"
-
-#: main/main.cpp
-msgid "Height"
-msgstr "高度"
-
-#: main/main.cpp
-msgid "Resizable"
-msgstr "可调整大小"
-
-#: main/main.cpp
-msgid "Borderless"
-msgstr "无边框"
-
-#: main/main.cpp
-msgid "Fullscreen"
-msgstr "全屏"
-
-#: main/main.cpp
-msgid "Always On Top"
-msgstr "总在最前"
-
-#: main/main.cpp
-msgid "Test Width"
-msgstr "测试宽度"
-
-#: main/main.cpp
-msgid "Test Height"
-msgstr "测试高度"
-
-#: main/main.cpp
-msgid "Dpi"
-msgstr "DPI"
-
-#: main/main.cpp
-msgid "Allow Hidpi"
-msgstr "允许HiDPI"
-
-#: main/main.cpp
-msgid "Vsync"
-msgstr "垂直同步"
-
-#: main/main.cpp
-msgid "Use Vsync"
-msgstr "使用垂直同步"
-
-#: main/main.cpp
-msgid "Vsync Via Compositor"
-msgstr "通过合成器进行垂直同步"
-
-#: main/main.cpp
-msgid "Tablet Driver"
-msgstr "Tablet Driver"
-
-#: main/main.cpp
-msgid "Per Pixel Transparency"
-msgstr "每像素透明度"
-
-#: main/main.cpp
-msgid "Allowed"
-msgstr "允许"
-
-#: main/main.cpp modules/mono/mono_gd/gd_mono.cpp
-msgid "Enabled"
-msgstr "启用"
-
-#: main/main.cpp
-msgid "Intended Usage"
-msgstr "预期用途"
-
-#: main/main.cpp
-msgid "Framebuffer Allocation"
-msgstr "帧缓冲区分配"
-
-#: main/main.cpp
-msgid "Framebuffer Allocation.mobile"
-msgstr "帧缓冲区分配.mobile"
-
-#: main/main.cpp
-msgid "Use Transform Snap"
-msgstr "使用变换吸附"
-
-#: main/main.cpp
-msgid "Use Camera Snap"
-msgstr "使用相机吸附"
-
-#: main/main.cpp platform/uwp/os_uwp.cpp
-msgid "Energy Saving"
-msgstr "节能"
-
-#: main/main.cpp platform/uwp/os_uwp.cpp
-msgid "Keep Screen On"
-msgstr "保持屏幕开启"
-
-#: main/main.cpp
-msgid "Threads"
-msgstr "线程"
-
-#: main/main.cpp servers/physics_2d/physics_2d_server_wrap_mt.h
-msgid "Thread Model"
-msgstr "线程模式"
-
-#: main/main.cpp
-msgid "Handheld"
-msgstr "手持设备"
-
-#: main/main.cpp
-msgid "Orientation"
-msgstr "方向"
-
-#: main/main.cpp scene/gui/scroll_container.cpp scene/gui/text_edit.cpp
-#: scene/main/scene_tree.cpp scene/register_scene_types.cpp
-msgid "Common"
-msgstr "常用"
-
-#: main/main.cpp
-msgid "Physics Fps"
-msgstr "物理FPS"
-
-#: main/main.cpp
-msgid "Physics Jitter Fix"
-msgstr "物理抖动修正"
-
-#: main/main.cpp
-msgid "Fps"
-msgstr "FPS"
-
-#: main/main.cpp
-msgid "Force Fps"
-msgstr "强制FPS"
-
-#: main/main.cpp
-msgid "Stdout"
-msgstr "标准输出"
-
-#: main/main.cpp
-msgid "Print Fps"
-msgstr "打印FPS"
-
-#: main/main.cpp
-msgid "Verbose Stdout"
-msgstr "详细的标准输出"
-
-#: main/main.cpp
-msgid "Frame Delay Msec"
-msgstr "帧延迟毫秒数"
-
-#: main/main.cpp
-msgid "Low Processor Mode"
-msgstr "低处理器模式"
-
-#: main/main.cpp
-msgid "Ios"
-msgstr "IOS"
-
-#: main/main.cpp
-msgid "Hide Home Indicator"
-msgstr "隐藏首页提示"
-
-#: main/main.cpp
-msgid "Input Devices"
-msgstr "输入设备"
-
-#: main/main.cpp
-msgid "Pointing"
-msgstr "指示"
-
-#: main/main.cpp
-msgid "Touch Delay"
-msgstr "触摸延迟"
-
-#: main/main.cpp scene/main/scene_tree.cpp
-msgid "Environment"
-msgstr "环境"
-
-#: main/main.cpp
-msgid "Default Clear Color"
-msgstr "默认清楚颜色"
-
-#: main/main.cpp
-msgid "Boot Splash"
-msgstr "开启画面"
-
-#: main/main.cpp
-msgid "Image"
-msgstr "图片"
-
-#: main/main.cpp
-msgid "Fullsize"
-msgstr "全尺寸"
-
-#: main/main.cpp
-msgid "Use Filter"
-msgstr "使用过滤器"
-
-#: main/main.cpp
-msgid "Bg Color"
-msgstr "背景颜色"
-
-#: main/main.cpp
-msgid "Macos Native Icon"
-msgstr "Mac本机图标"
-
-#: main/main.cpp
-msgid "Windows Native Icon"
-msgstr "Windows本机图标"
-
-#: main/main.cpp
-msgid "Emulate Touch From Mouse"
-msgstr "模拟鼠标触摸"
-
-#: main/main.cpp
-msgid "Emulate Mouse From Touch"
-msgstr "模拟触摸鼠标"
-
-#: main/main.cpp
-msgid "Mouse Cursor"
-msgstr "鼠标指针"
-
-#: main/main.cpp
-msgid "Custom Image"
-msgstr "自定义图片"
-
-#: main/main.cpp
-msgid "Custom Image Hotspot"
-msgstr "自定义图片热点"
-
-#: main/main.cpp
-msgid "Tooltip Position Offset"
-msgstr "工具提示位置偏移"
-
-#: main/main.cpp
-msgid "Main Loop Type"
-msgstr "主循环类型"
-
-#: main/main.cpp
-msgid "Stretch"
-msgstr "拉伸"
-
-#: main/main.cpp
-msgid "Mode"
-msgstr "模式"
-
-#: main/main.cpp
-msgid "Aspect"
-msgstr "方位"
-
-#: main/main.cpp
-msgid "Shrink"
-msgstr "伸缩"
-
-#: main/main.cpp
-msgid "Auto Accept Quit"
-msgstr "自动同意退出"
-
-#: main/main.cpp
-msgid "Quit On Go Back"
-msgstr "退出后返回"
-
-#: main/main.cpp scene/gui/item_list.cpp scene/gui/popup_menu.cpp
-#: scene/gui/scroll_container.cpp scene/gui/text_edit.cpp scene/gui/tree.cpp
-#: scene/main/viewport.cpp scene/register_scene_types.cpp
-msgid "Gui"
-msgstr "图形用户界面"
-
-#: main/main.cpp
-msgid "Snap Controls To Pixels"
-msgstr "控件吸附至像素"
-
-#: main/main.cpp
-msgid "Dynamic Fonts"
-msgstr "动态字体"
-
-#: main/main.cpp
-msgid "Use Oversampling"
-msgstr "使用多重采样"
-
-#: modules/bullet/register_types.cpp modules/bullet/space_bullet.cpp
-msgid "Active Soft World"
-msgstr "激活软体世界"
-
-#: modules/bullet/shape_bullet.cpp
-msgid "Smooth Trimesh Collision"
-msgstr "平滑三面网格碰撞"
-
-#: modules/csg/csg_gizmos.cpp
-msgid "Csg"
-msgstr "CSG"
 
 #: modules/csg/csg_gizmos.cpp
 msgid "Change Cylinder Radius"
@@ -13292,35 +11339,6 @@ msgstr "库： "
 msgid "GDNative"
 msgstr "GDNative"
 
-#: modules/gdscript/editor/gdscript_highlighter.cpp
-#: modules/gdscript/gdscript.cpp
-msgid "Gdscript"
-msgstr "Gdscript"
-
-#: modules/gdscript/editor/gdscript_highlighter.cpp
-msgid "Function Definition Color"
-msgstr "函数定义颜色"
-
-#: modules/gdscript/editor/gdscript_highlighter.cpp
-msgid "Node Path Color"
-msgstr "节点路径颜色"
-
-#: modules/gdscript/gdscript.cpp modules/visual_script/visual_script.cpp
-msgid "Max Call Stack"
-msgstr "最大调用堆栈"
-
-#: modules/gdscript/gdscript.cpp
-msgid "Treat Warnings As Errors"
-msgstr "将警告视为错误"
-
-#: modules/gdscript/gdscript.cpp
-msgid "Exclude Addons"
-msgstr "排除插件"
-
-#: modules/gdscript/gdscript.cpp
-msgid "Autocomplete Setters And Getters"
-msgstr "自动完成设置和获得"
-
 #: modules/gdscript/gdscript_functions.cpp
 msgid "Step argument is zero!"
 msgstr "Step 参数为 0！"
@@ -13356,22 +11374,6 @@ msgstr "实例字典无效（派生类无效）"
 #: modules/gdscript/gdscript_functions.cpp
 msgid "Object can't provide a length."
 msgstr "对象无法提供长度。"
-
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Language Server"
-msgstr "语言服务器"
-
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Enable Smart Resolve"
-msgstr "启用智能解析"
-
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Show Native Symbols In Editor"
-msgstr "在编辑器中显示本机符号"
-
-#: modules/gdscript/language_server/gdscript_language_server.cpp
-msgid "Use Thread"
-msgstr "使用多线程"
 
 #: modules/gridmap/grid_map_editor_plugin.cpp
 msgid "Next Plane"
@@ -13412,6 +11414,10 @@ msgstr "网格地图粘贴所选项"
 #: modules/gridmap/grid_map_editor_plugin.cpp
 msgid "GridMap Paint"
 msgstr "绘制栅格图"
+
+#: modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Grid Map"
+msgstr "网格地图"
 
 #: modules/gridmap/grid_map_editor_plugin.cpp
 msgid "Snap View"
@@ -13525,53 +11531,9 @@ msgstr "后处理"
 msgid "Plotting lightmaps"
 msgstr "绘制光照图"
 
-#: modules/lightmapper_cpu/register_types.cpp
-msgid "Cpu Lightmapper"
-msgstr "CPU光映射器"
-
-#: modules/lightmapper_cpu/register_types.cpp
-msgid "Low Quality Ray Count"
-msgstr "低质量射线计数"
-
-#: modules/lightmapper_cpu/register_types.cpp
-msgid "Medium Quality Ray Count"
-msgstr "中等质量射线计数"
-
-#: modules/lightmapper_cpu/register_types.cpp
-msgid "High Quality Ray Count"
-msgstr "高质量射线计数"
-
-#: modules/lightmapper_cpu/register_types.cpp
-msgid "Ultra Quality Ray Count"
-msgstr "超高质量射线计数"
-
 #: modules/mono/csharp_script.cpp
 msgid "Class name can't be a reserved keyword"
 msgstr "类名不能是保留关键字"
-
-#: modules/mono/editor/csharp_project.cpp modules/mono/mono_gd/gd_mono.cpp
-msgid "Mono"
-msgstr "Mono"
-
-#: modules/mono/editor/csharp_project.cpp
-msgid "Auto Update Project"
-msgstr "自动更新项目"
-
-#: modules/mono/mono_gd/gd_mono.cpp
-msgid "Args"
-msgstr "参数"
-
-#: modules/mono/mono_gd/gd_mono.cpp
-msgid "Debugger Agent"
-msgstr "调试器代理"
-
-#: modules/mono/mono_gd/gd_mono.cpp
-msgid "Wait For Debugger"
-msgstr "等待调试器"
-
-#: modules/mono/mono_gd/gd_mono.cpp
-msgid "Wait Timeout"
-msgstr "等待超时"
 
 #: modules/mono/mono_gd/gd_mono_utils.cpp
 msgid "End of inner exception stack trace"
@@ -13668,10 +11630,6 @@ msgstr "在非堆栈中的节点中找到连续比特，请回报 Bug！"
 #: modules/visual_script/visual_script.cpp
 msgid "Stack overflow with stack depth: "
 msgstr "堆栈深度溢出： "
-
-#: modules/visual_script/visual_script.cpp
-msgid "Visual Script"
-msgstr "Visual Script"
 
 #: modules/visual_script/visual_script_editor.cpp
 msgid "Change Signal Arguments"
@@ -14224,30 +12182,6 @@ msgid ""
 "outputs."
 msgstr "无法复制与更名导出文件，请在 Gradle 项目文件夹内确认输出。"
 
-#: platform/android/export/export.cpp
-msgid "Android Sdk Path"
-msgstr "安卓SDK目录"
-
-#: platform/android/export/export.cpp
-msgid "Debug Keystore"
-msgstr "调试密钥库"
-
-#: platform/android/export/export.cpp
-msgid "Debug Keystore User"
-msgstr "调试密钥库用户"
-
-#: platform/android/export/export.cpp
-msgid "Debug Keystore Pass"
-msgstr "调试密钥库密码"
-
-#: platform/android/export/export.cpp
-msgid "Force System User"
-msgstr "强制系统用户"
-
-#: platform/android/export/export.cpp
-msgid "Shutdown Adb On Exit"
-msgstr "退出时关闭Adb"
-
 #: platform/iphone/export/export.cpp
 msgid "Identifier is missing."
 msgstr "缺少标识符。"
@@ -14304,18 +12238,6 @@ msgstr "无法读取启动图片："
 msgid "Using default boot splash image."
 msgstr "使用默认启动图片。"
 
-#: platform/javascript/export/export.cpp
-msgid "Web"
-msgstr "WEB"
-
-#: platform/javascript/export/export.cpp
-msgid "Http Host"
-msgstr "HTTP主机"
-
-#: platform/javascript/export/export.cpp
-msgid "Http Port"
-msgstr "HTTP端口"
-
 #: platform/uwp/export/export.cpp
 msgid "Invalid package short name."
 msgstr "无效的包短名称。"
@@ -14367,42 +12289,6 @@ msgstr "宽幅 310x150 Logo 图片尺寸无效（应为 310x150）。"
 #: platform/uwp/export/export.cpp
 msgid "Invalid splash screen image dimensions (should be 620x300)."
 msgstr "启动画面图片尺寸无效（应为 620x300）。"
-
-#: platform/uwp/export/export.cpp
-msgid "Uwp"
-msgstr "UWP"
-
-#: platform/uwp/export/export.cpp platform/windows/export/export.cpp
-msgid "Signtool"
-msgstr "签名工具"
-
-#: platform/uwp/export/export.cpp
-msgid "Debug Certificate"
-msgstr "调试证书"
-
-#: platform/uwp/export/export.cpp
-msgid "Debug Password"
-msgstr "调试密码"
-
-#: platform/uwp/export/export.cpp
-msgid "Debug Algorithm"
-msgstr "调试算法"
-
-#: platform/windows/export/export.cpp
-msgid "Windows"
-msgstr "Windows"
-
-#: platform/windows/export/export.cpp
-msgid "Rcedit"
-msgstr "Rcedit"
-
-#: platform/windows/export/export.cpp
-msgid "Osslsigncode"
-msgstr "签名工具"
-
-#: platform/windows/export/export.cpp
-msgid "Wine"
-msgstr "Wine"
 
 #: scene/2d/animated_sprite.cpp
 msgid ""
@@ -14564,11 +12450,6 @@ msgstr ""
 msgid "PathFollow2D only works when set as a child of a Path2D node."
 msgstr "PathFollow2D 类型的节点只有作为 Path2D 的子节点节才能正常工作。"
 
-#: scene/2d/physics_body_2d.cpp scene/3d/physics_body.cpp
-#: scene/resources/world.cpp scene/resources/world_2d.cpp
-msgid "Default Gravity"
-msgstr "默认重力"
-
 #: scene/2d/physics_body_2d.cpp
 msgid ""
 "Size changes to RigidBody2D (in character or rigid modes) will be overridden "
@@ -14643,15 +12524,15 @@ msgstr "ARVROrigin 需要一个 ARVRCamera 子节点。"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Finding meshes and lights"
-msgstr "查找网格和灯光"
+msgstr "正在查找网格和灯光"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Preparing geometry (%d/%d)"
-msgstr "Preparing geometry (%d/%d)"
+msgstr "正在准备几何体（%d/%d）"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Preparing environment"
-msgstr "准备环境"
+msgstr "正在准备环境"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Generating capture"
@@ -14659,7 +12540,7 @@ msgstr "正在生成捕获"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Saving lightmaps"
-msgstr "保存光照贴图"
+msgstr "正在保存光照贴图"
 
 #: scene/3d/baked_lightmap.cpp
 msgid "Done"
@@ -14741,11 +12622,6 @@ msgid ""
 msgstr ""
 "GLES2 视频驱动程序不支持 GIProbes。\n"
 "请改用 BakedLightmap。"
-
-#: scene/3d/interpolated_camera.cpp
-msgid ""
-"InterpolatedCamera has been deprecated and will be removed in Godot 4.0."
-msgstr "InterpolatedCamera 已废弃，将在 Godot 4.0 中删除。"
 
 #: scene/3d/light.cpp
 msgid "A SpotLight with an angle wider than 90 degrees cannot cast shadows."
@@ -14987,15 +12863,6 @@ msgstr "必须使用有效的扩展名。"
 msgid "Enable grid minimap."
 msgstr "启用网格小地图。"
 
-#: scene/gui/item_list.cpp scene/gui/popup_menu.cpp scene/gui/text_edit.cpp
-#: scene/gui/tree.cpp scene/main/viewport.cpp
-msgid "Timers"
-msgstr "计时器"
-
-#: scene/gui/item_list.cpp scene/gui/popup_menu.cpp scene/gui/tree.cpp
-msgid "Incremental Search Max Interval Msec"
-msgstr "增量搜索最大间隔毫秒"
-
 #: scene/gui/popup.cpp
 msgid ""
 "Popups will hide by default unless you call popup() or any of the popup*() "
@@ -15019,6 +12886,2185 @@ msgstr ""
 "子节点应该是单个容器（VBox, HBox 等）或者使用单个控件并手动设置其自定义最小尺"
 "寸。"
 
+#: scene/gui/tree.cpp
+msgid "(Other)"
+msgstr "（其它）"
+
+#: scene/main/scene_tree.cpp
+msgid ""
+"Default Environment as specified in Project Settings (Rendering -> "
+"Environment -> Default Environment) could not be loaded."
+msgstr ""
+"无法加载项目设置中的默认环境 (Rendering -> Environment -> Default "
+"Environment)。"
+
+#: scene/main/viewport.cpp
+msgid ""
+"This viewport is not set as render target. If you intend for it to display "
+"its contents directly to the screen, make it a child of a Control so it can "
+"obtain a size. Otherwise, make it a RenderTarget and assign its internal "
+"texture to some node for display."
+msgstr ""
+"这个 Viewport 未被设置为渲染目标。如果你想让其直接在屏幕上显示内容，请使其成"
+"为 Control 的子节点，这样一来该 Viewport 才会有大小。否则请为其设置 "
+"RenderTarget 并分配其内部纹理来显示。"
+
+#: scene/main/viewport.cpp
+msgid "Viewport size must be greater than 0 to render anything."
+msgstr "Viewport 大小大于 0 时才能进行渲染。"
+
+#: scene/resources/visual_shader_nodes.cpp
+msgid ""
+"The sampler port is connected but not used. Consider changing the source to "
+"'SamplerPort'."
+msgstr "采样器端口已连接但未使用。考虑将源更改为“SamplerPort”。"
+
+#: scene/resources/visual_shader_nodes.cpp
+msgid "Invalid source for preview."
+msgstr "预览的源资源无效。"
+
+#: scene/resources/visual_shader_nodes.cpp
+msgid "Invalid source for shader."
+msgstr "着色器的源资源无效。"
+
+#: scene/resources/visual_shader_nodes.cpp
+msgid "Invalid comparison function for that type."
+msgstr "该类型的比较功能无效。"
+
+#: servers/visual/shader_language.cpp
+msgid "Assignment to function."
+msgstr "对函数的赋值。"
+
+#: servers/visual/shader_language.cpp
+msgid "Assignment to uniform."
+msgstr "对统一的赋值。"
+
+#: servers/visual/shader_language.cpp
+msgid "Varyings can only be assigned in vertex function."
+msgstr "变量只能在顶点函数中指定。"
+
+#: servers/visual/shader_language.cpp
+msgid "Constants cannot be modified."
+msgstr "不允许修改常量。"
+
+#: core/command_queue_mt.cpp core/message_queue.cpp main/main.cpp
+msgid "Memory"
+msgstr "内存"
+
+#: core/command_queue_mt.cpp core/message_queue.cpp
+#: core/register_core_types.cpp drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles2/rasterizer_scene_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
+#: servers/visual_server.cpp
+msgid "Limits"
+msgstr "限制"
+
+#: core/command_queue_mt.cpp
+msgid "Command Queue"
+msgstr "命令队列"
+
+#: core/command_queue_mt.cpp
+msgid "Multithreading Queue Size Kb"
+msgstr "多线程队列大小Kb"
+
+#: core/io/file_access_network.cpp core/register_core_types.cpp
+#: editor/editor_settings.cpp main/main.cpp
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Network"
+msgstr "网络"
+
+#: core/io/file_access_network.cpp
+msgid "Remote Fs"
+msgstr "远程FS"
+
+#: core/io/file_access_network.cpp
+msgid "Page Size"
+msgstr "页面大小"
+
+#: core/io/file_access_network.cpp
+msgid "Page Read Ahead"
+msgstr "预读页面"
+
+#: core/message_queue.cpp
+msgid "Message Queue"
+msgstr "消息队列"
+
+#: core/message_queue.cpp
+msgid "Max Size Kb"
+msgstr "最大KB"
+
+#: core/os/input.cpp editor/editor_help.cpp editor/editor_settings.cpp
+#: editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/script_text_editor.cpp
+#: editor/plugins/shader_editor_plugin.cpp editor/plugins/text_editor.cpp
+#: modules/gdscript/editor/gdscript_highlighter.cpp
+#: modules/gdscript/gdscript_editor.cpp
+#: modules/gdscript/language_server/gdscript_text_document.cpp
+#: modules/mono/csharp_script.cpp scene/animation/animation_player.cpp
+#: scene/gui/control.cpp scene/gui/line_edit.cpp scene/main/node.cpp
+#: scene/resources/material.cpp
+msgid "Text Editor"
+msgstr "文本编辑器"
+
+#: core/os/input.cpp editor/editor_settings.cpp modules/gdscript/gdscript.cpp
+#: modules/gdscript/gdscript_editor.cpp
+#: modules/gdscript/language_server/gdscript_text_document.cpp
+#: scene/animation/animation_player.cpp scene/gui/control.cpp
+#: scene/main/node.cpp scene/resources/material.cpp
+msgid "Completion"
+msgstr "完成"
+
+#: core/os/input.cpp editor/editor_settings.cpp
+#: modules/gdscript/gdscript_editor.cpp
+#: modules/gdscript/language_server/gdscript_text_document.cpp
+#: scene/animation/animation_player.cpp scene/gui/control.cpp
+#: scene/main/node.cpp scene/resources/material.cpp
+msgid "Use Single Quotes"
+msgstr "使用单引号"
+
+#: core/project_settings.cpp editor/editor_node.cpp main/main.cpp
+msgid "Application"
+msgstr "应用"
+
+#: core/project_settings.cpp main/main.cpp
+msgid "Config"
+msgstr "配置"
+
+#: core/project_settings.cpp
+msgid "Project Settings Override"
+msgstr "覆盖项目设置"
+
+#: core/project_settings.cpp
+msgid "Disable Stdout"
+msgstr "禁用标准输出"
+
+#: core/project_settings.cpp
+msgid "Disable Stderr"
+msgstr "禁用标准错误"
+
+#: core/project_settings.cpp
+msgid "Use Custom User Dir"
+msgstr "使用自定义用户目录"
+
+#: core/project_settings.cpp
+msgid "Custom User Dir Name"
+msgstr "自定义用户目录名称"
+
+#: core/project_settings.cpp
+msgid "Default Bus Layout"
+msgstr "默认总线布局"
+
+#: core/project_settings.cpp
+msgid "Search In File Extensions"
+msgstr "搜索文件扩展名"
+
+#: core/project_settings.cpp
+msgid "Script Templates Search Path"
+msgstr "脚本模板搜索路径"
+
+#: core/project_settings.cpp
+msgid "Ui Accept"
+msgstr "Ui Accept"
+
+#: core/project_settings.cpp
+msgid "Ui Select"
+msgstr "Ui Select"
+
+#: core/project_settings.cpp
+msgid "Ui Cancel"
+msgstr "Ui Cancel"
+
+#: core/project_settings.cpp
+msgid "Ui Focus Next"
+msgstr "Ui Focus Next"
+
+#: core/project_settings.cpp
+msgid "Ui Focus Prev"
+msgstr "Ui Focus Prev"
+
+#: core/project_settings.cpp
+msgid "Ui Left"
+msgstr "Ui Left"
+
+#: core/project_settings.cpp
+msgid "Ui Right"
+msgstr "Ui Right"
+
+#: core/project_settings.cpp
+msgid "Ui Up"
+msgstr "Ui Up"
+
+#: core/project_settings.cpp
+msgid "Ui Down"
+msgstr "Ui Down"
+
+#: core/project_settings.cpp
+msgid "Ui Page Up"
+msgstr "Ui Page Up"
+
+#: core/project_settings.cpp
+msgid "Ui Page Down"
+msgstr "Ui Page Down"
+
+#: core/project_settings.cpp
+msgid "Ui Home"
+msgstr "Ui Home"
+
+#: core/project_settings.cpp
+msgid "Ui End"
+msgstr "Ui End"
+
+#: core/project_settings.cpp main/main.cpp modules/gdscript/gdscript.cpp
+#: modules/visual_script/visual_script.cpp
+msgid "Settings"
+msgstr "设定"
+
+#: core/project_settings.cpp
+msgid "Max Functions"
+msgstr "最大函数数量"
+
+#: core/project_settings.cpp
+msgid "Compression"
+msgstr "压缩"
+
+#: core/project_settings.cpp
+msgid "Formats"
+msgstr "格式"
+
+#: core/project_settings.cpp
+msgid "Zstd"
+msgstr "Zstd"
+
+#: core/project_settings.cpp
+msgid "Long Distance Matching"
+msgstr "长距匹配"
+
+#: core/project_settings.cpp
+msgid "Compression Level"
+msgstr "压缩级别"
+
+#: core/project_settings.cpp
+msgid "Window Log Size"
+msgstr "窗口日志大小"
+
+#: core/project_settings.cpp
+msgid "Zlib"
+msgstr "Zlib"
+
+#: core/project_settings.cpp
+msgid "Gzip"
+msgstr "Gzip"
+
+#: core/project_settings.cpp platform/android/export/export.cpp
+msgid "Android"
+msgstr "安卓"
+
+#: core/project_settings.cpp
+msgid "Modules"
+msgstr "模块"
+
+#: core/register_core_types.cpp
+msgid "Tcp"
+msgstr "TCP"
+
+#: core/register_core_types.cpp
+msgid "Connect Timeout Seconds"
+msgstr "连接超时秒数"
+
+#: core/register_core_types.cpp
+msgid "Packet Peer Stream"
+msgstr "数据包对等流"
+
+#: core/register_core_types.cpp
+msgid "Max Buffer Po2"
+msgstr "最大缓冲区Po2"
+
+#: core/register_core_types.cpp editor/editor_settings.cpp main/main.cpp
+msgid "Ssl"
+msgstr "SSL"
+
+#: core/register_core_types.cpp main/main.cpp
+msgid "Certificates"
+msgstr "CA证书"
+
+#: core/translation.cpp
+msgid "Test"
+msgstr "测试"
+
+#: core/translation.cpp
+msgid "Fallback"
+msgstr "回退"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles2/rasterizer_scene_gles2.cpp
+#: drivers/gles2/rasterizer_storage_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+#: drivers/gles3/rasterizer_gles3.cpp drivers/gles3/rasterizer_scene_gles3.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
+#: modules/lightmapper_cpu/register_types.cpp scene/main/scene_tree.cpp
+#: servers/visual/visual_server_scene.cpp servers/visual_server.cpp
+msgid "Rendering"
+msgstr "渲染"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles2/rasterizer_scene_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp
+msgid "Buffers"
+msgstr "缓冲区"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+msgid "Canvas Polygon Buffer Size Kb"
+msgstr "画布多边形缓冲区大小KB"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+msgid "Canvas Polygon Index Buffer Size Kb"
+msgstr "画布多边形索引缓冲区大小KB"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles2/rasterizer_storage_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp
+#: drivers/gles3/rasterizer_gles3.cpp drivers/gles3/rasterizer_scene_gles3.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp main/main.cpp
+#: modules/lightmapper_cpu/register_types.cpp scene/main/scene_tree.cpp
+#: servers/visual/visual_server_scene.cpp servers/visual_server.cpp
+msgid "Quality"
+msgstr "质量"
+
+#: drivers/gles2/rasterizer_canvas_base_gles2.cpp
+#: drivers/gles3/rasterizer_canvas_base_gles3.cpp editor/editor_settings.cpp
+#: main/main.cpp scene/2d/physics_body_2d.cpp scene/resources/world_2d.cpp
+#: servers/physics_2d/broad_phase_2d_hash_grid.cpp
+#: servers/physics_2d/physics_2d_server_wrap_mt.h
+#: servers/physics_2d/space_2d_sw.cpp servers/visual_server.cpp
+msgid "2d"
+msgstr "2D"
+
+#: drivers/gles2/rasterizer_scene_gles2.cpp
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Immediate Buffer Size Kb"
+msgstr "直接缓冲区大小KB"
+
+#: drivers/gles2/rasterizer_storage_gles2.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp
+msgid "Lightmapping"
+msgstr "光照贴图"
+
+#: drivers/gles2/rasterizer_storage_gles2.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp
+msgid "Use Bicubic Sampling"
+msgstr "使用双三次采样"
+
+#: drivers/gles2/rasterizer_storage_gles2.cpp
+#: drivers/gles3/rasterizer_storage_gles3.cpp
+msgid "Use Bicubic Sampling.mobile"
+msgstr "使用双三次采样.mobile"
+
+#: drivers/gles3/rasterizer_gles3.cpp scene/main/scene_tree.cpp
+#: servers/visual_server.cpp
+msgid "Filters"
+msgstr "过滤器"
+
+#: drivers/gles3/rasterizer_gles3.cpp
+msgid "Anisotropic Filter Level"
+msgstr "各向异性过滤级别"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Max Renderable Elements"
+msgstr "最大可渲染元素"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Max Renderable Lights"
+msgstr "最大可渲染灯光"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Max Renderable Reflections"
+msgstr "最大可渲染反射"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Max Lights Per Object"
+msgstr "对象的最大灯光数"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Subsurface Scattering"
+msgstr "表面散射"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Scale"
+msgstr "缩放"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Follow Surface"
+msgstr "沿着曲面"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Weight Samples"
+msgstr "重度采样"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "Voxel Cone Tracing"
+msgstr "三维像素锥跟踪"
+
+#: drivers/gles3/rasterizer_scene_gles3.cpp
+msgid "High Quality"
+msgstr "高质量"
+
+#: drivers/gles3/rasterizer_storage_gles3.cpp
+msgid "Blend Shape Max Buffer Size Kb"
+msgstr "混合形状最大缓冲区大小KB"
+
+#: editor/animation_track_editor.cpp editor/editor_settings.cpp
+#: editor/plugins/mesh_library_editor_plugin.cpp
+#: editor/plugins/path_editor_plugin.cpp
+#: editor/plugins/polygon_2d_editor_plugin.cpp
+#: editor/plugins/spatial_editor_plugin.cpp
+#: editor/plugins/tile_map_editor_plugin.cpp editor/scene_tree_dock.cpp
+#: editor/spatial_editor_gizmos.cpp modules/csg/csg_gizmos.cpp
+#: modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Editors"
+msgstr "编辑器"
+
+#: editor/animation_track_editor.cpp editor/editor_settings.cpp
+msgid "Confirm Insert Track"
+msgstr "确认插入轨道"
+
+#: editor/editor_data.cpp editor/editor_node.cpp editor/editor_settings.cpp
+#: editor/scene_tree_dock.cpp
+msgid "Interface"
+msgstr "界面"
+
+#: editor/editor_data.cpp editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Scene Tabs"
+msgstr "场景标签"
+
+#: editor/editor_data.cpp editor/editor_settings.cpp
+msgid "Show Extension"
+msgstr "显示扩展名"
+
+#: editor/editor_export.cpp
+msgid "Convert Text Resources To Binary On Export"
+msgstr "在导出时将文本资源转换为二进制文件"
+
+#: editor/editor_feature_profile.cpp
+msgid "Default Feature Profile"
+msgstr "默认功能配置文件"
+
+#: editor/editor_file_system.cpp
+msgid "Reimport Missing Imported Files"
+msgstr "重新导入丢失的导入文件"
+
+#: editor/editor_help.cpp
+msgid "Sort Functions Alphabetically"
+msgstr "按字母顺序排序函数"
+
+#: editor/editor_node.cpp
+msgid "Main Run Args"
+msgstr "主运行参数"
+
+#: editor/editor_node.cpp
+msgid "Always Show Close Button"
+msgstr "总是显示关闭按钮"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Resize If Many Tabs"
+msgstr "如果有多个标签则调整大小"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Minimum Width"
+msgstr "最小宽度"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Always Clear Output On Play"
+msgstr "播放时始终清除输出"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Always Open Output On Play"
+msgstr "播放时始终打开输出"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Always Close Output On Stop"
+msgstr "停止时始终关闭输出"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Auto Save"
+msgstr "自动保存"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Save Before Running"
+msgstr "运行前保存"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Save Each Scene On Quit"
+msgstr "退出时保存每个场景"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Quit Confirmation"
+msgstr "确认退出"
+
+#: editor/editor_node.cpp
+msgid "Show Update Spinner"
+msgstr "更新显示下拉列表"
+
+#: editor/editor_node.cpp
+msgid "Restore Scenes On Load"
+msgstr "在加载时还原场景"
+
+#: editor/editor_node.cpp editor/editor_settings.cpp
+msgid "Show Thumbnail On Hover"
+msgstr "悬停显示缩略图"
+
+#: editor/editor_node.cpp
+msgid "Capitalize Properties"
+msgstr "大写属性"
+
+#: editor/editor_node.cpp
+msgid "Default Float Step"
+msgstr "默认浮点数位数"
+
+#: editor/editor_node.cpp
+msgid "Disable Folding"
+msgstr "禁用折叠"
+
+#: editor/editor_node.cpp
+msgid "Auto Unfold Foreign Scenes"
+msgstr "自动展开无关场景"
+
+#: editor/editor_node.cpp
+msgid "Horizontal Vector2 Editing"
+msgstr "水平2维向量编辑"
+
+#: editor/editor_node.cpp
+msgid "Horizontal Vector Types Editing"
+msgstr "水平向量类型编辑"
+
+#: editor/editor_node.cpp
+msgid "Open Resources In Current Inspector"
+msgstr "在当前检查器中打开资源"
+
+#: editor/editor_node.cpp
+msgid "Resources To Open In New Inspector"
+msgstr "在新的检查器中打开的资源"
+
+#: editor/editor_node.cpp
+msgid "Default Color Picker Mode"
+msgstr "默认拾色器模式"
+
+#: editor/editor_profiler.cpp
+msgid "Profiler Frame History Size"
+msgstr "分析器框架历史记录大小"
+
+#: editor/editor_profiler.cpp
+msgid "Profiler Frame Max Functions"
+msgstr "分析器框架最大函数"
+
+#: editor/editor_settings.cpp
+msgid "Editor Language"
+msgstr "编辑器语言"
+
+#: editor/editor_settings.cpp
+msgid "Editor Setting Translation"
+msgstr "翻译编辑器设置"
+
+#: editor/editor_settings.cpp
+msgid "Property Name Translation"
+msgstr "翻译属性名称"
+
+#: editor/editor_settings.cpp
+msgid "Display Scale"
+msgstr "显示比例"
+
+#: editor/editor_settings.cpp
+msgid "Custom Display Scale"
+msgstr "自定义显示标准"
+
+#: editor/editor_settings.cpp
+msgid "Main Font Size"
+msgstr "主要字体大小"
+
+#: editor/editor_settings.cpp
+msgid "Code Font Size"
+msgstr "代码字体大小"
+
+#: editor/editor_settings.cpp
+msgid "Font Antialiased"
+msgstr "字体抗锯齿"
+
+#: editor/editor_settings.cpp
+msgid "Font Hinting"
+msgstr "字体提示"
+
+#: editor/editor_settings.cpp
+msgid "Main Font"
+msgstr "主要字体"
+
+#: editor/editor_settings.cpp
+msgid "Main Font Bold"
+msgstr "主要加粗字体"
+
+#: editor/editor_settings.cpp
+msgid "Code Font"
+msgstr "代码字体"
+
+#: editor/editor_settings.cpp
+msgid "Dim Editor On Dialog Popup"
+msgstr "弹出对话框暗淡编辑器"
+
+#: editor/editor_settings.cpp main/main.cpp
+msgid "Low Processor Mode Sleep Usec"
+msgstr "低处理器模式休眠微秒"
+
+#: editor/editor_settings.cpp
+msgid "Unfocused Low Processor Mode Sleep Usec"
+msgstr "失去焦点低处理器模式休眠微秒"
+
+#: editor/editor_settings.cpp
+msgid "Separate Distraction Mode"
+msgstr "单独分解模式"
+
+#: editor/editor_settings.cpp
+msgid "Automatically Open Screenshots"
+msgstr "自动打开截图"
+
+#: editor/editor_settings.cpp
+msgid "Hide Console Window"
+msgstr "隐藏控制台窗口"
+
+#: editor/editor_settings.cpp
+msgid "Icon And Font Color"
+msgstr "图标和字体颜色"
+
+#: editor/editor_settings.cpp
+msgid "Base Color"
+msgstr "基本颜色"
+
+#: editor/editor_settings.cpp
+msgid "Accent Color"
+msgstr "强调颜色"
+
+#: editor/editor_settings.cpp
+msgid "Contrast"
+msgstr "对比度"
+
+#: editor/editor_settings.cpp
+msgid "Relationship Line Opacity"
+msgstr "关联线条不透明度"
+
+#: editor/editor_settings.cpp
+msgid "Highlight Tabs"
+msgstr "高亮显示标签"
+
+#: editor/editor_settings.cpp
+msgid "Border Size"
+msgstr "边框尺寸"
+
+#: editor/editor_settings.cpp
+msgid "Use Graph Node Headers"
+msgstr "使用图表节点标题"
+
+#: editor/editor_settings.cpp
+msgid "Additional Spacing"
+msgstr "附加间距"
+
+#: editor/editor_settings.cpp
+msgid "Custom Theme"
+msgstr "自制主题"
+
+#: editor/editor_settings.cpp
+msgid "Show Script Button"
+msgstr "显示脚本按钮"
+
+#: editor/editor_settings.cpp editor/fileserver/editor_file_server.cpp
+msgid "Filesystem"
+msgstr "文件系统"
+
+#: editor/editor_settings.cpp
+msgid "Directories"
+msgstr "目录"
+
+#: editor/editor_settings.cpp
+msgid "Autoscan Project Path"
+msgstr "自动扫描项目路径"
+
+#: editor/editor_settings.cpp
+msgid "Default Project Path"
+msgstr "默认项目路径"
+
+#: editor/editor_settings.cpp
+msgid "On Save"
+msgstr "当保存时"
+
+#: editor/editor_settings.cpp
+msgid "Compress Binary Resources"
+msgstr "压缩二进制资源"
+
+#: editor/editor_settings.cpp
+msgid "Safe Save On Backup Then Rename"
+msgstr "安全保存备份然后重命名"
+
+#: editor/editor_settings.cpp
+msgid "File Dialog"
+msgstr "文件对话框"
+
+#: editor/editor_settings.cpp
+msgid "Show Hidden Files"
+msgstr "显示隐藏文件"
+
+#: editor/editor_settings.cpp
+msgid "Display Mode"
+msgstr "显示模式"
+
+#: editor/editor_settings.cpp
+msgid "Thumbnail Size"
+msgstr "缩略图大小"
+
+#: editor/editor_settings.cpp
+msgid "Docks"
+msgstr "停靠"
+
+#: editor/editor_settings.cpp
+msgid "Scene Tree"
+msgstr "场景树"
+
+#: editor/editor_settings.cpp
+msgid "Start Create Dialog Fully Expanded"
+msgstr "开始创建对话框时完全展开"
+
+#: editor/editor_settings.cpp
+msgid "Always Show Folders"
+msgstr "总是显示文件夹"
+
+#: editor/editor_settings.cpp
+msgid "Property Editor"
+msgstr "属性编辑器"
+
+#: editor/editor_settings.cpp
+msgid "Auto Refresh Interval"
+msgstr "自动刷新间隔"
+
+#: editor/editor_settings.cpp
+msgid "Color Theme"
+msgstr "颜色主题"
+
+#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
+#: editor/plugins/text_editor.cpp
+msgid "Line Spacing"
+msgstr "行间距"
+
+#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
+#: modules/gdscript/editor/gdscript_highlighter.cpp
+msgid "Highlighting"
+msgstr "高亮显示"
+
+#: editor/editor_settings.cpp
+msgid "Syntax Highlighting"
+msgstr "语法高亮"
+
+#: editor/editor_settings.cpp
+msgid "Highlight All Occurrences"
+msgstr "突出显示所有事件"
+
+#: editor/editor_settings.cpp
+msgid "Highlight Current Line"
+msgstr "突出显示当前行"
+
+#: editor/editor_settings.cpp editor/plugins/script_text_editor.cpp
+msgid "Highlight Type Safe Lines"
+msgstr "突出显示类型安全行"
+
+#: editor/editor_settings.cpp modules/gdscript/gdscript_editor.cpp
+#: modules/mono/csharp_script.cpp
+msgid "Indent"
+msgstr "缩进"
+
+#: editor/editor_settings.cpp
+msgid "Convert Indent On Save"
+msgstr "转换缩进保存"
+
+#: editor/editor_settings.cpp
+msgid "Draw Tabs"
+msgstr "绘制标签"
+
+#: editor/editor_settings.cpp
+msgid "Draw Spaces"
+msgstr "绘制空格"
+
+#: editor/editor_settings.cpp
+msgid "Smooth Scrolling"
+msgstr "平滑滚动"
+
+#: editor/editor_settings.cpp
+msgid "V Scroll Speed"
+msgstr "垂直滚动速度"
+
+#: editor/editor_settings.cpp
+msgid "Show Minimap"
+msgstr "显示小地图"
+
+#: editor/editor_settings.cpp
+msgid "Minimap Width"
+msgstr "小地图宽度"
+
+#: editor/editor_settings.cpp
+msgid "Appearance"
+msgstr "外观"
+
+#: editor/editor_settings.cpp
+msgid "Show Line Numbers"
+msgstr "显示行号"
+
+#: editor/editor_settings.cpp
+msgid "Line Numbers Zero Padded"
+msgstr "填充零行号"
+
+#: editor/editor_settings.cpp
+msgid "Show Bookmark Gutter"
+msgstr "显示书签区"
+
+#: editor/editor_settings.cpp
+msgid "Show Breakpoint Gutter"
+msgstr "显示断点区"
+
+#: editor/editor_settings.cpp
+msgid "Show Info Gutter"
+msgstr "显示信息区"
+
+#: editor/editor_settings.cpp
+msgid "Code Folding"
+msgstr "代码折叠"
+
+#: editor/editor_settings.cpp
+msgid "Word Wrap"
+msgstr "自动换行"
+
+#: editor/editor_settings.cpp
+msgid "Show Line Length Guideline"
+msgstr "显示行长参考"
+
+#: editor/editor_settings.cpp
+msgid "Line Length Guideline Column"
+msgstr "行长参考列"
+
+#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
+msgid "Script List"
+msgstr "脚本列表"
+
+#: editor/editor_settings.cpp
+msgid "Show Members Overview"
+msgstr "显示成员概述"
+
+#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Files"
+msgstr "文档"
+
+#: editor/editor_settings.cpp
+msgid "Trim Trailing Whitespace On Save"
+msgstr "保存时移除尾部空白"
+
+#: editor/editor_settings.cpp
+msgid "Autosave Interval Secs"
+msgstr "自动保存间隔秒数"
+
+#: editor/editor_settings.cpp editor/plugins/script_editor_plugin.cpp
+msgid "Restore Scripts On Load"
+msgstr "在加载时还原脚本"
+
+#: editor/editor_settings.cpp
+msgid "Create Signal Callbacks"
+msgstr "创建新信号回调"
+
+#: editor/editor_settings.cpp
+msgid "Sort Members Outline Alphabetically"
+msgstr "按字母顺序对成员进行排序"
+
+#: editor/editor_settings.cpp scene/gui/line_edit.cpp
+msgid "Cursor"
+msgstr "光标"
+
+#: editor/editor_settings.cpp
+msgid "Scroll Past End Of File"
+msgstr "滚动到文件末尾"
+
+#: editor/editor_settings.cpp
+msgid "Block Caret"
+msgstr "块插入符"
+
+#: editor/editor_settings.cpp scene/gui/line_edit.cpp
+msgid "Caret Blink"
+msgstr "插入闪烁符号"
+
+#: editor/editor_settings.cpp scene/gui/line_edit.cpp
+msgid "Caret Blink Speed"
+msgstr "插入闪烁符号速度"
+
+#: editor/editor_settings.cpp
+msgid "Right Click Moves Caret"
+msgstr "单击右键插入符号"
+
+#: editor/editor_settings.cpp
+msgid "Idle Parse Delay"
+msgstr "闲置解析延迟"
+
+#: editor/editor_settings.cpp
+msgid "Auto Brace Complete"
+msgstr "支持自动完成"
+
+#: editor/editor_settings.cpp
+msgid "Code Complete Delay"
+msgstr "完成代码延迟"
+
+#: editor/editor_settings.cpp
+msgid "Put Callhint Tooltip Below Current Line"
+msgstr "将调用提示工具放在当前行下方"
+
+#: editor/editor_settings.cpp
+msgid "Callhint Tooltip Offset"
+msgstr "调用提示工具位置偏移"
+
+#: editor/editor_settings.cpp
+msgid "Complete File Paths"
+msgstr "完整的文件路径"
+
+#: editor/editor_settings.cpp modules/gdscript/gdscript_editor.cpp
+msgid "Add Type Hints"
+msgstr "添加类型提示"
+
+#: editor/editor_settings.cpp
+msgid "Show Help Index"
+msgstr "显示帮助索引"
+
+#: editor/editor_settings.cpp
+msgid "Help Font Size"
+msgstr "帮助字体大小"
+
+#: editor/editor_settings.cpp
+msgid "Help Source Font Size"
+msgstr "帮助源字体大小"
+
+#: editor/editor_settings.cpp
+msgid "Help Title Font Size"
+msgstr "帮助标题字体大小"
+
+#: editor/editor_settings.cpp modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Pick Distance"
+msgstr "捕获距离"
+
+#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
+#: main/main.cpp modules/bullet/register_types.cpp
+#: modules/bullet/shape_bullet.cpp modules/bullet/space_bullet.cpp
+#: scene/3d/physics_body.cpp scene/resources/world.cpp
+#: servers/physics/space_sw.cpp
+msgid "3d"
+msgstr "3D"
+
+#: editor/editor_settings.cpp
+msgid "Primary Grid Color"
+msgstr "主网格颜色"
+
+#: editor/editor_settings.cpp
+msgid "Secondary Grid Color"
+msgstr "次网格颜色"
+
+#: editor/editor_settings.cpp
+msgid "Selection Box Color"
+msgstr "选择框颜色"
+
+#: editor/editor_settings.cpp
+msgid "Primary Grid Steps"
+msgstr "主网格步长"
+
+#: editor/editor_settings.cpp
+msgid "Grid Size"
+msgstr "网格尺寸"
+
+#: editor/editor_settings.cpp
+msgid "Grid Division Level Max"
+msgstr "最大网格划分级别"
+
+#: editor/editor_settings.cpp
+msgid "Grid Division Level Min"
+msgstr "最小网格划分级别"
+
+#: editor/editor_settings.cpp
+msgid "Grid Division Level Bias"
+msgstr "网格划分级别偏差"
+
+#: editor/editor_settings.cpp
+msgid "Grid Xz Plane"
+msgstr "网格Xz平面"
+
+#: editor/editor_settings.cpp
+msgid "Grid Xy Plane"
+msgstr "网格Xy平面"
+
+#: editor/editor_settings.cpp
+msgid "Grid Yz Plane"
+msgstr "网格Yz平面"
+
+#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
+msgid "Default Fov"
+msgstr "默认视角"
+
+#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
+msgid "Default Z Near"
+msgstr "默认Z近值"
+
+#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
+msgid "Default Z Far"
+msgstr "默认Z远值"
+
+#: editor/editor_settings.cpp
+msgid "Navigation Scheme"
+msgstr "导航方案"
+
+#: editor/editor_settings.cpp
+msgid "Invert Y Axis"
+msgstr "反转Y轴"
+
+#: editor/editor_settings.cpp
+msgid "Invert X Axis"
+msgstr "反转X轴"
+
+#: editor/editor_settings.cpp
+msgid "Zoom Style"
+msgstr "变焦样式"
+
+#: editor/editor_settings.cpp
+msgid "Emulate 3 Button Mouse"
+msgstr "模拟3键鼠标"
+
+#: editor/editor_settings.cpp
+msgid "Orbit Modifier"
+msgstr "轨道调节器"
+
+#: editor/editor_settings.cpp
+msgid "Pan Modifier"
+msgstr "平移调节器"
+
+#: editor/editor_settings.cpp
+msgid "Zoom Modifier"
+msgstr "缩放调节器"
+
+#: editor/editor_settings.cpp editor/plugins/spatial_editor_plugin.cpp
+msgid "Warped Mouse Panning"
+msgstr "扭曲鼠标平移"
+
+#: editor/editor_settings.cpp
+msgid "Navigation Feel"
+msgstr "触摸导航"
+
+#: editor/editor_settings.cpp
+msgid "Orbit Sensitivity"
+msgstr "轨道灵敏度"
+
+#: editor/editor_settings.cpp
+msgid "Orbit Inertia"
+msgstr "轨道惯性"
+
+#: editor/editor_settings.cpp
+msgid "Translation Inertia"
+msgstr "转换惯性"
+
+#: editor/editor_settings.cpp
+msgid "Zoom Inertia"
+msgstr "变焦惯性"
+
+#: editor/editor_settings.cpp
+msgid "Manipulation Orbit Inertia"
+msgstr "操作轨道惯性"
+
+#: editor/editor_settings.cpp
+msgid "Manipulation Translation Inertia"
+msgstr "操纵平移惯性"
+
+#: editor/editor_settings.cpp
+msgid "Freelook"
+msgstr "自由视角"
+
+#: editor/editor_settings.cpp
+msgid "Freelook Navigation Scheme"
+msgstr "自由视角导航方案"
+
+#: editor/editor_settings.cpp
+msgid "Freelook Inertia"
+msgstr "自由惯性"
+
+#: editor/editor_settings.cpp
+msgid "Freelook Base Speed"
+msgstr "自由视角基本速度"
+
+#: editor/editor_settings.cpp
+msgid "Freelook Activation Modifier"
+msgstr "自由视角激活调节器"
+
+#: editor/editor_settings.cpp
+msgid "Freelook Speed Zoom Link"
+msgstr "自由视角速度变焦链接"
+
+#: editor/editor_settings.cpp
+msgid "Grid Color"
+msgstr "网格颜色"
+
+#: editor/editor_settings.cpp
+msgid "Guides Color"
+msgstr "指南颜色"
+
+#: editor/editor_settings.cpp
+msgid "Smart Snapping Line Color"
+msgstr "智能捕获线颜色"
+
+#: editor/editor_settings.cpp
+msgid "Bone Width"
+msgstr "骨宽"
+
+#: editor/editor_settings.cpp
+msgid "Bone Color1"
+msgstr "骨色1"
+
+#: editor/editor_settings.cpp
+msgid "Bone Color2"
+msgstr "骨色2"
+
+#: editor/editor_settings.cpp
+msgid "Bone Selected Color"
+msgstr "骨选择色"
+
+#: editor/editor_settings.cpp
+msgid "Bone Ik Color"
+msgstr "骨IK色"
+
+#: editor/editor_settings.cpp
+msgid "Bone Outline Color"
+msgstr "骨轮廓色"
+
+#: editor/editor_settings.cpp
+msgid "Bone Outline Size"
+msgstr "骨轮廓尺寸"
+
+#: editor/editor_settings.cpp
+msgid "Viewport Border Color"
+msgstr "视窗边框颜色"
+
+#: editor/editor_settings.cpp
+msgid "Constrain Editor View"
+msgstr "约束编辑视图"
+
+#: editor/editor_settings.cpp
+msgid "Simple Panning"
+msgstr "简单平移"
+
+#: editor/editor_settings.cpp
+msgid "Scroll To Pan"
+msgstr "平移滚动"
+
+#: editor/editor_settings.cpp
+msgid "Pan Speed"
+msgstr "平移速度"
+
+#: editor/editor_settings.cpp editor/plugins/polygon_2d_editor_plugin.cpp
+msgid "Poly Editor"
+msgstr "多边形编辑器"
+
+#: editor/editor_settings.cpp
+msgid "Point Grab Radius"
+msgstr "点抓取半径"
+
+#: editor/editor_settings.cpp editor/plugins/polygon_2d_editor_plugin.cpp
+msgid "Show Previous Outline"
+msgstr "显示上一个大纲"
+
+#: editor/editor_settings.cpp editor/scene_tree_dock.cpp
+msgid "Autorename Animation Tracks"
+msgstr "自动重命名动画轨道"
+
+#: editor/editor_settings.cpp
+msgid "Onion Layers Past Color"
+msgstr "洋葱层过去的颜色"
+
+#: editor/editor_settings.cpp
+msgid "Onion Layers Future Color"
+msgstr "洋葱层未来的颜色"
+
+#: editor/editor_settings.cpp
+msgid "Window Placement"
+msgstr "窗口设置"
+
+#: editor/editor_settings.cpp
+msgid "Rect"
+msgstr "矩形"
+
+#: editor/editor_settings.cpp
+msgid "Rect Custom Position"
+msgstr "自定义矩形位置"
+
+#: editor/editor_settings.cpp
+msgid "Screen"
+msgstr "屏幕"
+
+#: editor/editor_settings.cpp
+msgid "Font Size"
+msgstr "字体大小"
+
+#: editor/editor_settings.cpp
+msgid "Remote Host"
+msgstr "远程主机"
+
+#: editor/editor_settings.cpp
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Remote Port"
+msgstr "远程端口"
+
+#: editor/editor_settings.cpp
+msgid "Editor Ssl Certificates"
+msgstr "编辑SSL证书"
+
+#: editor/editor_settings.cpp
+msgid "Sorting Order"
+msgstr "排序顺序"
+
+#: editor/editor_settings.cpp
+msgid "Symbol Color"
+msgstr "符号颜色"
+
+#: editor/editor_settings.cpp
+msgid "Keyword Color"
+msgstr "关键字颜色"
+
+#: editor/editor_settings.cpp
+msgid "Base Type Color"
+msgstr "基本类型颜色"
+
+#: editor/editor_settings.cpp
+msgid "Engine Type Color"
+msgstr "引擎类型颜色"
+
+#: editor/editor_settings.cpp
+msgid "User Type Color"
+msgstr "用户类颜色"
+
+#: editor/editor_settings.cpp
+msgid "Comment Color"
+msgstr "注释颜色"
+
+#: editor/editor_settings.cpp
+msgid "String Color"
+msgstr "字符串颜色"
+
+#: editor/editor_settings.cpp
+msgid "Background Color"
+msgstr "背景颜色"
+
+#: editor/editor_settings.cpp
+msgid "Completion Background Color"
+msgstr "完成背景色"
+
+#: editor/editor_settings.cpp
+msgid "Completion Selected Color"
+msgstr "完成选择颜色"
+
+#: editor/editor_settings.cpp
+msgid "Completion Existing Color"
+msgstr "完成现有颜色"
+
+#: editor/editor_settings.cpp
+msgid "Completion Scroll Color"
+msgstr "完成滚动颜色"
+
+#: editor/editor_settings.cpp
+msgid "Completion Font Color"
+msgstr "完成字体颜色"
+
+#: editor/editor_settings.cpp
+msgid "Text Color"
+msgstr "文本颜色"
+
+#: editor/editor_settings.cpp
+msgid "Line Number Color"
+msgstr "行号颜色"
+
+#: editor/editor_settings.cpp
+msgid "Safe Line Number Color"
+msgstr "安全行号颜色"
+
+#: editor/editor_settings.cpp
+msgid "Caret Color"
+msgstr "插入符号颜色"
+
+#: editor/editor_settings.cpp
+msgid "Caret Background Color"
+msgstr "插入符号背景色"
+
+#: editor/editor_settings.cpp
+msgid "Text Selected Color"
+msgstr "文本选择颜色"
+
+#: editor/editor_settings.cpp
+msgid "Selection Color"
+msgstr "选择颜色"
+
+#: editor/editor_settings.cpp
+msgid "Brace Mismatch Color"
+msgstr "括号不匹配颜色"
+
+#: editor/editor_settings.cpp
+msgid "Current Line Color"
+msgstr "当前行颜色"
+
+#: editor/editor_settings.cpp
+msgid "Line Length Guideline Color"
+msgstr "行长度参考颜色"
+
+#: editor/editor_settings.cpp
+msgid "Word Highlighted Color"
+msgstr "单词高亮颜色"
+
+#: editor/editor_settings.cpp
+msgid "Number Color"
+msgstr "数字颜色"
+
+#: editor/editor_settings.cpp
+msgid "Function Color"
+msgstr "函数颜色"
+
+#: editor/editor_settings.cpp
+msgid "Member Variable Color"
+msgstr "成员变量颜色"
+
+#: editor/editor_settings.cpp
+msgid "Mark Color"
+msgstr "标记颜色"
+
+#: editor/editor_settings.cpp
+msgid "Bookmark Color"
+msgstr "书签颜色"
+
+#: editor/editor_settings.cpp
+msgid "Breakpoint Color"
+msgstr "断点颜色"
+
+#: editor/editor_settings.cpp
+msgid "Executing Line Color"
+msgstr "执行行颜色"
+
+#: editor/editor_settings.cpp
+msgid "Code Folding Color"
+msgstr "代码折叠颜色"
+
+#: editor/editor_settings.cpp
+msgid "Search Result Color"
+msgstr "搜索结果颜色"
+
+#: editor/editor_settings.cpp
+msgid "Search Result Border Color"
+msgstr "搜索结果边框颜色"
+
+#: editor/fileserver/editor_file_server.cpp
+msgid "File Server"
+msgstr "文件服务"
+
+#: editor/fileserver/editor_file_server.cpp modules/mono/mono_gd/gd_mono.cpp
+msgid "Port"
+msgstr "端口"
+
+#: editor/fileserver/editor_file_server.cpp
+msgid "Password"
+msgstr "密码"
+
+#: editor/import/editor_import_collada.cpp
+msgid "Collada"
+msgstr "Collada"
+
+#: editor/import/editor_import_collada.cpp
+msgid "Use Ambient"
+msgstr "使用环境光"
+
+#: editor/plugins/asset_library_editor_plugin.cpp
+msgid "Use Threads"
+msgstr "使用线程"
+
+#: editor/plugins/mesh_library_editor_plugin.cpp
+#: editor/plugins/tile_map_editor_plugin.cpp
+#: modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Preview Size"
+msgstr "预览尺寸"
+
+#: editor/plugins/path_editor_plugin.cpp
+#: editor/plugins/spatial_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
+#: modules/csg/csg_gizmos.cpp
+msgid "3d Gizmos"
+msgstr "3D装置"
+
+#: editor/plugins/path_editor_plugin.cpp
+#: editor/plugins/spatial_editor_plugin.cpp editor/spatial_editor_gizmos.cpp
+#: modules/csg/csg_gizmos.cpp
+msgid "Gizmo Colors"
+msgstr "装置颜色"
+
+#: editor/plugins/script_editor_plugin.cpp
+#: editor/plugins/shader_editor_plugin.cpp
+msgid "Auto Reload Scripts On External Change"
+msgstr "在外部更改时自动重新加载脚本"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Auto Reload And Parse Scripts On Save"
+msgstr "保存时自动重新加载和解析脚本"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Open Dominant Script On Scene Change"
+msgstr "在场景更改时打开主脚本"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "External"
+msgstr "外部"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Use External Editor"
+msgstr "使用外部编辑器"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Exec Path"
+msgstr "执行路径"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Script Temperature Enabled"
+msgstr "启用脚本热度"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Highlight Current Script"
+msgstr "高亮显示当前脚本"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Script Temperature History Size"
+msgstr "脚本热度历史记录大小"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Current Script Background Color"
+msgstr "当前脚本背景色"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Group Help Pages"
+msgstr "分组帮助页面"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Sort Scripts By"
+msgstr "脚本排序依据"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "List Script Names As"
+msgstr "列出脚本名称清单"
+
+#: editor/plugins/script_editor_plugin.cpp
+msgid "Exec Flags"
+msgstr "执行标记"
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Manipulator Gizmo Size"
+msgstr "操作装置大小"
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Manipulator Gizmo Opacity"
+msgstr "操作装置不透明度"
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Show Viewport Rotation Gizmo"
+msgstr "显示视口旋转装置"
+
+#: editor/plugins/spatial_editor_plugin.cpp
+msgid "Instanced"
+msgstr "实例化"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Tile Map"
+msgstr "瓦片地图"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Palette Item Hseparation"
+msgstr "调色板项目分离"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Show Tile Names"
+msgstr "显示图块名称"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Show Tile Ids"
+msgstr "显示图块ID"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Sort Tiles By Name"
+msgstr "图块按名称排序"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+#: modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Palette Min Width"
+msgstr "调色板最小宽度"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+msgid "Bucket Fill Preview"
+msgstr "批量填充预览"
+
+#: editor/plugins/tile_map_editor_plugin.cpp
+#: modules/gridmap/grid_map_editor_plugin.cpp
+msgid "Editor Side"
+msgstr "编辑侧边"
+
+#: editor/scene_tree_dock.cpp
+msgid "Show Scene Tree Root Selection"
+msgstr "显示场景树根选择"
+
+#: editor/scene_tree_dock.cpp
+msgid "Derive Script Globals By Name"
+msgstr "通过名称派生脚本全局变量"
+
+#: editor/scene_tree_dock.cpp
+msgid "Use Favorites Root Selection"
+msgstr "使用收藏夹根选择"
+
+#: editor/script_editor_debugger.cpp
+msgid "Auto Switch To Remote Scene Tree"
+msgstr "自动切换到远程场景树"
+
+#: editor/script_editor_debugger.cpp
+msgid "Remote Scene Tree Refresh Interval"
+msgstr "远程场景树刷新间隔"
+
+#: editor/script_editor_debugger.cpp
+msgid "Remote Inspect Refresh Interval"
+msgstr "远程监视面板刷新间隔"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Stream Player 3d"
+msgstr "流播放3D"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Camera"
+msgstr "摄像机"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Joint"
+msgstr "关节"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Shape"
+msgstr "形状"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Visibility Notifier"
+msgstr "可见性通知"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Reflection Probe"
+msgstr "反射探针"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Gi Probe"
+msgstr "GI探针"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Baked Indirect Light"
+msgstr "烘焙间接光"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Navigation Edge"
+msgstr "导航边缘"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Navigation Edge Disabled"
+msgstr "禁用导航边缘"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Navigation Solid"
+msgstr "导航实体"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Navigation Solid Disabled"
+msgstr "禁用导航实体"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Joint Body A"
+msgstr "关节体A"
+
+#: editor/spatial_editor_gizmos.cpp
+msgid "Joint Body B"
+msgstr "关节体B"
+
+#: main/main.cpp modules/bullet/register_types.cpp
+#: modules/bullet/shape_bullet.cpp modules/bullet/space_bullet.cpp
+#: scene/2d/physics_body_2d.cpp scene/3d/physics_body.cpp
+#: scene/main/scene_tree.cpp scene/resources/world.cpp
+#: scene/resources/world_2d.cpp servers/physics/space_sw.cpp
+#: servers/physics_2d/broad_phase_2d_hash_grid.cpp
+#: servers/physics_2d/physics_2d_server_wrap_mt.h
+#: servers/physics_2d/space_2d_sw.cpp
+msgid "Physics"
+msgstr "物理"
+
+#: main/main.cpp
+msgid "Godot Physics"
+msgstr "Godot物理"
+
+#: main/main.cpp servers/visual/visual_server_scene.cpp
+msgid "Use Bvh"
+msgstr "使用Bvh"
+
+#: main/main.cpp
+msgid "Crash Handler"
+msgstr "崩溃处理程序"
+
+#: main/main.cpp
+msgid "Message"
+msgstr "信息"
+
+#: main/main.cpp
+msgid "Multithreaded Server"
+msgstr "多线程服务器"
+
+#: main/main.cpp
+msgid "Rid Pool Prealloc"
+msgstr "RID池分配"
+
+#: main/main.cpp
+msgid "Debugger Stdout"
+msgstr "调试器输出"
+
+#: main/main.cpp
+msgid "Max Chars Per Second"
+msgstr "每秒最大字符数"
+
+#: main/main.cpp
+msgid "Max Messages Per Frame"
+msgstr "每秒最大消息数"
+
+#: main/main.cpp
+msgid "Max Errors Per Second"
+msgstr "每秒最大错误数"
+
+#: main/main.cpp
+msgid "Max Warnings Per Second"
+msgstr "每秒最大警告数"
+
+#: main/main.cpp
+msgid "Logging"
+msgstr "日志"
+
+#: main/main.cpp
+msgid "File Logging"
+msgstr "文件日志"
+
+#: main/main.cpp
+msgid "Enable File Logging"
+msgstr "启用文件日志"
+
+#: main/main.cpp
+msgid "Enable File Logging.pc"
+msgstr "启用文件日志.pc"
+
+#: main/main.cpp
+msgid "Log Path"
+msgstr "日志路径"
+
+#: main/main.cpp
+msgid "Max Log Files"
+msgstr "最大日志文件数"
+
+#: main/main.cpp
+msgid "Driver"
+msgstr "驱动"
+
+#: main/main.cpp
+msgid "Driver Name"
+msgstr "驱动名称"
+
+#: main/main.cpp
+msgid "Fallback To Gles2"
+msgstr "回退到GLES2"
+
+#: main/main.cpp
+msgid "Use Nvidia Rect Flicker Workaround"
+msgstr "使用英伟达矩形闪烁方案"
+
+#: main/main.cpp platform/uwp/os_uwp.cpp
+msgid "Display"
+msgstr "显示"
+
+#: main/main.cpp platform/uwp/os_uwp.cpp
+msgid "Window"
+msgstr "窗口"
+
+#: main/main.cpp
+msgid "Width"
+msgstr "宽度"
+
+#: main/main.cpp
+msgid "Height"
+msgstr "高度"
+
+#: main/main.cpp
+msgid "Resizable"
+msgstr "可调整大小"
+
+#: main/main.cpp
+msgid "Borderless"
+msgstr "无边框"
+
+#: main/main.cpp
+msgid "Fullscreen"
+msgstr "全屏"
+
+#: main/main.cpp
+msgid "Always On Top"
+msgstr "总在最前"
+
+#: main/main.cpp
+msgid "Test Width"
+msgstr "测试宽度"
+
+#: main/main.cpp
+msgid "Test Height"
+msgstr "测试高度"
+
+#: main/main.cpp
+msgid "Dpi"
+msgstr "DPI"
+
+#: main/main.cpp
+msgid "Allow Hidpi"
+msgstr "允许HiDPI"
+
+#: main/main.cpp
+msgid "Vsync"
+msgstr "垂直同步"
+
+#: main/main.cpp
+msgid "Use Vsync"
+msgstr "使用垂直同步"
+
+#: main/main.cpp
+msgid "Vsync Via Compositor"
+msgstr "通过合成器进行垂直同步"
+
+#: main/main.cpp
+msgid "Tablet Driver"
+msgstr "Tablet Driver"
+
+#: main/main.cpp
+msgid "Per Pixel Transparency"
+msgstr "每像素透明度"
+
+#: main/main.cpp
+msgid "Allowed"
+msgstr "允许"
+
+#: main/main.cpp modules/mono/mono_gd/gd_mono.cpp
+msgid "Enabled"
+msgstr "启用"
+
+#: main/main.cpp
+msgid "Intended Usage"
+msgstr "预期用途"
+
+#: main/main.cpp
+msgid "Framebuffer Allocation"
+msgstr "帧缓冲区分配"
+
+#: main/main.cpp
+msgid "Framebuffer Allocation.mobile"
+msgstr "帧缓冲区分配.mobile"
+
+#: main/main.cpp
+msgid "Use Transform Snap"
+msgstr "使用变换吸附"
+
+#: main/main.cpp
+msgid "Use Camera Snap"
+msgstr "使用相机吸附"
+
+#: main/main.cpp platform/uwp/os_uwp.cpp
+msgid "Energy Saving"
+msgstr "节能"
+
+#: main/main.cpp platform/uwp/os_uwp.cpp
+msgid "Keep Screen On"
+msgstr "保持屏幕开启"
+
+#: main/main.cpp
+msgid "Threads"
+msgstr "线程"
+
+#: main/main.cpp servers/physics_2d/physics_2d_server_wrap_mt.h
+msgid "Thread Model"
+msgstr "线程模式"
+
+#: main/main.cpp
+msgid "Handheld"
+msgstr "手持设备"
+
+#: main/main.cpp
+msgid "Orientation"
+msgstr "方向"
+
+#: main/main.cpp scene/gui/scroll_container.cpp scene/gui/text_edit.cpp
+#: scene/main/scene_tree.cpp scene/register_scene_types.cpp
+msgid "Common"
+msgstr "常用"
+
+#: main/main.cpp
+msgid "Physics Fps"
+msgstr "物理FPS"
+
+#: main/main.cpp
+msgid "Physics Jitter Fix"
+msgstr "物理抖动修正"
+
+#: main/main.cpp
+msgid "Fps"
+msgstr "FPS"
+
+#: main/main.cpp
+msgid "Force Fps"
+msgstr "强制FPS"
+
+#: main/main.cpp
+msgid "Stdout"
+msgstr "标准输出"
+
+#: main/main.cpp
+msgid "Print Fps"
+msgstr "打印FPS"
+
+#: main/main.cpp
+msgid "Verbose Stdout"
+msgstr "详细的标准输出"
+
+#: main/main.cpp
+msgid "Frame Delay Msec"
+msgstr "帧延迟毫秒数"
+
+#: main/main.cpp
+msgid "Low Processor Mode"
+msgstr "低处理器模式"
+
+#: main/main.cpp
+msgid "Ios"
+msgstr "IOS"
+
+#: main/main.cpp
+msgid "Hide Home Indicator"
+msgstr "隐藏首页提示"
+
+#: main/main.cpp
+msgid "Input Devices"
+msgstr "输入设备"
+
+#: main/main.cpp
+msgid "Pointing"
+msgstr "指示"
+
+#: main/main.cpp
+msgid "Touch Delay"
+msgstr "触摸延迟"
+
+#: main/main.cpp scene/main/scene_tree.cpp
+msgid "Environment"
+msgstr "环境"
+
+#: main/main.cpp
+msgid "Default Clear Color"
+msgstr "默认清楚颜色"
+
+#: main/main.cpp
+msgid "Boot Splash"
+msgstr "开启画面"
+
+#: main/main.cpp
+msgid "Image"
+msgstr "图片"
+
+#: main/main.cpp
+msgid "Fullsize"
+msgstr "全尺寸"
+
+#: main/main.cpp
+msgid "Use Filter"
+msgstr "使用过滤器"
+
+#: main/main.cpp
+msgid "Bg Color"
+msgstr "背景颜色"
+
+#: main/main.cpp
+msgid "Macos Native Icon"
+msgstr "Mac本机图标"
+
+#: main/main.cpp
+msgid "Windows Native Icon"
+msgstr "Windows本机图标"
+
+#: main/main.cpp
+msgid "Emulate Touch From Mouse"
+msgstr "模拟鼠标触摸"
+
+#: main/main.cpp
+msgid "Emulate Mouse From Touch"
+msgstr "模拟触摸鼠标"
+
+#: main/main.cpp
+msgid "Mouse Cursor"
+msgstr "鼠标指针"
+
+#: main/main.cpp
+msgid "Custom Image"
+msgstr "自定义图片"
+
+#: main/main.cpp
+msgid "Custom Image Hotspot"
+msgstr "自定义图片热点"
+
+#: main/main.cpp
+msgid "Tooltip Position Offset"
+msgstr "工具提示位置偏移"
+
+#: main/main.cpp
+msgid "Main Loop Type"
+msgstr "主循环类型"
+
+#: main/main.cpp
+msgid "Stretch"
+msgstr "拉伸"
+
+#: main/main.cpp
+msgid "Mode"
+msgstr "模式"
+
+#: main/main.cpp
+msgid "Aspect"
+msgstr "方位"
+
+#: main/main.cpp
+msgid "Shrink"
+msgstr "伸缩"
+
+#: main/main.cpp
+msgid "Auto Accept Quit"
+msgstr "自动同意退出"
+
+#: main/main.cpp
+msgid "Quit On Go Back"
+msgstr "退出后返回"
+
+#: main/main.cpp scene/gui/item_list.cpp scene/gui/popup_menu.cpp
+#: scene/gui/scroll_container.cpp scene/gui/text_edit.cpp scene/gui/tree.cpp
+#: scene/main/viewport.cpp scene/register_scene_types.cpp
+msgid "Gui"
+msgstr "图形用户界面"
+
+#: main/main.cpp
+msgid "Snap Controls To Pixels"
+msgstr "控件吸附至像素"
+
+#: main/main.cpp
+msgid "Dynamic Fonts"
+msgstr "动态字体"
+
+#: main/main.cpp
+msgid "Use Oversampling"
+msgstr "使用多重采样"
+
+#: modules/bullet/register_types.cpp modules/bullet/space_bullet.cpp
+msgid "Active Soft World"
+msgstr "激活软体世界"
+
+#: modules/bullet/shape_bullet.cpp
+msgid "Smooth Trimesh Collision"
+msgstr "平滑三面网格碰撞"
+
+#: modules/csg/csg_gizmos.cpp
+msgid "Csg"
+msgstr "CSG"
+
+#: modules/gdscript/editor/gdscript_highlighter.cpp
+#: modules/gdscript/gdscript.cpp
+msgid "Gdscript"
+msgstr "Gdscript"
+
+#: modules/gdscript/editor/gdscript_highlighter.cpp
+msgid "Function Definition Color"
+msgstr "函数定义颜色"
+
+#: modules/gdscript/editor/gdscript_highlighter.cpp
+msgid "Node Path Color"
+msgstr "节点路径颜色"
+
+#: modules/gdscript/gdscript.cpp modules/visual_script/visual_script.cpp
+msgid "Max Call Stack"
+msgstr "最大调用堆栈"
+
+#: modules/gdscript/gdscript.cpp
+msgid "Treat Warnings As Errors"
+msgstr "将警告视为错误"
+
+#: modules/gdscript/gdscript.cpp
+msgid "Exclude Addons"
+msgstr "排除插件"
+
+#: modules/gdscript/gdscript.cpp
+msgid "Autocomplete Setters And Getters"
+msgstr "自动完成设置和获得"
+
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Language Server"
+msgstr "语言服务器"
+
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Enable Smart Resolve"
+msgstr "启用智能解析"
+
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Show Native Symbols In Editor"
+msgstr "在编辑器中显示本机符号"
+
+#: modules/gdscript/language_server/gdscript_language_server.cpp
+msgid "Use Thread"
+msgstr "使用多线程"
+
+#: modules/lightmapper_cpu/register_types.cpp
+msgid "Cpu Lightmapper"
+msgstr "CPU光映射器"
+
+#: modules/lightmapper_cpu/register_types.cpp
+msgid "Low Quality Ray Count"
+msgstr "低质量射线计数"
+
+#: modules/lightmapper_cpu/register_types.cpp
+msgid "Medium Quality Ray Count"
+msgstr "中等质量射线计数"
+
+#: modules/lightmapper_cpu/register_types.cpp
+msgid "High Quality Ray Count"
+msgstr "高质量射线计数"
+
+#: modules/lightmapper_cpu/register_types.cpp
+msgid "Ultra Quality Ray Count"
+msgstr "超高质量射线计数"
+
+#: modules/mono/editor/csharp_project.cpp modules/mono/mono_gd/gd_mono.cpp
+msgid "Mono"
+msgstr "Mono"
+
+#: modules/mono/editor/csharp_project.cpp
+msgid "Auto Update Project"
+msgstr "自动更新项目"
+
+#: modules/mono/mono_gd/gd_mono.cpp
+msgid "Args"
+msgstr "参数"
+
+#: modules/mono/mono_gd/gd_mono.cpp
+msgid "Debugger Agent"
+msgstr "调试器代理"
+
+#: modules/mono/mono_gd/gd_mono.cpp
+msgid "Wait For Debugger"
+msgstr "等待调试器"
+
+#: modules/mono/mono_gd/gd_mono.cpp
+msgid "Wait Timeout"
+msgstr "等待超时"
+
+#: modules/visual_script/visual_script.cpp
+msgid "Visual Script"
+msgstr "Visual Script"
+
+#: platform/android/export/export.cpp
+msgid "Android Sdk Path"
+msgstr "安卓SDK目录"
+
+#: platform/android/export/export.cpp
+msgid "Debug Keystore"
+msgstr "调试密钥库"
+
+#: platform/android/export/export.cpp
+msgid "Debug Keystore User"
+msgstr "调试密钥库用户"
+
+#: platform/android/export/export.cpp
+msgid "Debug Keystore Pass"
+msgstr "调试密钥库密码"
+
+#: platform/android/export/export.cpp
+msgid "Force System User"
+msgstr "强制系统用户"
+
+#: platform/android/export/export.cpp
+msgid "Shutdown Adb On Exit"
+msgstr "退出时关闭Adb"
+
+#: platform/javascript/export/export.cpp
+msgid "Web"
+msgstr "WEB"
+
+#: platform/javascript/export/export.cpp
+msgid "Http Host"
+msgstr "HTTP主机"
+
+#: platform/javascript/export/export.cpp
+msgid "Http Port"
+msgstr "HTTP端口"
+
+#: platform/uwp/export/export.cpp
+msgid "Uwp"
+msgstr "UWP"
+
+#: platform/uwp/export/export.cpp platform/windows/export/export.cpp
+msgid "Signtool"
+msgstr "签名工具"
+
+#: platform/uwp/export/export.cpp
+msgid "Debug Certificate"
+msgstr "调试证书"
+
+#: platform/uwp/export/export.cpp
+msgid "Debug Password"
+msgstr "调试密码"
+
+#: platform/uwp/export/export.cpp
+msgid "Debug Algorithm"
+msgstr "调试算法"
+
+#: platform/windows/export/export.cpp
+msgid "Windows"
+msgstr "Windows"
+
+#: platform/windows/export/export.cpp
+msgid "Rcedit"
+msgstr "Rcedit"
+
+#: platform/windows/export/export.cpp
+msgid "Osslsigncode"
+msgstr "签名工具"
+
+#: platform/windows/export/export.cpp
+msgid "Wine"
+msgstr "Wine"
+
+#: scene/2d/physics_body_2d.cpp scene/3d/physics_body.cpp
+#: scene/resources/world.cpp scene/resources/world_2d.cpp
+msgid "Default Gravity"
+msgstr "默认重力"
+
+#: scene/gui/item_list.cpp scene/gui/popup_menu.cpp scene/gui/text_edit.cpp
+#: scene/gui/tree.cpp scene/main/viewport.cpp
+msgid "Timers"
+msgstr "计时器"
+
+#: scene/gui/item_list.cpp scene/gui/popup_menu.cpp scene/gui/tree.cpp
+msgid "Incremental Search Max Interval Msec"
+msgstr "增量搜索最大间隔毫秒"
+
 #: scene/gui/scroll_container.cpp
 msgid "Default Scroll Deadzone"
 msgstr "默认滚动盲区"
@@ -15030,10 +15076,6 @@ msgstr "文本编辑空闲检测秒数"
 #: scene/gui/text_edit.cpp
 msgid "Text Edit Undo Stack Max Size"
 msgstr "文本编辑撤消堆栈最大大小"
-
-#: scene/gui/tree.cpp
-msgid "(Other)"
-msgstr "（其它）"
 
 #: scene/main/node.cpp
 msgid "Name Num Separator"
@@ -15104,31 +15146,8 @@ msgid "Default Environment"
 msgstr "默认环境"
 
 #: scene/main/scene_tree.cpp
-msgid ""
-"Default Environment as specified in Project Settings (Rendering -> "
-"Environment -> Default Environment) could not be loaded."
-msgstr ""
-"无法加载项目设置中的默认环境 (Rendering -> Environment -> Default "
-"Environment)。"
-
-#: scene/main/scene_tree.cpp
 msgid "Enable Object Picking"
 msgstr "启用对象捕获"
-
-#: scene/main/viewport.cpp
-msgid ""
-"This viewport is not set as render target. If you intend for it to display "
-"its contents directly to the screen, make it a child of a Control so it can "
-"obtain a size. Otherwise, make it a RenderTarget and assign its internal "
-"texture to some node for display."
-msgstr ""
-"这个 Viewport 未被设置为渲染目标。如果你想让其直接在屏幕上显示内容，请使其成"
-"为 Control 的子节点，这样一来该 Viewport 才会有大小。否则请为其设置 "
-"RenderTarget 并分配其内部纹理来显示。"
-
-#: scene/main/viewport.cpp
-msgid "Viewport size must be greater than 0 to render anything."
-msgstr "Viewport 大小大于 0 时才能进行渲染。"
 
 #: scene/main/viewport.cpp
 msgid "Tooltip Delay Sec"
@@ -15169,24 +15188,6 @@ msgstr "自定义"
 #: scene/register_scene_types.cpp
 msgid "Custom Font"
 msgstr "自定义字体"
-
-#: scene/resources/visual_shader_nodes.cpp
-msgid ""
-"The sampler port is connected but not used. Consider changing the source to "
-"'SamplerPort'."
-msgstr "采样器端口已连接但未使用。考虑将源更改为“SamplerPort”。"
-
-#: scene/resources/visual_shader_nodes.cpp
-msgid "Invalid source for preview."
-msgstr "预览的源资源无效。"
-
-#: scene/resources/visual_shader_nodes.cpp
-msgid "Invalid source for shader."
-msgstr "着色器的源资源无效。"
-
-#: scene/resources/visual_shader_nodes.cpp
-msgid "Invalid comparison function for that type."
-msgstr "该类型的比较功能无效。"
 
 #: scene/resources/world.cpp scene/resources/world_2d.cpp
 msgid "Default Gravity Vector"
@@ -15255,22 +15256,6 @@ msgstr "BP哈希表大小"
 #: servers/physics_2d/broad_phase_2d_hash_grid.cpp
 msgid "Large Object Surface Threshold In Cells"
 msgstr "单元中的大物体表面阈值"
-
-#: servers/visual/shader_language.cpp
-msgid "Assignment to function."
-msgstr "对函数的赋值。"
-
-#: servers/visual/shader_language.cpp
-msgid "Assignment to uniform."
-msgstr "对统一的赋值。"
-
-#: servers/visual/shader_language.cpp
-msgid "Varyings can only be assigned in vertex function."
-msgstr "变量只能在顶点函数中指定。"
-
-#: servers/visual/shader_language.cpp
-msgid "Constants cannot be modified."
-msgstr "不允许修改常量。"
 
 #: servers/visual/visual_server_scene.cpp
 msgid "Spatial Partitioning"
@@ -15508,6 +15493,22 @@ msgstr "UV收缩"
 msgid "Uv Contract Amount"
 msgstr "UV收缩量"
 
+#~ msgid ""
+#~ "Godot editor was built without ray tracing support; lightmaps can't be "
+#~ "baked.\n"
+#~ "If you are using an Apple Silicon-based Mac, try forcing Rosetta "
+#~ "emulation on Godot.app in the application settings\n"
+#~ "then restart the editor."
+#~ msgstr ""
+#~ "Godot 编辑器是在没有光线跟踪支持的情况下构建的；无法烘焙光照贴图。\n"
+#~ "如果你使用的是基于 Apple Silicon 的 Mac，可以尝试在应用设置中让 Godot.app "
+#~ "强制使用 Rosetta 模拟\n"
+#~ "并重启编辑器。"
+
+#~ msgid ""
+#~ "InterpolatedCamera has been deprecated and will be removed in Godot 4.0."
+#~ msgstr "InterpolatedCamera 已废弃，将在 Godot 4.0 中删除。"
+
 #~ msgid "No"
 #~ msgstr "否"
 
@@ -15567,6 +15568,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Move anchor"
 #~ msgstr "移动锚点"
+
+#~ msgid "Resize CanvasItem"
+#~ msgstr "调整 CanvasItem 尺寸"
 
 #~ msgid "Polygon->UV"
 #~ msgstr "多边形->UV"
@@ -15686,17 +15690,29 @@ msgstr "UV收缩量"
 #~ msgid "Alt+"
 #~ msgstr "Alt+"
 
+#~ msgid "Control+"
+#~ msgstr "Ctrl+"
+
 #~ msgid "Snap to Grid"
 #~ msgstr "吸附到网格"
 
 #~ msgid "Add input +"
 #~ msgstr "添加输入+"
 
+#~ msgid "Language"
+#~ msgstr "语言"
+
 #~ msgid "Inherits"
 #~ msgstr "继承自"
 
+#~ msgid "Base Type:"
+#~ msgstr "基础类型："
+
 #~ msgid "Available Nodes:"
 #~ msgstr "有效节点："
+
+#~ msgid "Input"
+#~ msgstr "输入"
 
 #~ msgid "Properties:"
 #~ msgstr "属性:"
@@ -15790,6 +15806,9 @@ msgstr "UV收缩量"
 #~ msgid "Snap Mode (%s)"
 #~ msgstr "吸附模式 (%s)"
 
+#~ msgid "Tool Select"
+#~ msgstr "选择工具"
+
 #~ msgid "Tool Move"
 #~ msgstr "移动工具"
 
@@ -15835,6 +15854,9 @@ msgstr "UV收缩量"
 #~ msgid "Next Folder"
 #~ msgstr "下一个文件夹"
 
+#~ msgid "Automatically Open Screenshots"
+#~ msgstr "自动打开截图"
+
 #~ msgid "Open in an external image editor."
 #~ msgstr "使用外部图像编辑器打开。"
 
@@ -15861,6 +15883,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Failed to create C# project."
 #~ msgstr "创建C#项目失败。"
+
+#~ msgid "Mono"
+#~ msgstr "Mono"
 
 #~ msgid "About C# support"
 #~ msgstr "关于C#支持"
@@ -15928,6 +15953,9 @@ msgstr "UV收缩量"
 #~ msgid "Create folder"
 #~ msgstr "新建目录"
 
+#~ msgid "Custom Node"
+#~ msgstr "自定义节点"
+
 #~ msgid "Invalid Path"
 #~ msgstr "路径非法"
 
@@ -15954,6 +15982,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Instance the selected scene(s) as child of the selected node."
 #~ msgstr "将选中的场景实例为选中节点的子节点。"
+
+#~ msgid "Font Size:"
+#~ msgstr "字体大小:"
 
 #~ msgid "Line:"
 #~ msgstr "行:"
@@ -16096,6 +16127,9 @@ msgstr "UV收缩量"
 #~ msgid "Search the class hierarchy."
 #~ msgstr "搜索类。"
 
+#~ msgid "Search in files"
+#~ msgstr "在文件中搜索"
+
 #~ msgid ""
 #~ "Built-in scripts can only be edited when the scene they belong to is "
 #~ "loaded"
@@ -16181,6 +16215,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Modify Curve Map"
 #~ msgstr "修改曲线图"
+
+#~ msgid "Connect Graph Nodes"
+#~ msgstr "连接Graph Node"
 
 #~ msgid "Remove Shader Graph Node"
 #~ msgstr "移除Graph Node节点"
@@ -16302,8 +16339,14 @@ msgstr "UV收缩量"
 #~ msgid "Run Script"
 #~ msgstr "运行脚本"
 
+#~ msgid "Stop Profiling"
+#~ msgstr "停止"
+
 #~ msgid "Start Profiling"
 #~ msgstr "开始"
+
+#~ msgid "Default (Same as Editor)"
+#~ msgstr "默认（与编辑器相同）"
 
 #~ msgid "Create new animation in player."
 #~ msgstr "在播放中创建动画。"
@@ -16322,6 +16365,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Copy Animation"
 #~ msgstr "拷贝动画"
+
+#~ msgid "Fetching:"
+#~ msgstr "获取:"
 
 #~ msgid "prev"
 #~ msgstr "上一页"
@@ -16484,6 +16530,9 @@ msgstr "UV收缩量"
 #~ msgid " "
 #~ msgstr " .. "
 
+#~ msgid "Sections:"
+#~ msgstr "选项:"
+
 #~ msgid "Cannot navigate to '"
 #~ msgstr "无法导航到 '"
 
@@ -16515,6 +16564,9 @@ msgstr "UV收缩量"
 #~ msgid "Remote Inspector"
 #~ msgstr "远程属性面板"
 
+#~ msgid "Live Scene Tree:"
+#~ msgstr "即时场景树:"
+
 #~ msgid "Remote Object Properties: "
 #~ msgstr "远程对象属性: "
 
@@ -16528,6 +16580,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Selection -> Duplicate"
 #~ msgstr "选择->复制"
+
+#~ msgid "Selection -> Clear"
+#~ msgstr "选择->清空"
 
 #~ msgid ""
 #~ "Path property must point to a valid Viewport node to work. Such Viewport "
@@ -16631,6 +16686,9 @@ msgstr "UV收缩量"
 #~ msgid "Target Path:"
 #~ msgstr "目标路径:"
 
+#~ msgid "Accept"
+#~ msgstr "接受"
+
 #~ msgid "Bit Mask"
 #~ msgstr "位掩码（BitMask）"
 
@@ -16650,6 +16708,9 @@ msgstr "UV收缩量"
 #~ msgid "Couldn't save font."
 #~ msgstr "无法保存字体。"
 
+#~ msgid "Source Font:"
+#~ msgstr "源字体文件:"
+
 #~ msgid "Dest Resource:"
 #~ msgstr "目标资源:"
 
@@ -16657,6 +16718,9 @@ msgstr "UV收缩量"
 #~ msgstr ""
 #~ "The quick brown fox jumps over the lazy dog.\n"
 #~ "我能吞下玻璃而不伤身体。"
+
+#~ msgid "Test:"
+#~ msgstr "测试:"
 
 #~ msgid "Options:"
 #~ msgstr "选项:"
@@ -16702,6 +16766,9 @@ msgstr "UV收缩量"
 #~ msgid "New Clip"
 #~ msgstr "新片段"
 
+#~ msgid "Flags"
+#~ msgstr "标记"
+
 #~ msgid "Bake FPS:"
 #~ msgstr "烘培FPS:"
 
@@ -16713,6 +16780,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Max Angular Error"
 #~ msgstr "最大角度误差"
+
+#~ msgid "Max Angle"
+#~ msgstr "最大角度"
 
 #~ msgid "Start(s)"
 #~ msgstr "起点"
@@ -16785,6 +16855,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Texture Compression Quality (WebP):"
 #~ msgstr "高质量（WebP）压缩方式:"
+
+#~ msgid "Texture Options"
+#~ msgstr "纹理选项"
 
 #~ msgid "Please specify some files!"
 #~ msgstr "请添加文件！"
@@ -16906,11 +16979,17 @@ msgstr "UV收缩量"
 #~ msgid "Ignore First Row"
 #~ msgstr "忽略第一行"
 
+#~ msgid "Compress"
+#~ msgstr "压缩"
+
 #~ msgid "Add to Project (project.godot)"
 #~ msgstr "添加到项目 (project.godot)"
 
 #~ msgid "Import Languages:"
 #~ msgstr "导入语言:"
+
+#~ msgid "Translation"
+#~ msgstr "语言"
 
 #~ msgid "Triangle #"
 #~ msgstr "三角形 #"
@@ -16936,6 +17015,9 @@ msgstr "UV收缩量"
 #~ msgid "Reset the lightmap octree baking process (start over)."
 #~ msgstr "重置贴图烘焙过程 （重新开始） 的 octree (八叉树)。"
 
+#~ msgid "Zoom Set..."
+#~ msgstr "设置缩放..."
+
 #~ msgid "Set a Value"
 #~ msgstr "设置值"
 
@@ -16956,6 +17038,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Rename Sample"
 #~ msgstr "重命名音效"
+
+#~ msgid "Delete Sample"
+#~ msgstr "删除音效"
 
 #~ msgid "16 Bits"
 #~ msgstr "16位"
@@ -17068,8 +17153,14 @@ msgstr "UV收缩量"
 #~ msgid "Could not instance scene!"
 #~ msgstr "无法实例化场景！"
 
-#~ msgid "Use Default sRGB"
-#~ msgstr "使用默认sRGB"
+#~ msgid "Use Default Light"
+#~ msgstr "使用默认光照"
+
+#~ msgid "Default Light Normal:"
+#~ msgstr "默认光照法线:"
+
+#~ msgid "Ambient Light Color:"
+#~ msgstr "环境光颜色:"
 
 #~ msgid "Invalid parent class name"
 #~ msgstr "基类名称非法"
@@ -17130,6 +17221,9 @@ msgstr "UV收缩量"
 #~ msgid "Organizational unit"
 #~ msgstr "组织单元"
 
+#~ msgid "Organization"
+#~ msgstr "组织"
+
 #~ msgid "City"
 #~ msgstr "城市(City)"
 
@@ -17141,6 +17235,9 @@ msgstr "UV收缩量"
 
 #~ msgid "User alias"
 #~ msgstr "用户别名"
+
+#~ msgid "Password"
+#~ msgstr "密码"
 
 #~ msgid "at least 6 characters"
 #~ msgstr "至少6个字符"
@@ -17182,6 +17279,12 @@ msgstr "UV收缩量"
 #~ msgid "Export all files in the project directory."
 #~ msgstr "导出项目目录下的所有文件。"
 
+#~ msgid "Convert text scenes to binary on export."
+#~ msgstr "导出时将文本场景写入二进制文件。"
+
+#~ msgid "Images"
+#~ msgstr "图片"
+
 #~ msgid "Keep Original"
 #~ msgstr "保持原样"
 
@@ -17212,6 +17315,15 @@ msgstr "UV收缩量"
 #~ msgid "Compress RAM"
 #~ msgstr "节省内存"
 
+#~ msgid "Compress Mode:"
+#~ msgstr "压缩方式:"
+
+#~ msgid "Lossy Quality:"
+#~ msgstr "图片质量:"
+
+#~ msgid "Shrink By:"
+#~ msgstr "收缩方式:"
+
 #~ msgid "Images:"
 #~ msgstr "图片:"
 
@@ -17241,6 +17353,9 @@ msgstr "UV收缩量"
 
 #~ msgid "BakedLightInstance does not contain a BakedLight resource."
 #~ msgstr "BakedLightInstance未包含BakedLight资源。"
+
+#~ msgid "Lighting"
+#~ msgstr "光照"
 
 #~ msgid "Global"
 #~ msgstr "全局"
@@ -17301,6 +17416,9 @@ msgstr "UV收缩量"
 
 #~ msgid "Live Editing"
 #~ msgstr "实时编辑"
+
+#~ msgid "File Server"
+#~ msgstr "文件服务"
 
 #~ msgid "Deploy File Server Clients"
 #~ msgstr "部署文件服务客户端"
