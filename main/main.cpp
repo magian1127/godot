@@ -3132,6 +3132,7 @@ Error Main::setup2() {
 	// after init'ing the ScriptServer, but also after init'ing the ThemeDB,
 	// for the C# docs generation in the bindings.
 	List<String> cmdline_args = OS::get_singleton()->get_cmdline_args();
+	load_doc_translations("zh_CN");
 	BindingsGenerator::handle_cmdline_args(cmdline_args);
 #endif
 
