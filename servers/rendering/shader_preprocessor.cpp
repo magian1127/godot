@@ -281,6 +281,9 @@ String ShaderPreprocessor::CommentRemover::strip() {
 			if (p == '/') { // Single line comment.
 				advance('\n');
 			} else if (p == '*') { // Start of a block comment.
+#ifdef TOOLS_ENABLED
+				int tip_index = index - 1;
+#endif
 				index++;
 				comment_line_open = line;
 				comments_open++;
@@ -288,6 +291,16 @@ String ShaderPreprocessor::CommentRemover::strip() {
 					if (peek() == '/') { // End of a block comment.
 						comments_open--;
 						index++;
+#ifdef TOOLS_ENABLED
+						while (advance('u')) {
+							if (peek() == 'n') {
+								for (int i = tip_index; i < index; i++) {
+									stripped.push_back(code[i]);
+								}
+								break;
+							}
+						}
+#endif
 						break;
 					}
 				}

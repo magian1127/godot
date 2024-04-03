@@ -37,6 +37,10 @@
 #include "servers/rendering_server.h"
 #include "shader_types.h"
 
+#ifdef TOOLS_ENABLED
+#include "editor/editor_help.h"
+#endif
+
 #define HAS_WARNING(flag) (warning_flags & flag)
 
 String ShaderLanguage::get_operator_text(Operator p_op) {
@@ -396,7 +400,9 @@ const ShaderLanguage::KeyWord ShaderLanguage::keyword_list[] = {
 
 ShaderLanguage::Token ShaderLanguage::_get_token() {
 #define GETCHAR(m_idx) (((char_idx + m_idx) < code.length()) ? code[char_idx + m_idx] : char32_t(0))
-
+#ifdef TOOLS_ENABLED
+	String tooltip;
+#endif
 	while (true) {
 		char_idx++;
 		switch (GETCHAR(-1)) {
@@ -426,7 +432,9 @@ ShaderLanguage::Token ShaderLanguage::_get_token() {
 							} else if (GETCHAR(0) == '\n') {
 								tk_line++;
 							}
-
+#ifdef TOOLS_ENABLED
+							tooltip += GETCHAR(0);
+#endif
 							char_idx++;
 						}
 
@@ -852,6 +860,11 @@ ShaderLanguage::Token ShaderLanguage::_get_token() {
 						char_idx++;
 					}
 
+#ifdef TOOLS_ENABLED
+					if (str == "uniform" && tooltip.size() > 0) {
+						return _make_token(TK_UNIFORM, tooltip);
+					}
+#endif
 					//see if keyword
 					//should be converted to a static map
 					int idx = 0;
@@ -8397,7 +8410,12 @@ Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_f
 				DataType type;
 				StringName name;
 				int array_size = 0;
-
+#ifdef TOOLS_ENABLED
+				String tooltip;
+				if (is_uniform) {
+					tooltip = tk.text;
+				}
+#endif
 				tk = _get_token();
 #ifdef DEBUG_ENABLED
 				bool temp_error = false;
@@ -8562,6 +8580,14 @@ Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_f
 							return ERR_PARSE_ERROR;
 						}
 					}
+#ifdef TOOLS_ENABLED
+					if (!tooltip.is_empty()) {
+						DocData::PropertyDoc prop_doc;
+						prop_doc.name = "shader_parameter/" + name;
+						prop_doc.description = tooltip;
+						/*EditorHelp::get_doc_data()->class_list["ShaderMaterial"].properties.push_back(prop_doc);*/
+					}
+#endif
 					ShaderNode::Uniform uniform;
 
 					uniform.type = type;

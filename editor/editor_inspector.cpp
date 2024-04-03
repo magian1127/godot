@@ -3379,6 +3379,12 @@ void EditorInspector::update_tree() {
 						ep->set_tooltip_text("theme_item|" + classname + "|" + theme_item_name + "|");
 					}
 					ep->has_doc_tooltip = true;
+				}else if (p.name.contains("shader_parameter/")) {
+					ShaderMaterial *shader_material = Object::cast_to<ShaderMaterial>(object);
+					if (shader_material) {
+						ep->set_tooltip_text("property|" + shader_material->get_shader()->get_path() + "|" + property_prefix + p.name + "|");
+						ep->has_doc_tooltip = true;
+					}
 				}
 
 				ep->set_doc_path(doc_path);
