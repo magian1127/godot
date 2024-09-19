@@ -43,6 +43,7 @@
 #include "core/io/dir_access.h"
 #include "core/io/file_access.h"
 #include "core/os/os.h"
+#include "core/string/translation_server.h"
 #include "main/main.h"
 
 StringBuilder &operator<<(StringBuilder &r_sb, const String &p_string) {
@@ -159,10 +160,39 @@ void BindingsGenerator::TypeInterface::postsetup_enum_type(BindingsGenerator::Ty
 	r_enum_itype.class_doc = &EditorHelp::get_doc_data()->class_list[r_enum_itype.proxy_name];
 }
 
+static String _get_indent(const String &p_text) {
+	String indent;
+	bool has_text = false;
+	int line_start = 0;
+
+	for (int i = 0; i < p_text.length(); i++) {
+		const char32_t c = p_text[i];
+		if (c == '\n') {
+			line_start = i + 1;
+		} else if (c > 32) {
+			has_text = true;
+			indent = p_text.substr(line_start, i - line_start);
+			break; // Indentation of the first line that has text.
+		}
+	}
+	if (!has_text) {
+		return p_text;
+	}
+	return indent;
+}
+
+static String _translate_doc_string(const String &p_text) {
+	const String indent = _get_indent(p_text);
+	const String message = p_text.dedent().strip_edges();
+	const String translated = TranslationServer::get_singleton()->doc_translate(message, "");
+	// No need to restore stripped edges because they'll be stripped again later.
+	return translated.indent(indent);
+}
+
 static String fix_doc_description(const String &p_bbcode) {
 	// This seems to be the correct way to do this. It's the same EditorHelp does.
 
-	return p_bbcode.dedent()
+	return _translate_doc_string(p_bbcode).dedent()
 			.replace("\t", "")
 			.replace("\r", "")
 			.strip_edges();
