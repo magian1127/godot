@@ -49,7 +49,7 @@ namespace Godot.SourceGenerators
             return false;
         }
 
-        public static string? GetDocumentationSummaryText(this ISymbol symbol)
+        public static void GetDocumentationSummaryText(this ISymbol symbol, out string? briefSummary, out string? fullSummary)
         {
             // TODO: Can't use GetDocumentationCommentXml in source generators: https://github.com/dotnet/roslyn/issues/23673
             var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax();
@@ -59,10 +59,27 @@ namespace Godot.SourceGenerators
             }
             var trivia = syntax?.GetLeadingTrivia();
 
-            string summaryContent = Regex.Match(trivia.ToString(), "(?<=<summary>)[.\\s\\S]*?(?=</summary>)", RegexOptions.Singleline).Value;
-            string cleanedSummary = Regex.Replace(summaryContent, @"^\s*///\s?", "", RegexOptions.Multiline);
+            briefSummary = null;
+            fullSummary = null;
 
-            return cleanedSummary.Trim().Replace("\"", "\"\"");
+            if (trivia == null)
+            {
+                return;
+            }
+
+            try
+            {
+                BBCodeRenderer.RenderXmlDocumentationToBBCode(
+                    trivia.ToString(),
+                    out string? briefText,
+                    out string? fullText
+                );
+            }
+            catch (Exception)
+            {
+                // Ignore any errors in XML doc comments
+                return;
+            }
         }
 
         public static INamedTypeSymbol? GetGodotScriptNativeClass(this INamedTypeSymbol classTypeSymbol)

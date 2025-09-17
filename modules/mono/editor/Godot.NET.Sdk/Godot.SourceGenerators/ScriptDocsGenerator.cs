@@ -81,7 +81,7 @@ namespace Godot.SourceGenerators
             string godotProjectDir
         )
         {
-            string? classDescription = symbol.GetDocumentationSummaryText();
+            symbol.GetDocumentationSummaryText(out string? classDescription, out _);
 
             StringBuilder docPropertyString = new StringBuilder();
 
@@ -244,7 +244,7 @@ namespace Godot.SourceGenerators
 
         private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol)
         {
-            string? text = symbol.GetDocumentationSummaryText();
+            symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
                 docPropertyString.Append("        propertyDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", PropertyName.")
@@ -261,7 +261,7 @@ namespace Godot.SourceGenerators
             string SignalDelegateSuffix = "EventHandler";
             signalName = signalName.Substring(0, signalName.Length - SignalDelegateSuffix.Length);
 
-            string? text = symbol.GetDocumentationSummaryText();
+            symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
                 docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
