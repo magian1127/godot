@@ -245,6 +245,7 @@ namespace Godot.SourceGenerators
         private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol)
         {
             symbol.GetDocumentationSummaryText(out _, out string? text);
+
             if (!string.IsNullOrWhiteSpace(text))
             {
                 docPropertyString.Append("        propertyDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", PropertyName.")
@@ -262,6 +263,7 @@ namespace Godot.SourceGenerators
             signalName = signalName.Substring(0, signalName.Length - SignalDelegateSuffix.Length);
 
             symbol.GetDocumentationSummaryText(out _, out string? text);
+
             if (!string.IsNullOrWhiteSpace(text))
             {
                 docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
