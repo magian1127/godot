@@ -71,8 +71,8 @@ namespace Godot.SourceGenerators
             {
                 BBCodeRenderer.RenderXmlDocumentationToBBCode(
                     trivia.ToString(),
-                    out string? briefText,
-                    out string? fullText
+                    out briefSummary,
+                    out fullSummary
                 );
             }
             catch (Exception)

@@ -81,7 +81,7 @@ namespace Godot.SourceGenerators
             string godotProjectDir
         )
         {
-            symbol.GetDocumentationSummaryText(out string? classDescription, out _);
+            symbol.GetDocumentationSummaryText(out string? briefDescription, out string? classDescription);
 
             StringBuilder docPropertyString = new StringBuilder();
 
@@ -195,6 +195,9 @@ namespace Godot.SourceGenerators
                     source.Append($".{symbol.Name}");
                 }
             }
+            source.Append("\");\n");
+            source.Append("        docs.Add(\"brief_description\",@\"");
+            source.Append(briefDescription);
             source.Append("\");\n");
             source.Append("        docs.Add(\"description\",@\"");
             source.Append(classDescription);

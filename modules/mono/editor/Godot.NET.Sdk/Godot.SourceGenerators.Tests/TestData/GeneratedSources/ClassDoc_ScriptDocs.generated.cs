@@ -7,6 +7,7 @@ partial class ClassDoc
     {
         var docs = new global::Godot.Collections.Dictionary();
         docs.Add("name","\"ClassDoc.cs\"");
+        docs.Add("brief_description",@"This is the class documentation.");
         docs.Add("description",@"This is the class documentation.");
 
         return docs;

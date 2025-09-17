@@ -7,7 +7,7 @@ using Godot;
 public partial class ClassAllDoc : GodotObject
 {
     /// <summary>
-    /// field description
+    /// field description <c>true</c>
     /// test <see cref="ClassAllDoc"/>
     /// </summary>
     [Export]

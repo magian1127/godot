@@ -2159,7 +2159,8 @@ void CSharpScript::get_docs(Ref<CSharpScript> p_script) {
 	DocData::ClassDoc class_doc = DocData::ClassDoc();
 	class_doc.inherits = inherits;
 	class_doc.name = class_doc_dict["name"];
-	class_doc.brief_description = class_doc_dict["description"];
+	class_doc.brief_description = class_doc_dict["brief_description"];
+	class_doc.description = class_doc_dict["description"];
 	class_doc.is_script_doc = true;
 
 	Array property_docs_dict = class_doc_dict["properties"];
