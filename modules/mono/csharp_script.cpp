@@ -2156,29 +2156,9 @@ void CSharpScript::get_docs(Ref<CSharpScript> p_script) {
 		}
 	}
 
-	DocData::ClassDoc class_doc = DocData::ClassDoc();
+	DocData::ClassDoc class_doc = DocData::ClassDoc().from_dict(class_doc_dict);
 	class_doc.inherits = inherits;
-	class_doc.name = class_doc_dict["name"];
-	class_doc.brief_description = class_doc_dict["brief_description"];
-	class_doc.description = class_doc_dict["description"];
 	class_doc.is_script_doc = true;
-
-	Array property_docs_dict = class_doc_dict["properties"];
-	for (Dictionary property_doc_dict : property_docs_dict) {
-		DocData::PropertyDoc prop_doc;
-		prop_doc.type = property_doc_dict["type"];
-		prop_doc.name = property_doc_dict["name"];
-		prop_doc.description = property_doc_dict["description"];
-		class_doc.properties.push_back(prop_doc);
-	}
-
-	Array signals_docs_dict = class_doc_dict["signals"];
-	for (Dictionary signals_doc_dict : signals_docs_dict) {
-		DocData::MethodDoc signal_doc;
-		signal_doc.name = signals_doc_dict["name"];
-		signal_doc.description = signals_doc_dict["description"];
-		class_doc.signals.push_back(signal_doc);
-	}
 
 	p_script->doc_class_name = class_doc.name;
 	p_script->docs.append(class_doc);
