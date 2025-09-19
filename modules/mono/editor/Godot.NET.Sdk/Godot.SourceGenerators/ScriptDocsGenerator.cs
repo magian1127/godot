@@ -355,8 +355,8 @@ namespace Godot.SourceGenerators
             string signalName = symbol.Name;
             const string SignalDelegateSuffix = "EventHandler";
             signalName = signalName.Substring(0, signalName.Length - SignalDelegateSuffix.Length);
-                docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
-                    .Append(signalName).Append(" }");
+            docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
+                .Append(signalName).Append(" }");
             symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
