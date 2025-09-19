@@ -2166,6 +2166,7 @@ void CSharpScript::get_docs(Ref<CSharpScript> p_script) {
 	Array property_docs_dict = class_doc_dict["properties"];
 	for (Dictionary property_doc_dict : property_docs_dict) {
 		DocData::PropertyDoc prop_doc;
+		prop_doc.type = property_doc_dict["type"];
 		prop_doc.name = property_doc_dict["name"];
 		prop_doc.description = property_doc_dict["description"];
 		class_doc.properties.push_back(prop_doc);

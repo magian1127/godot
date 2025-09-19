@@ -1,9 +1,10 @@
-using System;
-using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System;
+using System.Linq;
+using System.Text;
+using static Godot.SourceGenerators.MarshalUtils;
 
 namespace Godot.SourceGenerators
 {
@@ -103,12 +104,12 @@ namespace Godot.SourceGenerators
 
             foreach (var property in exportedProperties)
             {
-                GeneratePropertyDoc(docPropertyString, property);
+                GeneratePropertyDoc(docPropertyString, property, typeCache);
             }
 
             foreach (var field in exportedFields)
             {
-                GeneratePropertyDoc(docPropertyString, field);
+                GeneratePropertyDoc(docPropertyString, field, typeCache);
             }
 
             StringBuilder docSignalString = new StringBuilder();
@@ -245,14 +246,20 @@ namespace Godot.SourceGenerators
             context.AddSource(uniqueHint, SourceText.From(source.ToString(), Encoding.UTF8));
         }
 
-        private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol)
+        private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol, MarshalUtils.TypeCache typeCache)
         {
             symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
+                var propertySymbol = symbol as IPropertySymbol;
+                var fieldSymbol = symbol as IFieldSymbol;
+                var memberType = propertySymbol?.Type ?? fieldSymbol!.Type;
+                var variantType = ConvertMarshalTypeToVariantType(ConvertManagedTypeToMarshalType(memberType, typeCache)!.Value);
                 docPropertyString.Append("        propertyDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", PropertyName.")
                     .Append(symbol.Name)
-                    .Append("}, { \"description\", @\"")
+                    .Append("}, { \"type\", \"")
+                    .Append(variantType == VariantType.Nil ? "Variant" : variantType.ToString())
+                    .Append("\"}, { \"description\", @\"")
                     .Append(text)
                     .Append("\" } });\n");
             }
