@@ -135,7 +135,7 @@ namespace Godot.SourceGenerators
 
             foreach (var enumType in enumRegistration)
             {
-                GenerateEnumRegisteration(docEnumString, docConstantString, enumType);
+                GenerateEnumRegistration(docEnumString, docConstantString, enumType);
             }
 
             if (string.IsNullOrWhiteSpace(classDescription) && docPropertyString.Length == 0 && docSignalString.Length == 0 && docEnumString.Length == 0 && docConstantString.Length == 0)
@@ -306,7 +306,7 @@ namespace Godot.SourceGenerators
             docPropertyString.Append("});\n");
         }
 
-        private static void GenerateEnumRegisteration(StringBuilder enumRegistrationString, StringBuilder constantRegistrationString, ITypeSymbol enumType)
+        private static void GenerateEnumRegistration(StringBuilder enumRegistrationString, StringBuilder constantRegistrationString, ITypeSymbol enumType)
         {
             enumRegistrationString.Append("        enumDocs.Add(").Append("\"").Append(enumType.Name).Append("\", new global::Godot.Collections.Dictionary {");
             bool isFlags = enumType.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == "System.FlagsAttribute");
@@ -331,7 +331,7 @@ namespace Godot.SourceGenerators
                     .Append("{ \"value\", @\"").Append(member.ConstantValue).Append("\" }, ")
                     .Append("{ \"enumeration\", @\"").Append(enumType.Name).Append("\" }");
 
-                if(isFlags)
+                if (isFlags)
                 {
                     constantRegistrationString.Append(", { \"isFlags\", @\"true\" }");
                 }
@@ -511,7 +511,7 @@ namespace Godot.SourceGenerators
                     typeString = "StringName[]";
                     break;
                 case MarshalType.SystemArrayOfNodePath:
-                    typeString = "NodePath[`]";
+                    typeString = "NodePath[]";
                     break;
                 case MarshalType.SystemArrayOfRid:
                     typeString = "RID[]";
