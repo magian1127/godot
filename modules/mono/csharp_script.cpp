@@ -2152,7 +2152,7 @@ void CSharpScript::get_docs(Ref<CSharpScript> p_script) {
 	} else {
 		inherits = base->get_global_name();
 		if (inherits == StringName()) {
-			inherits = base->get_path();
+			inherits = base->get_path().trim_prefix("res://").quote();
 		}
 	}
 
