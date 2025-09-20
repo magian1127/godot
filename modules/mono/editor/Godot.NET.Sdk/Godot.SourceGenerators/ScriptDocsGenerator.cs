@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static Godot.SourceGenerators.MarshalUtils;
@@ -102,14 +103,16 @@ namespace Godot.SourceGenerators
                     .Any(a => a.AttributeClass?.IsGodotExportAttribute() ?? false))
                 .ToArray();
 
+            var enumRegistration = new HashSet<ITypeSymbol>();
+
             foreach (var property in exportedProperties)
             {
-                GeneratePropertyDoc(docPropertyString, property, typeCache);
+                GeneratePropertyDoc(docPropertyString, property, typeCache, symbol, enumRegistration);
             }
 
             foreach (var field in exportedFields)
             {
-                GeneratePropertyDoc(docPropertyString, field, typeCache);
+                GeneratePropertyDoc(docPropertyString, field, typeCache, symbol, enumRegistration);
             }
 
             StringBuilder docSignalString = new StringBuilder();
@@ -127,9 +130,17 @@ namespace Godot.SourceGenerators
                 GenerateSignalDoc(docSignalString, signalDelegateSymbol);
             }
 
-            if (string.IsNullOrWhiteSpace(classDescription) && docPropertyString.Length == 0 && docSignalString.Length == 0)
+            StringBuilder docEnumString = new StringBuilder();
+            StringBuilder docConstantString = new StringBuilder();
+
+            foreach (var enumType in enumRegistration)
             {
-                // Script has no docs.
+                GenerateEnumRegistration(docEnumString, docConstantString, enumType);
+            }
+
+            if (string.IsNullOrWhiteSpace(classDescription) && docPropertyString.Length == 0 && docSignalString.Length == 0 && docEnumString.Length == 0 && docConstantString.Length == 0)
+            {
+                // Script has no doc.
                 return;
             }
 
@@ -184,13 +195,16 @@ namespace Godot.SourceGenerators
             source.Append("    internal new static global::Godot.Collections.Dictionary GetGodotClassDocs()\n    {\n");
             source.Append("        var docs = new global::Godot.Collections.Dictionary();\n");
             source.Append("        docs.Add(\"name\",\"");
+
+            string scriptPath = ScriptPathAttributeGenerator.RelativeToDir(symbol.DeclaringSyntaxReferences.First().SyntaxTree.FilePath, godotProjectDir);
+
             if (symbol.GetAttributes().Any(a => a.AttributeClass?.IsGodotGlobalClassAttribute() ?? false))
             {
                 source.Append(symbol.Name);
             }
             else
             {
-                source.Append($"\\\"{ScriptPathAttributeGenerator.RelativeToDir(symbol.DeclaringSyntaxReferences.First().SyntaxTree.FilePath, godotProjectDir)}\\\"");
+                source.Append($"\\\"{scriptPath}\\\"");
                 if (isInnerClass)
                 {
                     source.Append($".{symbol.Name}");
@@ -217,6 +231,23 @@ namespace Godot.SourceGenerators
                 source.Append(docSignalString);
                 source.Append("        docs.Add(\"signals\", signalDocs);\n\n");
             }
+
+            if (docEnumString.Length > 0)
+            {
+                source.Append("        var enumDocs = new global::Godot.Collections.Dictionary();\n");
+                source.Append(docEnumString);
+                source.Append("        docs.Add(\"enums\", enumDocs);\n\n");
+            }
+
+            if (docConstantString.Length > 0)
+            {
+                source.Append("        var constantDocs = new global::Godot.Collections.Array();\n");
+                source.Append(docConstantString);
+                source.Append("        docs.Add(\"constants\", constantDocs);\n\n");
+            }
+
+            source.Append("        docs.Add(\"is_script_doc\", true);\n\n");
+            source.Append("        docs.Add(\"script_path\", \"").Append(scriptPath).Append("\");\n\n");
 
             source.Append("        return docs;\n    }\n\n");
 
@@ -246,40 +277,320 @@ namespace Godot.SourceGenerators
             context.AddSource(uniqueHint, SourceText.From(source.ToString(), Encoding.UTF8));
         }
 
-        private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol, MarshalUtils.TypeCache typeCache)
+        private const string FallbackDoc = "There is currently no description for this property.";
+
+        private static void GeneratePropertyDoc(StringBuilder docPropertyString, ISymbol symbol, TypeCache typeCache, ITypeSymbol containingType, HashSet<ITypeSymbol> enumRegistration)
         {
+            var propertySymbol = symbol as IPropertySymbol;
+            var fieldSymbol = symbol as IFieldSymbol;
+            var memberType = propertySymbol?.Type ?? fieldSymbol!.Type;
+            var typeInfo = new Dictionary<string, string>();
+            ConvertManagedTypeToDocTypeString(memberType, typeCache, containingType, enumRegistration, typeInfo);
+            docPropertyString.Append("        propertyDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", PropertyName.")
+                .Append(symbol.Name).Append(" }");
+            foreach (var info in typeInfo)
+            {
+                docPropertyString.Append(", { @\"").Append(info.Key).Append("\", @\"").Append(info.Value).Append("\" }");
+            }
+
             symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
-                var propertySymbol = symbol as IPropertySymbol;
-                var fieldSymbol = symbol as IFieldSymbol;
-                var memberType = propertySymbol?.Type ?? fieldSymbol!.Type;
-                var variantType = ConvertMarshalTypeToVariantType(ConvertManagedTypeToMarshalType(memberType, typeCache)!.Value);
-                docPropertyString.Append("        propertyDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", PropertyName.")
-                    .Append(symbol.Name)
-                    .Append("}, { \"type\", \"")
-                    .Append(variantType == VariantType.Nil ? "Variant" : variantType.ToString())
-                    .Append("\"}, { \"description\", @\"")
-                    .Append(text)
-                    .Append("\" } });\n");
+                docPropertyString.Append(", { \"description\", @\"").Append(text).Append("\" }");
+            }
+            else
+            {
+                docPropertyString.Append(", { \"description\", @\"").Append(FallbackDoc).Append("\" }");
+            }
+
+            docPropertyString.Append("});\n");
+        }
+
+        private static void GenerateEnumRegistration(StringBuilder enumRegistrationString, StringBuilder constantRegistrationString, ITypeSymbol enumType)
+        {
+            enumRegistrationString.Append("        enumDocs.Add(").Append("\"").Append(enumType.Name).Append("\", new global::Godot.Collections.Dictionary {");
+            bool isFlags = enumType.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == "System.FlagsAttribute");
+
+            enumType.GetDocumentationSummaryText(out _, out string? text);
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                enumRegistrationString.Append("{ \"description\", @\"").Append(text).Append("\" }");
+            }
+            else
+            {
+                enumRegistrationString.Append("{ \"description\", @\"").Append(FallbackDoc).Append("\" }");
+            }
+
+            enumRegistrationString.Append("});\n");
+
+            var enumMembers = enumType.GetMembers().Where(m => m.Kind == SymbolKind.Field).Cast<IFieldSymbol>().Where(f => f.ConstantValue != null);
+            foreach (var member in enumMembers)
+            {
+                constantRegistrationString.Append("        constantDocs.Add(new global::Godot.Collections.Dictionary {")
+                    .Append(" { \"name\", @\"").Append(member.Name).Append("\" }, ")
+                    .Append("{ \"value\", @\"").Append(member.ConstantValue).Append("\" }, ")
+                    .Append("{ \"enumeration\", @\"").Append(enumType.Name).Append("\" }");
+
+                if (isFlags)
+                {
+                    constantRegistrationString.Append(", { \"isFlags\", @\"true\" }");
+                }
+
+                member.GetDocumentationSummaryText(out _, out string? memberSummary);
+                if (!string.IsNullOrWhiteSpace(memberSummary))
+                {
+                    constantRegistrationString.Append(", { \"description\", @\"").Append(memberSummary).Append("\" }");
+                }
+                else
+                {
+                    constantRegistrationString.Append(", { \"description\", @\"").Append(FallbackDoc).Append("\" }");
+                }
+
+                constantRegistrationString.Append("});\n");
             }
         }
 
         private static void GenerateSignalDoc(StringBuilder docSignalString, ISymbol symbol)
         {
             string signalName = symbol.Name;
-            string SignalDelegateSuffix = "EventHandler";
+            const string SignalDelegateSuffix = "EventHandler";
             signalName = signalName.Substring(0, signalName.Length - SignalDelegateSuffix.Length);
-
+            docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
+                .Append(signalName).Append(" }");
             symbol.GetDocumentationSummaryText(out _, out string? text);
             if (!string.IsNullOrWhiteSpace(text))
             {
-                docSignalString.Append("        signalDocs.Add(new global::Godot.Collections.Dictionary { { \"name\", SignalName.")
-                    .Append(signalName)
-                    .Append("}, { \"description\", @\"")
-                    .Append(text)
-                    .Append("\" } });\n");
+                docSignalString.Append(", { \"description\", @\"").Append(text).Append("\" }");
             }
+            else
+            {
+                docSignalString.Append(", { \"description\", @\"").Append(FallbackDoc).Append("\" }");
+            }
+            docSignalString.Append("});\n");
+        }
+
+        private static void ConvertManagedTypeToDocTypeString(ITypeSymbol typeSymbol, TypeCache typeCache,
+            ITypeSymbol containingType, HashSet<ITypeSymbol> enumRegistration, Dictionary<string, string> typeInfo)
+        {
+            typeInfo["type"] = "Variant";
+            var marshalType = ConvertManagedTypeToMarshalType(typeSymbol, typeCache);
+            if (!marshalType.HasValue)
+            {
+                return;
+            }
+
+            var marshalTypeValue = marshalType.Value;
+            string typeString;
+
+            switch (marshalTypeValue)
+            {
+                case MarshalType.Boolean:
+                    typeString = "bool";
+                    break;
+                case MarshalType.Char:
+                case MarshalType.SByte:
+                case MarshalType.Int16:
+                case MarshalType.Int32:
+                case MarshalType.Int64:
+                case MarshalType.Byte:
+                case MarshalType.UInt16:
+                case MarshalType.UInt32:
+                case MarshalType.UInt64:
+                    typeString = "int";
+                    break;
+                case MarshalType.Single:
+                case MarshalType.Double:
+                    typeString = "float";
+                    break;
+                case MarshalType.String:
+                    typeString = "String";
+                    break;
+                case MarshalType.Vector2:
+                    typeString = "Vector2";
+                    break;
+                case MarshalType.Vector2I:
+                    typeString = "Vector2i";
+                    break;
+                case MarshalType.Rect2:
+                    typeString = "Rect2";
+                    break;
+                case MarshalType.Rect2I:
+                    typeString = "Rect2i";
+                    break;
+                case MarshalType.Transform2D:
+                    typeString = "Transform2D";
+                    break;
+                case MarshalType.Vector3:
+                    typeString = "Vector3";
+                    break;
+                case MarshalType.Vector3I:
+                    typeString = "Vector3i";
+                    break;
+                case MarshalType.Basis:
+                    typeString = "Basis";
+                    break;
+                case MarshalType.Quaternion:
+                    typeString = "Quaternion";
+                    break;
+                case MarshalType.Transform3D:
+                    typeString = "Transform3D";
+                    break;
+                case MarshalType.Vector4:
+                    typeString = "Vector4";
+                    break;
+                case MarshalType.Vector4I:
+                    typeString = "Vector4i";
+                    break;
+                case MarshalType.Projection:
+                    typeString = "Projection";
+                    break;
+                case MarshalType.Aabb:
+                    typeString = "AABB";
+                    break;
+                case MarshalType.Color:
+                    typeString = "Color";
+                    break;
+                case MarshalType.Plane:
+                    typeString = "Plane";
+                    break;
+                case MarshalType.Callable:
+                    typeString = "Callable";
+                    break;
+                case MarshalType.Signal:
+                    typeString = "Signal";
+                    break;
+                case MarshalType.ByteArray:
+                    typeString = "PackedByteArray";
+                    break;
+                case MarshalType.Int32Array:
+                    typeString = "PackedInt32Array";
+                    break;
+                case MarshalType.Int64Array:
+                    typeString = "PackedInt64Array";
+                    break;
+                case MarshalType.Float32Array:
+                    typeString = "PackedFloat32Array";
+                    break;
+                case MarshalType.Float64Array:
+                    typeString = "PackedFloat64Array";
+                    break;
+                case MarshalType.StringArray:
+                    typeString = "PackedStringArray";
+                    break;
+                case MarshalType.Vector2Array:
+                    typeString = "PackedVector2Array";
+                    break;
+                case MarshalType.Vector3Array:
+                    typeString = "PackedVector3Array";
+                    break;
+                case MarshalType.Vector4Array:
+                    typeString = "PackedVector4Array";
+                    break;
+                case MarshalType.ColorArray:
+                    typeString = "PackedColorArray";
+                    break;
+                case MarshalType.Variant:
+                    typeString = "Variant";
+                    break;
+                case MarshalType.StringName:
+                    typeString = "StringName";
+                    break;
+                case MarshalType.NodePath:
+                    typeString = "NodePath";
+                    break;
+                case MarshalType.Rid:
+                    typeString = "RID";
+                    break;
+                case MarshalType.GodotDictionary:
+                    typeString = "Dictionary";
+                    break;
+                case MarshalType.GodotArray:
+                    typeString = "Array";
+                    break;
+                case MarshalType.SystemArrayOfStringName:
+                    typeString = "StringName[]";
+                    break;
+                case MarshalType.SystemArrayOfNodePath:
+                    typeString = "NodePath[]";
+                    break;
+                case MarshalType.SystemArrayOfRid:
+                    typeString = "RID[]";
+                    break;
+                case MarshalType.GodotObjectOrDerived:
+                    typeString = typeSymbol.Name;
+                    break;
+                case MarshalType.GodotObjectOrDerivedArray:
+                {
+                    var arrayType = (IArrayTypeSymbol)typeSymbol;
+                    var elementType = arrayType.ElementType;
+                    typeString = $"{elementType.Name}[]";
+                    break;
+                }
+                case MarshalType.GodotGenericArray:
+                {
+                    var innerType = ((INamedTypeSymbol)typeSymbol).TypeArguments[0];
+                    if (innerType.TypeKind == TypeKind.Enum)
+                    {
+                        enumRegistration.Add(innerType);
+                        typeString = $"{containingType.Name}.{innerType.Name}[]";
+                    }
+                    else
+                    {
+                        var innerTypeInfo = new Dictionary<string, string>();
+                        ConvertManagedTypeToDocTypeString(innerType, typeCache, containingType, enumRegistration, innerTypeInfo);
+                        typeString = $"{innerTypeInfo["type"]}[]";
+                    }
+                    break;
+                }
+                case MarshalType.GodotGenericDictionary:
+                {
+                    var namedTypeSymbol = (INamedTypeSymbol)typeSymbol;
+                    var keyType = namedTypeSymbol.TypeArguments[0];
+                    var valueType = namedTypeSymbol.TypeArguments[1];
+                    string keyTypeName;
+                    string valueTypeName;
+                    if (keyType.TypeKind == TypeKind.Enum)
+                    {
+                        enumRegistration.Add(keyType);
+                        keyTypeName = $"{containingType.Name}.{keyType.Name}";
+                    }
+                    else
+                    {
+                        var innerTypeInfo = new Dictionary<string, string>();
+                        ConvertManagedTypeToDocTypeString(keyType, typeCache, containingType, enumRegistration, innerTypeInfo);
+                        keyTypeName = innerTypeInfo["type"];
+                    }
+                    if (valueType.TypeKind == TypeKind.Enum)
+                    {
+                        enumRegistration.Add(valueType);
+                        valueTypeName = $"{containingType.Name}.{valueType.Name}";
+                    }
+                    else
+                    {
+                        var innerTypeInfo = new Dictionary<string, string>();
+                        ConvertManagedTypeToDocTypeString(valueType, typeCache, containingType, enumRegistration, innerTypeInfo);
+                        valueTypeName = innerTypeInfo["type"];
+                    }
+                    typeString = $"Dictionary[{keyTypeName}, {valueTypeName}]";
+                    break;
+                }
+                case MarshalType.Enum:
+                {
+                    typeString = "int";
+                    typeInfo["enumeration"] = $"{containingType.Name}.{typeSymbol.Name}";
+                    enumRegistration.Add(typeSymbol);
+                    var isFlags = typeSymbol.GetAttributes()
+                        .Any(a => a.AttributeClass?.ToDisplayString() == "System.FlagsAttribute");
+                    if (isFlags)
+                    {
+                        typeInfo["is_bitfield"] = "true";
+                    }
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            typeInfo["type"] = typeString;
         }
     }
 }

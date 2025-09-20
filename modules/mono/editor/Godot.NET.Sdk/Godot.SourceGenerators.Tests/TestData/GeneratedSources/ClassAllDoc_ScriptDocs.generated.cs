@@ -11,13 +11,17 @@ partial class ClassAllDoc
         docs.Add("description",@"class description test");
 
         var propertyDocs = new global::Godot.Collections.Array();
-        propertyDocs.Add(new global::Godot.Collections.Dictionary { { "name", PropertyName.PropertyDocTest}, { "type", "Int"}, { "description", @"property description test [code]ClassAllDoc[/code]" } });
-        propertyDocs.Add(new global::Godot.Collections.Dictionary { { "name", PropertyName._fieldDocTest}, { "type", "Int"}, { "description", @"field description [code]true[/code] test [code]ClassAllDoc[/code]" } });
+        propertyDocs.Add(new global::Godot.Collections.Dictionary { { "name", PropertyName.PropertyDocTest }, { @"type", @"int" }, { "description", @"property description test [code]ClassAllDoc[/code]" }});
+        propertyDocs.Add(new global::Godot.Collections.Dictionary { { "name", PropertyName._fieldDocTest }, { @"type", @"int" }, { "description", @"field description [code]true[/code] test [code]ClassAllDoc[/code]" }});
         docs.Add("properties", propertyDocs);
 
         var signalDocs  = new global::Godot.Collections.Array();
-        signalDocs.Add(new global::Godot.Collections.Dictionary { { "name", SignalName.SignalDocTest}, { "description", @"signal description ~!@#$%^*()_+{}| test [code]ClassAllDoc[/code][br][br][b]Parameters:[/b][br] • [b]num[/b]:" } });
+        signalDocs.Add(new global::Godot.Collections.Dictionary { { "name", SignalName.SignalDocTest }, { "description", @"signal description ~!@#$%^*()_+{}| test [code]ClassAllDoc[/code][br][br][b]Parameters:[/b][br] • [b]num[/b]:" }});
         docs.Add("signals", signalDocs);
+
+        docs.Add("is_script_doc", true);
+
+        docs.Add("script_path", "ClassAllDoc.cs");
 
         return docs;
     }

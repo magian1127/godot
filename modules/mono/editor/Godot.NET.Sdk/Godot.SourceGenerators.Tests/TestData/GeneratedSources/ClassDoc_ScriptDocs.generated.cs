@@ -10,6 +10,14 @@ partial class ClassDoc
         docs.Add("brief_description",@"This is the class documentation.");
         docs.Add("description",@"This is the class documentation.");
 
+        var propertyDocs = new global::Godot.Collections.Array();
+        propertyDocs.Add(new global::Godot.Collections.Dictionary { { "name", PropertyName.MyProperty }, { @"type", @"int" }, { "description", @"There is currently no description for this property." }});
+        docs.Add("properties", propertyDocs);
+
+        docs.Add("is_script_doc", true);
+
+        docs.Add("script_path", "ClassDoc.cs");
+
         return docs;
     }
 
