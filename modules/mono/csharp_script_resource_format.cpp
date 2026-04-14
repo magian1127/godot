@@ -119,12 +119,11 @@ Error ResourceFormatSaverCSharpScript::save(const Ref<Resource> &p_resource, con
 	String source = sqscr->get_source_code();
 
 #ifdef TOOLS_ENABLED
-	if (!FileAccess::exists(p_path)) {
-		// The file does not yet exist, let's assume the user just created this script. In such
-		// cases we need to check whether the solution and csproj were already created or not.
-		if (!_create_project_solution_if_needed()) {
-			ERR_PRINT("C# project could not be created; cannot add file: '" + p_path + "'.");
-		}
+	// Ensure the project files exist before saving scripts. This is especially important
+	// for newly created projects where the first C# script may be created before the
+	// solution/csproj are initialized.
+	if (!_create_project_solution_if_needed()) {
+		ERR_PRINT("C# project could not be created; cannot add file: '" + p_path + "'.");
 	}
 #endif
 
